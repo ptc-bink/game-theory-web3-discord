@@ -31,6 +31,8 @@ const Dashboard: React.FC<IDashboard> = () => {
     const initAction = async () => {
         const res: any = await getDashboardInfo();
         const serverList: IServerList[] = await getServerList();
+        const giveAways: any = await GetGiveaways();
+
 
         const isCheck: any = adminCheck()
 
@@ -39,13 +41,14 @@ const Dashboard: React.FC<IDashboard> = () => {
         }
 
         setIsAdmin(true)
+        setGiveAways(giveAways);
 
         setServerList(serverList);
         setBiddersGiveawayList(res.biddersGiveawayList);
     }
 
     const chainValueAction = async () => {
-        const giveAways: any = await GetGiveaways(serverValue);
+        const giveAways: any = await GetGiveaways();
 
         setGiveAways(giveAways);
     }
@@ -56,7 +59,6 @@ const Dashboard: React.FC<IDashboard> = () => {
     }, [])
 
     useEffect(() => {
-
 
         chainValueAction();
     }, [serverValue])
@@ -114,8 +116,8 @@ const Dashboard: React.FC<IDashboard> = () => {
                         entrants={item.entrants}
                         quantity={item.quantity}
                         enterDate={item.chain}
-                        timeRemaining={item.expiry.toString()}
-                        status="active"
+                        timeRemaining={item.expiry}
+                        harvested={item.harvested}
                         bidders={item.bidders}
                         winners={item.winners}
                     />

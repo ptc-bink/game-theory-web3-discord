@@ -27,6 +27,8 @@ export default function Page() {
 
   const handleSignIn = async () => {
     // console.log("handle sign in");
+    console.log("signin");
+    
 
     await signIn();
   }

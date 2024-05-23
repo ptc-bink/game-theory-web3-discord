@@ -40,11 +40,11 @@ const RoleDropdown: React.FC<IRoleDropdownProps> = ({ dropdownList, placeholder,
                     alt="Arrow down"
                 />}
             </div>
-            {RoledropdownOpen && <div className="absolute w-full cursor-pointer text-[#FFFFFF] flex flex-col mt-2 rounded-lg border border-cgrey-200 z-10">
+            {RoledropdownOpen && <div className="absolute w-full cursor-pointer text-[#FFFFFF] flex flex-col mt-1 rounded-lg z-10">
                 {dropdownList.map((item, index) => (
                     <div
                         key={index}
-                        className={`items-center w-full px-4 py-[10px] border-cgrey-200 rounded-md border  justify-between text-sm font-normal text-[#FFFFFF] bg-[${item.color}] ${className} `}
+                        className={`items-center w-full px-4 py-[10px] border-cgrey-200 rounded-md border bg-cgrey-100 justify-between text-sm font-normal text-[#FFFFFF] text-[${item.color}] ${className} `}
                         onClick={() => handleSetValue(item.id, item.name)}>
                         {item.name}
                     </div>

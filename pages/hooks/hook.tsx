@@ -69,15 +69,9 @@ export const GetAdminof = async () => {
     }
 }
 
-export const UserInfo = async (userId: string) => {
+export const UserInfo = async () => {
 
-    const response = await fetch("/api/userinfo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            userId,
-        }),
-    });
+    const response = await fetch("/api/userinfo");
 
     console.log(response);
 
@@ -91,23 +85,21 @@ export const UserInfo = async (userId: string) => {
     }
 }
 
-export const GetGiveaways = async (serverID: string) => {
+export const GetGiveaways = async () => {
 
-    // const response = await fetch(`/api/giveaways/${serverID}`);
+    const response = await fetch(`/api/giveaways/`);
 
-    // if (response.status == 200) {
-    //     const data = await response.json();
+    if (response.status == 200) {
+        const data = await response.json();
 
-    //     return data;
+        return data;
 
-    // } else {
-    //     return undefined;
-    // }
-
-    return giveAways;
+    } else {
+        return undefined;
+    }
 }
 
-export const CreateGiveaway = async (data: ICreateGiveaway) => {
+export const HandleCreateGiveaway = async (data: ICreateGiveaway) => {
 
     const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles } = data;
 
@@ -123,16 +115,16 @@ export const CreateGiveaway = async (data: ICreateGiveaway) => {
         }),
     });
 
-    console.log(response);
+    console.log("create giveaway",response);
 
-    if (response.status == 200) {
-        const data = await response.json();
+    // if (response.status == 200) {
+    //     const data = await response.json();
 
-        return data;
+    //     return data;
 
-    } else {
-        return undefined;
-    }
+    // } else {
+    //     return undefined;
+    // }
 }
 
 export const Logout = async () => {

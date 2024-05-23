@@ -33,5 +33,24 @@ export default async function handler(
             console.error("Error creating user: ", error);
             return res.json({ message: "Failed to create user" });
         }
+    } else if (req.method == "GET") {
+        try {
+            const axios = require("axios");
+
+            let config = {
+                method: "get",
+                url: `${process.env.baseURL_back}/test/giveaways`,
+            }
+
+            const response = await axios.request(config);
+
+            console.log("get giveaways res ====>", response.data);
+            
+
+            return res.json(response.data);
+        } catch (error) {
+            console.error("Error creating user: ", error);
+            return res.json({ message: "Failed to create user" });
+        }
     }
 }

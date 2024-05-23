@@ -15,17 +15,17 @@ export interface IAdministrationTrustedServers {
 
 export interface ICreateGiveaway {
     serverID: string
-    Expiry: string
+    Expiry: any
     title: string
     description: string
     chain: string
     type: string
-    quantity: string
-    price: string
-    requiredRoles: string
-    restrictedRoles: string
-    winningRole: string
-    requireAllRoles: string
+    quantity: number
+    price?: number
+    requiredRoles?: any
+    restrictedRoles?: any
+    winningRole?: any
+    requireAllRoles?: boolean
 }
 
 export interface IDashboard {
@@ -73,11 +73,13 @@ export interface IUserInfo {
     avatar: string;
 }
 
+export interface IDropdownListProps {
+    name: string,
+    id: string
+}
+
 export interface IDropdownProps {
-    dropdownList: {
-        name: string;
-        id: string
-    }[];
+    dropdownList: IDropdownListProps[];
     placeholder: string;
     className: string;
     callback: any;
@@ -88,11 +90,6 @@ export interface IRoleDropdownProps {
     placeholder: string;
     className: string;
     callback: any;
-}
-
-export interface IServerList {
-    name: string,
-    id: string
 }
 
 export interface IGiveaway {
@@ -134,21 +131,33 @@ export interface IBiddersGiveaway {
 }
 
 export interface IDashboardres {
-    serverList: IServerList,
+    serverList: IServer[],
     biddersGiveawayList: IBiddersGiveaway[],
     initGiveawayList: IGiveaway[]
 }
 
+export interface IServer {
+    guildID: string,
+    guild: {
+        id: string,
+        name: string,
+        iconURL: string,
+        memberCount: number
+    },
+    admins: string[],
+    owner: string
+}
+
 export interface IGiveawayCardProps {
-    id?: string;
+    id: string;
     username?: string;
     avatar?: string;
     chain?: string;
     entrants?: number;
     quantity?: number;
     enterDate?: string;
-    timeRemaining?: string;
-    status?: string;
+    timeRemaining: number;
+    harvested: boolean;
     bidders: string[];
     winners: string[];
 }
@@ -156,13 +165,14 @@ export interface IGiveawayCardProps {
 export interface IPreviewCardProps {
     title: string,
     description: string
+    type:string,
     expiry: string,
     winningRole: string,
     chain: string,
     quantity: number,
     restricted: IServerRole,
     requirements: string,
-    price: number
+    price?: number
 }
 
 export interface IServerRole {

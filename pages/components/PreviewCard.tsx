@@ -11,7 +11,7 @@ import { IPreviewCardProps } from "../utils/_type";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, quantity, restricted, requirements, price }) => {
+const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, quantity, restricted, requirements, price }) => {
 
     const { data: session } = useSession();
     const router = useRouter();
@@ -55,10 +55,6 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                         <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Expiry</label>
                         <p className="bg-[#393F4B] w-fit rounded-sm px-1 text-xs font-medium text-[#ECDEDB]">{expiry}</p>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Winning Role</label>
-                        <p className="text-xs font-medium text-[#FFFFFF]">{winningRole ? winningRole : "-"}</p>
-                    </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1">
                             <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Chain</label>
@@ -67,6 +63,16 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                         <div className="flex flex-col gap-1">
                             <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Quantity</label>
                             <p className="text-[#FFFFFF] text-xs leading-[18px] font-medium">{quantity ? quantity : "-"}</p>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1">
+                            <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Type</label>
+                            <p className="text-[#FFFFFF] text-xs leading-[18px] font-medium">{type}</p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Winning Role</label>
+                            <p className="text-xs font-medium text-[#FFFFFF]">{winningRole ? winningRole : "-"}</p>
                         </div>
                     </div>
                     <div className="flex flex-col gap-1">

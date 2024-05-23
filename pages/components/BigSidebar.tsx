@@ -24,6 +24,7 @@ const BigSidebar = () => {
 
     const { setIsAdmin, isAdmin } = useContext(AppContext);
     const [fill, setFill] = useState<string>("");
+    const [sideData, setSideData] = useState<SideDataProps[]>([])
     const pathname = usePathname();
 
     const adminSideBar = [
@@ -115,6 +116,8 @@ const BigSidebar = () => {
     }, [])
 
     useEffect(() => {
+        setSideData(isAdmin ? adminSideBar : userSideBar);
+
         if (pathname !== "/") {
             const updatedSideData = sideData.map(item => {
                 const isActive = pathname.includes(item.link);
@@ -129,9 +132,7 @@ const BigSidebar = () => {
                 setFill("#FFFFFF");
             }
         }
-    }, [pathname]);
-
-    const [sideData, setSideData] = useState<SideDataProps[]>(isAdmin ? adminSideBar : userSideBar)
+    }, [pathname, isAdmin]);
 
     return (
         <div className="flex flex-col">

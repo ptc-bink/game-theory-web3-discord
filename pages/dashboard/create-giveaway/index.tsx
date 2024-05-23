@@ -18,98 +18,112 @@ import {
     restrictedRolesList,
     requiredRolesList
 } from "@/pages/utils/_data";
-import { GetAdminof, GetSeverRoles } from "@/pages/hooks/hook";
-import { IServerList, IServerRole } from "@/pages/utils/_type";
+import { GetAdminof, GetSeverRoles, HandleCreateGiveaway } from "@/pages/hooks/hook";
+import { IDropdownListProps, IDropdownProps, IServer, IServerRole } from "@/pages/utils/_type";
 import { getServerList } from "@/pages/hooks/action";
+import { useRouter } from "next/router";
 
 const CreateGiveaway: React.FC = () => {
 
-    const styles: StylesConfig<DataOption, true> = {
-        multiValue: (styles) => ({ ...styles, backgroundColor: '#202125', borderRadius: "10px", fontSize: "15px", padding: "1px 5px 1px 2px", gap: "0px" }),
-        multiValueLabel: (styles) => ({ ...styles, color: "#939393" }),
-        multiValueRemove: (styles) => ({ ...styles, color: "#939393", ":hover": { color: "#141518" } }),
-        control: (styles) => ({ ...styles, backgroundColor: "#141518", border: "1px", borderColor: "#292A2E", borderRadius: "8px", gap: "4px", padding: "10px 0px 10px 0px" }),
-        container: (styles) => ({ ...styles, fontSize: "14px" }),
-        group: (styles) => ({ ...styles, paddingLeft: "10px" }),
-        clearIndicator: (styles) => ({ ...styles, padding: "0px 0px 0px 0px" }),
-        indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "transparent" }),
-        dropdownIndicator: (styles) => ({ ...styles, padding: "0px 15px 0px 0px" }),
-        indicatorsContainer: (styles) => ({ ...styles, alignItems: "start", paddingTop: "5px" }),
-        menu: (styles) => ({ ...styles, backgroundColor: "#141518" }),
-        menuList: (styles) => ({ ...styles, color: "#FFFFFF", "::part": { ":hover": { color: "black", backgroundColor: "" } }, }),
-    };
+    // const styles: StylesConfig<DataOption, true> = {
+    //     multiValue: (styles) => ({ ...styles, backgroundColor: '#202125', borderRadius: "10px", fontSize: "15px", padding: "1px 5px 1px 2px", gap: "0px" }),
+    //     multiValueLabel: (styles) => ({ ...styles, color: "#939393" }),
+    //     multiValueRemove: (styles) => ({ ...styles, color: "#939393", ":hover": { color: "#141518" } }),
+    //     control: (styles) => ({ ...styles, backgroundColor: "#141518", border: "1px", borderColor: "#292A2E", borderRadius: "8px", gap: "4px", padding: "10px 0px 10px 0px" }),
+    //     container: (styles) => ({ ...styles, fontSize: "14px" }),
+    //     group: (styles) => ({ ...styles, paddingLeft: "10px" }),
+    //     clearIndicator: (styles) => ({ ...styles, padding: "0px 0px 0px 0px" }),
+    //     indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "transparent" }),
+    //     dropdownIndicator: (styles) => ({ ...styles, padding: "0px 15px 0px 0px" }),
+    //     indicatorsContainer: (styles) => ({ ...styles, alignItems: "start", paddingTop: "5px" }),
+    //     menu: (styles) => ({ ...styles, backgroundColor: "#141518" }),
+    //     menuList: (styles) => ({ ...styles, color: "#FFFFFF", "::part": { ":hover": { color: "black", backgroundColor: "" } }, }),
+    // };
 
-    const orderOptions = (values: DataOption[]): DataOption[] => { return [...values] };
+    // const orderOptions = (values: DataOption[]): DataOption[] => { return [...values] };
 
-    const [serverList, setServerList] = useState<IServerList[]>([]);
+    const [serverList, setServerList] = useState<IServer[]>([]);
+    const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [expiresDate, setExpiresDate] = useState<any>("");
-    const [chain, setChain] = useState<string>("");
+    const [expiresDate, setExpiresDate] = useState<any>();
+    const [chain, setChain] = useState<string>("Ethereum");
     const [quantity, setQuantity] = useState<number>(1);
-    const [type, setType] = useState<string>("");
+    const [type, setType] = useState<string>("Raffle");
     const [winningRole, setWinningRole] = useState<string>("");
     const [restrictedRoles, setRestrictedRoles] = useState<any>();
     const [requiredAllRoles, setReqiuredAllRoles] = useState<boolean>(false);
-    const [requiredRoles, setReqiuredRoles] = useState<IServerRole>();
-    const [price, setPrice] = useState<number>(0.00001);
+    const [requiredRoles, setReqiuredRoles] = useState<any>();
+    const [price, setPrice] = useState<number>();
     const [links, setLinks] = useState<string>("");
     const [requirements, setRequirements] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
-    const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
+    const [serverRoles, setServerRoles] = useState<any>();
     const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
+    const router = useRouter();
+
+    const initAction = async () => {
+        const serverList = await getServerList();
+        const serverDropdownList = serverList?.map((item, index) => {
+            return { name: item.guild.name, id: item.guild.id }
+        })
+
+        setServerList(serverList);
+        setServerDropdownList(serverDropdownList);
+    }
+
+    const serverValueAction = async () => {
+        // const res = await GetSeverRoles(serverValue);
+        const res = [
+            {
+                "id": "1219682506475831446",
+                "name": "@everyone",
+                "color": "#000000",
+                "position": 0
+            },
+            {
+                "id": "1219686078135402661",
+                "name": "GiveAway",
+                "color": "#000000",
+                "position": 2
+            },
+            {
+                "id": "1219686759231782932",
+                "name": "member",
+                "color": "#9b59b6",
+                "position": 4
+            },
+            {
+                "id": "1219687461798809763",
+                "name": "admin",
+                "color": "#ad1457",
+                "position": 3
+            },
+            {
+                "id": "1219723324880457748",
+                "name": "Test",
+                "color": "#32ab42",
+                "position": 1
+            }
+        ]
+
+        setServerRoles(res);
+    }
 
     useEffect(() => {
-        const initAction = async () => {
-            const serverList = await getServerList();
-            setServerList(serverList);
-        }
-
         initAction();
     }, [])
 
     useEffect(() => {
-        const serverValueAction = async () => {
-            // const res = await GetSeverRoles(serverValue);
-            const res = [
-                {
-                    "id": "1219682506475831446",
-                    "name": "@everyone",
-                    "color": "#000000",
-                    "position": 0
-                },
-                {
-                    "id": "1219686078135402661",
-                    "name": "GiveAway",
-                    "color": "#000000",
-                    "position": 2
-                },
-                {
-                    "id": "1219686759231782932",
-                    "name": "member",
-                    "color": "#9b59b6",
-                    "position": 4
-                },
-                {
-                    "id": "1219687461798809763",
-                    "name": "admin",
-                    "color": "#ad1457",
-                    "position": 3
-                },
-                {
-                    "id": "1219723324880457748",
-                    "name": "Test",
-                    "color": "#32ab42",
-                    "position": 1
-                }
-            ]
-
-            setServerRoles(res);
-        }
-
         serverValueAction();
     }, [serverValue])
 
+    useEffect(() => {
+        // Initialize the date to current datetime if not already set
+        if (!expiresDate) {
+          setExpiresDate(new Date().toISOString().slice(0, 16)); // ISO format for datetime-local
+        }
+      }, [expiresDate]);
 
     // const handleRestrictedRoles = (
     //     newValue: OnChangeValue<DataOption, true>,
@@ -123,8 +137,31 @@ const CreateGiveaway: React.FC = () => {
     //     setReqiuredRoles(orderOptions(newValue as DataOption[]));
     // };
 
-    const handleSubmit = () => {
-        console.log("handle submit");
+    const handleSubmit = async () => {
+
+        if (!serverValue || !expiresDate || !title || !description || !chain || !type || !quantity) {
+            // return console.log("plz input all value");
+        }
+
+        const data = {
+            serverID: serverValue,
+            Expiry: expiresDate,
+            title: title,
+            description: description,
+            chain: chain,
+            type: type,
+            quantity: quantity,
+            price: price,
+            requiredRoles: requiredRoles,
+            restrictedRoles: restrictedRoles,
+            winningRole: winningRole,
+            requiredAllRoles: requiredAllRoles
+        }
+
+        console.log("===============================", data);
+        
+
+        await HandleCreateGiveaway(data);
 
     }
 
@@ -133,11 +170,11 @@ const CreateGiveaway: React.FC = () => {
     }
 
     return (
-        <div className="p-8 grid md:grid-cols-2 grid-rows-2 gap-8 bg-cdark-100">
+        <div className="p-8 grid md:grid-cols-2 md:grid-rows-1 gap-8 bg-cdark-100 relative">
             <div className="flex flex-col gap-4">
                 <div className="flex gap-6 items-center justify-between">
                     <div className="flex gap-6 items-center">
-                        <div className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
+                        <div onClick={() => router.back()} className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
                             <Image
                                 src={ArrowLeft}
                                 width="24"
@@ -158,7 +195,7 @@ const CreateGiveaway: React.FC = () => {
                 </div>
                 <div>
                     <Dropdown
-                        dropdownList={serverList}
+                        dropdownList={serverDropdownList}
                         placeholder="Select"
                         className="hover:bg-cdark-100 bg-cdark-200"
                         callback={setServerValue}
@@ -292,13 +329,14 @@ const CreateGiveaway: React.FC = () => {
                 </div>
             </div>
             {showCreditCard &&
-                <div className="">
+                <div className="absolute">
                     <PreviewCard
                         title={title}
                         description={description}
                         expiry={expiresDate}
                         winningRole={winningRole}
                         chain={chain}
+                        type={type}
                         quantity={quantity}
                         restricted={restrictedRoles}
                         requirements={requirements}
@@ -313,6 +351,7 @@ const CreateGiveaway: React.FC = () => {
                     expiry={expiresDate}
                     winningRole={winningRole}
                     chain={chain}
+                    type={type}
                     quantity={quantity}
                     restricted={restrictedRoles}
                     requirements={requirements}

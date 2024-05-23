@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,18 +12,24 @@ import Cancel from "@/public/avatar/close-circle.svg"
 
 import { IGiveawayCardProps, IUserInfo } from "../utils/_type";
 import { UserInfo } from "../hooks/hook";
+import AppContext from "../providers/AppContext";
 
-const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, username, entrants, quantity, enterDate, timeRemaining, status, bidders, winners }) => {
+const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, username, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
 
-    const [biddersInfoList, setBiddersInfoList] = useState<any>();
+    const { setGiveawayID } = useContext(AppContext);
+    // const [biddersInfoList, setBiddersInfoList] = useState<any>();
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
 
     const initAction = async () => {
-        const biddersInfoList = bidders?.forEach((userID, index) => {
-            return UserInfo(userID);
-        })
 
-        setBiddersInfoList(biddersInfoList);
+        // const biddersInfoList = bidders?.forEach((userID, index) => {
+        //     console.log();
+
+        //     return UserInfo();
+        // })
+        // setBiddersInfoList(biddersInfoList);
+        // console.log("biddersInfoList ====>", biddersInfoList);
+
     }
 
     useEffect(() => {
@@ -78,37 +84,40 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                         <p className="text-[#FFFFFF] text-sm font-semibold">{quantity}</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-3">
-                    <div className="flex flex-col gap-1">
-                        <p className="text-[#939393] text-xs leading-[18px] font-normal">Enter date:</p>
-                        <p className="text-[#FFFFFF] text-sm font-semibold">{enterDate}</p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <p className="text-[#939393] text-xs leading-[18px] font-normal">Time remaining:</p>
-                        <p className="text-[#FFFFFF] text-sm font-semibold">{timeRemaining}</p>
-                    </div>
-                    <Link href="/dashboard/harvest-winners" className="flex text-[#FFFFFF] text-sm font-normal gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-[#141518] outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
-                        Harvest Winners
-                    </Link>
-                    {/* <div className="flex flex-col gap-1">
-                        <p className="text-[#939393] text-xs leading-[18px] font-normal">Status:</p>
-                        {status === "active" && (
-                            <div className="px-1 w-fit rounded-sm bg-[#3F904E] bg-opacity-[0.16] text-xs leading-[18px] font-medium text-[#3F904E]">Active</div>
-                        )}
-                        {status === "postpone" && (
-                            <div className="px-1 w-fit rounded-sm bg-[#FFD105] bg-opacity-[0.16] text-xs leading-[18px] font-medium text-[#FFD105]">Postpone</div>
-                        )}
-                    </div> */}
-                </div>
+                {harvested ?
+                    <div className="grid grid-cols-3">
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[#939393] text-xs leading-[18px] font-normal">Enter date:</p>
+                            <p className="text-[#FFFFFF] text-sm font-semibold">{enterDate}</p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[#939393] text-xs leading-[18px] font-normal">Time remaining:</p>
+                            <p className="text-[#FFFFFF] text-sm font-semibold">Ended</p>
+                        </div>
+                        <Link href="/dashboard/harvest-winners" onClick={() => setGiveawayID(id)} className="flex text-[#FFFFFF] text-sm font-normal gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-[#141518] outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
+                            Harvest Winners
+                        </Link>
+                    </div> :
+                    <div className="grid grid-cols-3">
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[#939393] text-xs leading-[18px] font-normal">Enter date:</p>
+                            <p className="text-[#FFFFFF] text-sm font-semibold">{enterDate}</p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[#939393] text-xs leading-[18px] font-normal">Time remaining:</p>
+                            <p className="text-[#FFFFFF] text-sm font-semibold">{Math.floor(timeRemaining / 3600 / 60 /24)} days</p>
+                            {/* <p className="text-[#FFFFFF] text-sm font-semibold">{timeRemaining}</p> */}
+                        </div>
+                    </div>}
             </div>
             {detailOpen &&
                 <div className="flex flex-col rounded-lg">
                     <div className="grid md:grid-rows-10 md:grid-flow-col max-h-[220px] overflow-scroll grid-flow-row gap-y-[1.5px] border border-cgrey-200 rounded-t-lg px-1 py-[10px] bg-[#141518]">
-                        {biddersInfoList?.map((item: IUserInfo, index: number) => (
+                        {/* {biddersInfoList?.map((item: IUserInfo, index: number) => (
                             detailItem(index + 1, item)
-                        ))}
+                        ))} */}
                     </div>
-                    <div className="flex justify-center items-center bg-cgrey-200 gap-1 px-4 py-2 rounded-b-lg">
+                    {harvested || <div className="flex justify-center items-center bg-cgrey-200 gap-1 px-4 py-2 rounded-b-lg">
                         <Image
                             src={Cancel}
                             width="16"
@@ -116,7 +125,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                             alt="cancel"
                         />
                         <p className="text-xs leading-[18px] font-medium text-[#939393]">Not Finished Yet</p>
-                    </div>
+                    </div>}
                 </div >
             }
             < div className="flex justify-between gap-2" >
@@ -128,7 +137,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                                 src={ArrowUp}
                                 width="16"
                                 height="16"
-                                alt="arrow down"
+                                alt="arrow up"
                             />
                         </button>
                     ) : (
@@ -142,7 +151,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                             />
                         </button>
                     )}
-                <button className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-[#141518] outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
+                {/* <button className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-[#141518] outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
                     <p className="text-[#FFFFFF] text-sm font-normal hidden md:block">Edit</p>
                     <Image
                         src={Edit}
@@ -150,7 +159,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                         height="16"
                         alt="edit"
                     />
-                </button>
+                </button> */}
             </div >
         </div >
     )

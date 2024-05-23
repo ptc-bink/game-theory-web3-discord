@@ -3,7 +3,7 @@
 import React, { useEffect, useContext } from "react";
 
 import AppContext from "../providers/AppContext";
-import { IAdminof, IDashboard, IGiveaway, IBiddersGiveaway, IServerList, IDashboardres } from "../utils/_type"
+import { IAdminof, IDashboard, IGiveaway, IBiddersGiveaway, IDashboardres, IServer } from "../utils/_type"
 import {
     test,
     User,
@@ -25,29 +25,14 @@ import {
 
 export const getDashboardInfo = async () => {
 
-    // const serverIDList: string[] = [];
-    // const serverList: string[] = [];
-
     const adminof: IAdminof = await GetAdminof();
-
-    let serverList: IServerList = { name: "", id: "" };
+    const serverList : IServer[] = await getServerList();
     let biddersGiveawayList: IBiddersGiveaway[] = [];
     let giveawayList: IGiveaway[] = [];
 
-    // console.log("adminof =====>", adminof);
-    // console.log("serverIDLIST[0]============");
-
     if (adminof) {
-
-        serverList = { id: adminof.id, name: adminof.name }
-
-        // console.log("serverList ===>", adminof);
-
         if (serverList) {
-            giveawayList = await GetGiveaways(serverList.id);
-
-
-            // console.log("giveawayList ====>", giveawayList);
+            giveawayList = await GetGiveaways();
 
             if (giveawayList.length) {
                 biddersGiveawayList = giveawayList.map(item => {
@@ -164,7 +149,7 @@ export const getApprovedServers = async () => {
     const userIdList = Object.keys(adminTrustedServers);
 
     const userInfoList = userIdList?.map((userID: any, index: number) => {
-        return UserInfo(userID);
+        return UserInfo();
     })
 
     console.log("userInfoList ===>", userInfoList);
@@ -179,18 +164,9 @@ export const adminCheck = async () => {
 }
 
 export const getServerList = async () => {
-    const adminof: IAdminof = await GetAdminof();
+    const serverList: IServer[] = await GetServers();
 
-    let serverList: IServerList[] = [
-        { name: "server.name", id: "0000000000000000000" },
-        { name: "server.name", id: "0000000000000000000" },
-        { name: "server.name", id: "0000000000000000000" },
-    ];
-
-    // if (adminof) {
-    // serverList = { id: adminof.id, name: adminof.name }
-    // }
-
+    console.log("serverList =====>", serverList);
 
     return serverList;
 }

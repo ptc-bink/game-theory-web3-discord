@@ -9,6 +9,8 @@ interface ContextType {
   username: string;
   userImage: string;
   isAdmin: boolean;
+  giveawayID: string;
+  setGiveawayID: (giveawayID: string) => void;
   setIsAdmin: (isAdmin: boolean) => void;
   setAddServerModalOpen: (addServerModalOpen: boolean) => void;
   setEditServerModalOpen: (editServerModalOpen: boolean) => void;
@@ -29,6 +31,8 @@ const initialValue: ContextType = {
   userImage: "",
   username: "",
   isAdmin: false,
+  giveawayID: "",
+  setGiveawayID(giveawayID) { },
   setIsAdmin(isAdmin) { },
   setUserImage(userImage) { },
   setUsername(username) { },
