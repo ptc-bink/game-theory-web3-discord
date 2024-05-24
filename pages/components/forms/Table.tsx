@@ -1,17 +1,31 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 import Edit from "@/public/avatar/edit.svg"
 import Copy from "@/public/avatar/copy.svg"
 import Trash from "@/public/avatar/trash.svg"
 
-import { jsonObjectList } from "@/pages/utils/_data";
+// import { jsonObjectList } from "@/pages/utils/_data";
+import { IAllocation } from "@/pages/utils/_type";
 
-const Table: React.FC<ITable> = ({ }) => {
+const Table: React.FC<ITable> = ({ allocations }) => {
 
     const [isChecked, setIsChecked] = useState<boolean>(false);
+
+    // Maintain the state of individual checkboxes
+    const [checkedState, setCheckedState] = useState<boolean[]>([]);
+
+    useEffect(() => {
+        // Initialize checkedState based on jsonObjectList length
+        setCheckedState(new Array(allocations.length).fill(false));
+    }, []);
+
+    const handleCheckboxChange = (index: number) => {
+        const updatedCheckedState = checkedState.map((item, idx) => idx === index ? !item : item);
+        setCheckedState(updatedCheckedState);
+    };
 
     const btnGroup = (index: number) => {
         return (
@@ -44,10 +58,7 @@ const Table: React.FC<ITable> = ({ }) => {
         )
     }
 
-    const tableBody = (
-        index: number,
-        item: ITableBodyList
-    ) => {
+    const tableBody = (index: number, item: IAllocation) => {
         return (
             <tr key={index} className="items-center border-b border-[#292A2E] text-xs leading-[18px] font-normal text-[#FFFFFF]">
                 <td className="text-center justify-center">
@@ -57,12 +68,12 @@ const Table: React.FC<ITable> = ({ }) => {
                     </div>
                 </td>
                 <td className="text-center" >{item.allocation}</td>
-                <td className="text-center">{item.mintHoldDays}</td>
-                <td className="text-center">{item.secondaryBuyHoldDays}</td>
-                <td className="text-center">{item.secondaryBuyHours}</td>
-                <td className="text-center">{item.secondaryBuyAmount}</td>
-                <td className="text-center">{item.priceVoid}</td>
-                <td className="text-center">{item.isVoid}</td>
+                <td className="text-center">{item.vesting.mint_hold_days}</td>
+                <td className="text-center">{item.vesting.secondary_buy_hold_days}</td>
+                <td className="text-center">{item.vesting.secondary_buy_hours}</td>
+                <td className="text-center">{item.vesting.secondary_buy_amount}</td>
+                <td className="text-center">{item.vesting.price_void}</td>
+                <td className="text-center">{item.vesting.is_void}</td>
                 <td className="">{btnGroup(index)}</td>
             </tr>
         )
@@ -85,7 +96,7 @@ const Table: React.FC<ITable> = ({ }) => {
                     <th>Is void</th>
                     <th className="text-center">Action</th>
                 </tr>
-                {jsonObjectList.map((item, index) => (
+                {allocations.length && allocations?.map((item, index) => (
                     tableBody(index, item)
                 ))}
             </table>
@@ -96,6 +107,7 @@ const Table: React.FC<ITable> = ({ }) => {
 export default Table;
 
 interface ITable {
+    allocations: IAllocation[];
 }
 
 interface ITableBodyList {

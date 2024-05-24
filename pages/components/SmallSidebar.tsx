@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link"
 
@@ -10,6 +10,8 @@ import Allocation from "@/public/avatar/allocation"
 import Admin from "@/public/avatar/admin"
 import Bot from "@/public/avatar/bot";
 import { usePathname } from "next/navigation";
+import { adminCheck } from "../hooks/action";
+import AppContext from "../providers/AppContext";
 
 interface SideDataProps {
     label: string,
@@ -20,11 +22,14 @@ interface SideDataProps {
 
 const SmallSidebar = () => {
 
+    const { setIsAdmin, isAdmin } = useContext(AppContext);
+    const [fill, setFill] = useState<string>("");
+    const [sideData, setSideData] = useState<SideDataProps[]>([])
     const pathname = usePathname();
 
-    const [fill, setFill] = useState<string>("");
-    const [sideData, setSideData] = useState<SideDataProps[]>([
+    const sideBar = [
         {
+            user: true,
             label: "Dashboard",
             link: "/dashboard",
             image: <Dashboard
@@ -33,6 +38,7 @@ const SmallSidebar = () => {
             isActive: false,
         },
         {
+            user: true,
             label: "Projects",
             link: "/projects",
             image: <Projects
@@ -41,6 +47,7 @@ const SmallSidebar = () => {
             isActive: false
         },
         {
+            user: true,
             label: "Allocations",
             link: "/allocations",
             image: <Allocation
@@ -49,6 +56,7 @@ const SmallSidebar = () => {
             isActive: false
         },
         {
+            user: false,
             label: "Admin",
             link: "/admin",
             image: <Admin
@@ -57,6 +65,7 @@ const SmallSidebar = () => {
             isActive: false
         },
         {
+            user: true,
             label: "Bot",
             link: "/bot",
             image: <Bot
@@ -64,7 +73,38 @@ const SmallSidebar = () => {
             />,
             isActive: false
         },
-    ])
+    ]
+
+    const isCheck = async () => {
+        const tempAdmin: boolean = await adminCheck()
+        const tempSide: any = tempAdmin ? sideBar : sideBar.filter(item => item.user == tempAdmin);
+
+        setIsAdmin(tempAdmin);
+        setSideData(tempSide);
+    }
+
+    useEffect(() => {
+        isCheck();
+    }, [])
+
+    useEffect(() => {
+        setSideData(sideBar)
+
+        if (pathname !== "/") {
+            const updatedSideData = sideData.map(item => {
+                const isActive = pathname.includes(item.link);
+                return {
+                    ...item,
+                    isActive,
+                };
+            });
+            setSideData(updatedSideData);
+
+            if (updatedSideData.some(item => item.isActive)) {
+                setFill("#FFFFFF");
+            }
+        }
+    }, [pathname, isAdmin]);
 
     useEffect(() => {
         if (pathname !== "/") {

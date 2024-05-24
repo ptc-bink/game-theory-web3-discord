@@ -18,7 +18,6 @@ export default async function handler(
             }
 
             const response = await axios.request(config);
-            console.log(response.data);
 
             return res.json(response.data);
         } catch (error) {

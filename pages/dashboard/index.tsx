@@ -7,7 +7,7 @@ import Image from "next/image";
 import GiveawayCard from "@/pages/components/GiveawayCard";
 import Dropdown from "@/pages/components/forms/Dropdown";
 import SearchBtn from "@/pages/components/forms/SearchBtn";
-import { IBiddersGiveaway, IGiveaway, IServerList } from "../utils/_type";
+import { IBiddersGiveaway, IGiveaway, IServer, IDropdownListProps } from "../utils/_type";
 
 // import { giveawayList, dashboardDropdownList } from "@/pages/utils/_data";
 
@@ -25,14 +25,15 @@ const Dashboard: React.FC<IDashboard> = () => {
     const { isAdmin, setIsAdmin } = useContext(AppContext);
     const [serverValue, setServerValue] = useState<string>("");
     const [giveAways, setGiveAways] = useState<IGiveaway[]>([]);
-    const [serverList, setServerList] = useState<IServerList[]>([]);
+    const [serverList, setServerList] = useState<IServer[]>([]);
+    const [searchInput, setSearchInput] = useState<string>();
+    const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
     const [biddersGiveawayList, setBiddersGiveawayList] = useState<IBiddersGiveaway[]>([]);
 
     const initAction = async () => {
         const res: any = await getDashboardInfo();
-        const serverList: IServerList[] = await getServerList();
+        const serverList: IServer[] = await getServerList();
         const giveAways: any = await GetGiveaways();
-
 
         const isCheck: any = adminCheck()
 
@@ -40,8 +41,13 @@ const Dashboard: React.FC<IDashboard> = () => {
             setIsAdmin(true);
         }
 
+        const serverDropdownList = serverList.map((item, index) => {
+            return {name:item.guild.name, id:item.guild.id}
+        })
+
         setIsAdmin(true)
         setGiveAways(giveAways);
+        setServerDropdownList(serverDropdownList);
 
         setServerList(serverList);
         setBiddersGiveawayList(res.biddersGiveawayList);
@@ -55,23 +61,11 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     useEffect(() => {
         initAction();
-        console.log("dashboard giveaway ====>", giveAways);
     }, [])
 
     useEffect(() => {
-
         chainValueAction();
     }, [serverValue])
-
-    // const serverList: IServerList[] = res?.serverList;
-    // const serverList: IServerList = res?.serverList;
-    // const biddersGiveawayList: IBiddersGiveaway[] = res?.biddersGiveawayList;
-    // const initGiveawayList: IGiveaway[] = res?.giveawayList;
-
-    // console.log("serverList ===>", serverList);
-    // console.log("biddersGiveawayList ===>", biddersGiveawayList);
-    // console.log("initGiveawayList ===>", initGiveawayList);
-
 
     return (
         <div className="flex flex-col gap-4 p-8 bg-cdark-100">
@@ -80,7 +74,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                 <div className="items-center w-full grid md:grid-cols-2 grid-rows-2 gap-4 pt-4 text-sm">
                     <div>
                         <Dropdown
-                            dropdownList={serverList}
+                            dropdownList={serverDropdownList}
                             placeholder="Select"
                             className="hover:bg-cdark-100 bg-cdark-200"
                             callback={setServerValue}
@@ -91,7 +85,8 @@ const Dashboard: React.FC<IDashboard> = () => {
                             <SearchBtn
                                 placeholder="Search giveaway"
                                 endContent="Refresh"
-                                endContentImg={Refresh}
+                                // endContentImg={Refresh}
+                                callback={setSearchInput}
                             />
                         </div>
                         {isAdmin && <Link href="/dashboard/create-giveaway" className="ml-2 flex justify-between bg-[#FFFFFF] w-fit items-center rounded-lg outline-none border border-[#EEEEEE] px-[10px] py-3">

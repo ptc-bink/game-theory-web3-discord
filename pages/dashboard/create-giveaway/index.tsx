@@ -6,7 +6,7 @@ import Image from "next/image";
 import Select, { ActionMeta, OnChangeValue, StylesConfig } from 'react-select';
 
 import Dropdown from "@/pages/components/forms/Dropdown";
-import RoleDropdown from "@/pages/components/forms/RoleDropdown";
+import MultiDropdown from "@/pages/components/forms/MultiDripdown";
 import PreviewCard from "@/pages/components/PreviewCard";
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import Preview from "@/public/avatar/eye.svg"
@@ -14,9 +14,7 @@ import Preview from "@/public/avatar/eye.svg"
 import {
     chainList,
     giveawayTypeList,
-    winningRoleList,
-    restrictedRolesList,
-    requiredRolesList
+    serverRoles
 } from "@/pages/utils/_data";
 import { GetAdminof, GetSeverRoles, HandleCreateGiveaway } from "@/pages/hooks/hook";
 import { IDropdownListProps, IDropdownProps, IServer, IServerRole } from "@/pages/utils/_type";
@@ -25,22 +23,22 @@ import { useRouter } from "next/router";
 
 const CreateGiveaway: React.FC = () => {
 
-    // const styles: StylesConfig<DataOption, true> = {
-    //     multiValue: (styles) => ({ ...styles, backgroundColor: '#202125', borderRadius: "10px", fontSize: "15px", padding: "1px 5px 1px 2px", gap: "0px" }),
-    //     multiValueLabel: (styles) => ({ ...styles, color: "#939393" }),
-    //     multiValueRemove: (styles) => ({ ...styles, color: "#939393", ":hover": { color: "#141518" } }),
-    //     control: (styles) => ({ ...styles, backgroundColor: "#141518", border: "1px", borderColor: "#292A2E", borderRadius: "8px", gap: "4px", padding: "10px 0px 10px 0px" }),
-    //     container: (styles) => ({ ...styles, fontSize: "14px" }),
-    //     group: (styles) => ({ ...styles, paddingLeft: "10px" }),
-    //     clearIndicator: (styles) => ({ ...styles, padding: "0px 0px 0px 0px" }),
-    //     indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "transparent" }),
-    //     dropdownIndicator: (styles) => ({ ...styles, padding: "0px 15px 0px 0px" }),
-    //     indicatorsContainer: (styles) => ({ ...styles, alignItems: "start", paddingTop: "5px" }),
-    //     menu: (styles) => ({ ...styles, backgroundColor: "#141518" }),
-    //     menuList: (styles) => ({ ...styles, color: "#FFFFFF", "::part": { ":hover": { color: "black", backgroundColor: "" } }, }),
-    // };
+    const styles: StylesConfig<DataOption, true> = {
+        multiValue: (styles) => ({ ...styles, backgroundColor: '#202125', borderRadius: "10px", fontSize: "15px", padding: "1px 5px 1px 2px", gap: "0px" }),
+        multiValueLabel: (styles) => ({ ...styles, color: "#939393" }),
+        multiValueRemove: (styles) => ({ ...styles, color: "#939393", ":hover": { color: "#141518" } }),
+        control: (styles) => ({ ...styles, backgroundColor: "#141518", border: "1px", borderColor: "#292A2E", borderRadius: "8px", gap: "4px", padding: "10px 0px 10px 0px" }),
+        container: (styles) => ({ ...styles, fontSize: "14px" }),
+        group: (styles) => ({ ...styles, paddingLeft: "10px" }),
+        clearIndicator: (styles) => ({ ...styles, padding: "0px 0px 0px 0px" }),
+        indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "transparent" }),
+        dropdownIndicator: (styles) => ({ ...styles, padding: "0px 15px 0px 0px" }),
+        indicatorsContainer: (styles) => ({ ...styles, alignItems: "start", paddingTop: "5px" }),
+        menu: (styles) => ({ ...styles, backgroundColor: "#141518" }),
+        menuList: (styles) => ({ ...styles, color: "#FFFFFF", "::part": { ":hover": { color: "black", backgroundColor: "" } }, }),
+    };
 
-    // const orderOptions = (values: DataOption[]): DataOption[] => { return [...values] };
+    const orderOptions = (values: DataOption[]): DataOption[] => { return [...values] };
 
     const [serverList, setServerList] = useState<IServer[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
@@ -58,7 +56,7 @@ const CreateGiveaway: React.FC = () => {
     const [links, setLinks] = useState<string>("");
     const [requirements, setRequirements] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
-    const [serverRoles, setServerRoles] = useState<any>();
+    // const [serverRoles, setServerRoles] = useState<any>();
     const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
     const router = useRouter();
 
@@ -72,70 +70,26 @@ const CreateGiveaway: React.FC = () => {
         setServerDropdownList(serverDropdownList);
     }
 
-    const serverValueAction = async () => {
-        // const res = await GetSeverRoles(serverValue);
-        const res = [
-            {
-                "id": "1219682506475831446",
-                "name": "@everyone",
-                "color": "#000000",
-                "position": 0
-            },
-            {
-                "id": "1219686078135402661",
-                "name": "GiveAway",
-                "color": "#000000",
-                "position": 2
-            },
-            {
-                "id": "1219686759231782932",
-                "name": "member",
-                "color": "#9b59b6",
-                "position": 4
-            },
-            {
-                "id": "1219687461798809763",
-                "name": "admin",
-                "color": "#ad1457",
-                "position": 3
-            },
-            {
-                "id": "1219723324880457748",
-                "name": "Test",
-                "color": "#32ab42",
-                "position": 1
-            }
-        ]
+    // const serverValueAction = async () => {
+    //     const res = await GetSeverRoles(serverValue);
 
-        setServerRoles(res);
-    }
+    //     setServerRoles(res);
+    // }
 
     useEffect(() => {
         initAction();
     }, [])
 
-    useEffect(() => {
-        serverValueAction();
-    }, [serverValue])
+    // useEffect(() => {
+    //     serverValueAction();
+    // }, [serverValue])
 
     useEffect(() => {
         // Initialize the date to current datetime if not already set
         if (!expiresDate) {
-          setExpiresDate(new Date().toISOString().slice(0, 16)); // ISO format for datetime-local
+            setExpiresDate(new Date().toISOString().slice(0, 16)); // ISO format for datetime-local
         }
-      }, [expiresDate]);
-
-    // const handleRestrictedRoles = (
-    //     newValue: OnChangeValue<DataOption, true>,
-    // ) => {
-    //     setRestrictedRoles(orderOptions(newValue as DataOption[]));
-    // };
-
-    // const handleRequiredRoles = (
-    //     newValue: OnChangeValue<DataOption, true>,
-    // ) => {
-    //     setReqiuredRoles(orderOptions(newValue as DataOption[]));
-    // };
+    }, [expiresDate]);
 
     const handleSubmit = async () => {
 
@@ -159,7 +113,7 @@ const CreateGiveaway: React.FC = () => {
         }
 
         console.log("===============================", data);
-        
+
 
         await HandleCreateGiveaway(data);
 
@@ -216,8 +170,8 @@ const CreateGiveaway: React.FC = () => {
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-[#FFFFFF]">Expires*</p>
                         {/* <div className="grid grid-cols-2 gap-3 w-full"> */}
-                        <input type="datetime-local" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
-                        {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" /> */}
+                            <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" /> */}
                         {/* </div> */}
                     </div>
                     {/* Chain & Quantity */}
@@ -249,7 +203,7 @@ const CreateGiveaway: React.FC = () => {
                         </div>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-[#FFFFFF]">Winning Role*</p>
-                            <RoleDropdown
+                            <MultiDropdown
                                 dropdownList={serverRoles}
                                 placeholder="Select winning role"
                                 className="hover:bg-cdark-200"
@@ -261,45 +215,25 @@ const CreateGiveaway: React.FC = () => {
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-[#FFFFFF]">Restricted Roles*</p>
-                            {/* <div>
-                                <Select
-                                    value={restrictedRoles}
-                                    isMulti
-                                    styles={styles}
-                                    name="colors"
-                                    className="bg-[#141518]"
-                                    classNamePrefix=""
-                                    onChange={handleRestrictedRoles}
-                                    options={restrictedRolesList}
+                            <div>
+                                <MultiDropdown
+                                    dropdownList={serverRoles}
+                                    placeholder="Select restricted role"
+                                    className="hover:bg-cdark-200"
+                                    callback={setWinningRole}
                                 />
-                            </div> */}
-                            <RoleDropdown
-                                dropdownList={serverRoles}
-                                placeholder="Select winning role"
-                                className="hover:bg-cdark-200"
-                                callback={setRestrictedRoles}
-                            />
+                            </div>
                         </div>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-[#FFFFFF]">Required Roles*</p>
-                            {/* <div>
-                                <Select
-                                    value={requiredRoles}
-                                    isMulti
-                                    styles={styles}
-                                    name="colors"
-                                    className="bg-[#141518]"
-                                    classNamePrefix=""
-                                    onChange={handleRequiredRoles}
-                                    options={requiredRolesList}
+                            <div>
+                                <MultiDropdown
+                                    dropdownList={serverRoles}
+                                    placeholder="Select required role"
+                                    className="hover:bg-cdark-200"
+                                    callback={setWinningRole}
                                 />
-                            </div> */}
-                            <RoleDropdown
-                                dropdownList={serverRoles}
-                                placeholder="Select winning role"
-                                className="hover:bg-cdark-200"
-                                callback={setReqiuredRoles}
-                            />
+                            </div>
                         </div>
                     </div>
                     {/* Required all roles */}

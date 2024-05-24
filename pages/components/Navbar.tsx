@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import ProfileModal from "./forms/ProfileModal";
 import AppContext from "../providers/AppContext";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
 import { firUppercase } from "../utils/utils";
@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 const Navbar = () => {
 
     const path = usePathname();
-    const { data: session } = useSession();
     const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
     const [userImage, setUserImage] = useState<string>("")
     const [username, setUsername] = useState<string>("")
@@ -22,25 +21,34 @@ const Navbar = () => {
     const { profileModalOpen, serverID, userID, setProfileModalOpen } = useContext(AppContext);
     const router = useRouter();
 
-    useEffect(() => {
+    const initAction = async () => {
+        const session = await getSession();
+        console.log("navbar session ====>", session);
+
+
         if (session) {
             setUserImage(session?.user?.image || "");
             setUsername(session?.user?.name || "");
+            // router.push('/dashboard')
         } else {
             router.push('/')
         }
-    }, [session])
-
-    const handleProfileModalOpen = () => {
-        setProfileModalOpen(true);
     }
 
+    useEffect(() => {
+        initAction()
+    }, [])
+    
     useEffect(() => {
         if (path) {
             // setTemp("temp")
             setTemp(firUppercase(path?.split("/")[1]));
         }
     }, [path])
+
+    const handleProfileModalOpen = () => {
+        setProfileModalOpen(true);
+    }
 
     return (
         <div className="flex justify-between items-center px-8 py-4 w-full bg-cgrey-100">

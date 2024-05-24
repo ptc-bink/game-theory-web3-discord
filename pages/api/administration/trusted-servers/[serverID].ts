@@ -15,11 +15,11 @@ export default async function handler(
 
             let config = {
                 method: "get",
-                url: `${process.env.baseURL_back}/test/serverRoles?serverID=${serverID}`,
+                url: `${process.env.baseURL_back}/test/administration-trusted-servers`,
+                // url: `${process.env.baseURL_back}/test/administration-trusted-servers?serverId=${serverID}`,
             }
 
             const response = await axios.request(config);
-            console.log(response.data);
 
             return res.json(response.data);
         } catch (error) {

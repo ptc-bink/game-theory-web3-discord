@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { IServer } from "../utils/_type";
 
 interface ContextType {
   addServerModalOpen: boolean;

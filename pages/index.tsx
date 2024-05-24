@@ -12,23 +12,10 @@ import AppContext from "./providers/AppContext";
 
 export default function Page() {
 
-  const { data: session } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (session) {
-      console.log("session======>", session);
-
-      router.push('/dashboard')
-    } else {
-      router.push('/')
-    }
-  }, [session])
-
   const handleSignIn = async () => {
     // console.log("handle sign in");
     console.log("signin");
-    
+
 
     await signIn();
   }

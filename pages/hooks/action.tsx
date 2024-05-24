@@ -13,7 +13,7 @@ import {
     UserInfo,
     GetGiveaways,
     GetServers,
-    CreateGiveaway,
+    HandleCreateGiveaway,
     ActiveServers,
     Administration,
     RemoveEntry,
@@ -26,7 +26,7 @@ import {
 export const getDashboardInfo = async () => {
 
     const adminof: IAdminof = await GetAdminof();
-    const serverList : IServer[] = await getServerList();
+    const serverList: IServer[] = await getServerList();
     let biddersGiveawayList: IBiddersGiveaway[] = [];
     let giveawayList: IGiveaway[] = [];
 
@@ -59,9 +59,9 @@ export const getHarvestWinners = async (giveawayID: string) => {
     return harvest;
 }
 
-export const getApprovedServers = async () => {
+export const getApprovedServers = async (serverID: string) => {
 
-    const adminTrustedServers = await GetAdministrationTrustedServers();
+    const adminTrustedServers = await GetAdministrationTrustedServers(serverID);
     // const adminTrustedServers = {
     //     "1187912294773039136": {
     //         "name": "Game Theory",
@@ -160,13 +160,14 @@ export const getApprovedServers = async () => {
 export const adminCheck = async () => {
     const res = await Administration();
 
-    return res;
+    if (res.message == "User is an administrator")
+        return true
+
+    return false;
 }
 
 export const getServerList = async () => {
     const serverList: IServer[] = await GetServers();
-
-    console.log("serverList =====>", serverList);
 
     return serverList;
 }

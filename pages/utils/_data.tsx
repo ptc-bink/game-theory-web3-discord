@@ -103,6 +103,39 @@ export const jsonObjectList = [
 ]
 
 // giveaways & serverid = "serverid"
+export const serverRoles = [
+  {
+    "id": "1219682506475831446",
+    "name": "@everyone",
+    "color": "#000000",
+    "position": 0
+  },
+  {
+    "id": "1219686078135402661",
+    "name": "GiveAway",
+    "color": "#000000",
+    "position": 2
+  },
+  {
+    "id": "1219686759231782932",
+    "name": "member",
+    "color": "#9b59b6",
+    "position": 4
+  },
+  {
+    "id": "1219687461798809763",
+    "name": "admin",
+    "color": "#ad1457",
+    "position": 3
+  },
+  {
+    "id": "1219723324880457748",
+    "name": "Test",
+    "color": "#32ab42",
+    "position": 1
+  }
+]
+
 export const giveAways = [
   {
     "messageID": "1219688746157342853",

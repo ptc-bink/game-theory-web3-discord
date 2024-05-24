@@ -1,11 +1,9 @@
 import Image from "next/image";
 
 import DiscordSVG from "@/public/avatar/discord.svg"
-import { useSession, signIn, signOut } from "next-auth/react";
 
 const DiscordBtn: React.FC<DiscordBtnProps> = ({ btnName }) => {
 
-    const { data: session } = useSession();
 
     const handleClick = async () => {
         console.log("handle click");

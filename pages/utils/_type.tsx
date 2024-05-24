@@ -13,6 +13,26 @@ export interface IAdministrationTrustedServers {
     Supported_Wallets: string
 }
 
+export interface IAllocation {
+        id: string,
+        title: string,
+        allocation: number,
+        for_server: string,
+        role: string,
+        contract: string,
+        mint_date: string,
+        presale: number,
+        vesting: {
+          allocation: number,
+          mint_hold_days: number,
+          secondary_buy_hold_days: number,
+          secondary_buy_hours: number,
+          secondary_buy_amount: number,
+          price_void: number,
+          is_void : number
+        }
+}
+
 export interface ICreateGiveaway {
     serverID: string
     Expiry: any
@@ -85,7 +105,7 @@ export interface IDropdownProps {
     callback: any;
 }
 
-export interface IRoleDropdownProps {
+export interface IMultiDropdownProps {
     dropdownList: IServerRole[];
     placeholder: string;
     className: string;
@@ -130,6 +150,14 @@ export interface IBiddersGiveaway {
     giveaway: string
 }
 
+export interface IApprovedServer {
+    server: string,
+    createdBy: string,
+    paymentExpires: any,
+    marketChannel: string,
+    generalChannel: string
+}
+
 export interface IDashboardres {
     serverList: IServer[],
     biddersGiveawayList: IBiddersGiveaway[],
@@ -165,7 +193,7 @@ export interface IGiveawayCardProps {
 export interface IPreviewCardProps {
     title: string,
     description: string
-    type:string,
+    type: string,
     expiry: string,
     winningRole: string,
     chain: string,

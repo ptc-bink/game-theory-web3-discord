@@ -39,7 +39,7 @@ const Dropdown: React.FC<IDropdownProps> = ({ dropdownList, placeholder, classNa
                 />}
             </div>
             {dropdownOpen && <div className="absolute w-full cursor-pointer text-[#FFFFFF] flex flex-col mt-1 rounded-lg z-10">
-                {dropdownList.map((item, index) => (
+                {dropdownList?.map((item, index) => (
                     <div key={index} className={`items-center w-full px-4 py-[10px] bg-cgrey-100 justify-between border rounded border-cgrey-200 text-sm font-normal text-[#FFFFFF] ${className}`} onClick={() => handleSetValue(item.id, item.name)}>{item.name}</div>
                 ))}
                 {/* <div className={`items-center w-full px-4 py-[10px]  justify-between text-sm font-normal text-[#FFFFFF] ${className}`} onClick={() => handleSetValue(dropdownList.id)}>{dropdownList?.name}</div> */}

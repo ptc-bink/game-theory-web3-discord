@@ -11,14 +11,19 @@ export default async function handler(
     if (req.method == "GET") {
         try {
             const axios = require("axios");
-            const { serverID } = req.query;
+            const { serverID, id } = req.query
+
+            console.log("get allocation ===>", serverID, ":", id);
 
             let config = {
                 method: "get",
-                url: `${process.env.baseURL_back}/test/giveaways?serverId=${serverID}`,
+                url: `${process.env.baseURL_back}/test/allocations?serverId=${serverID}`,
             }
 
             const response = await axios.request(config);
+
+            console.log(response.data);
+            
 
             return res.json(response.data);
         } catch (error) {

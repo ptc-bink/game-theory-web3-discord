@@ -27,8 +27,9 @@ const BigSidebar = () => {
     const [sideData, setSideData] = useState<SideDataProps[]>([])
     const pathname = usePathname();
 
-    const adminSideBar = [
+    const sideBar = [
         {
+            user: true,
             label: "Dashboard",
             link: "/dashboard",
             image: <Dashboard
@@ -37,6 +38,7 @@ const BigSidebar = () => {
             isActive: false,
         },
         {
+            user: true,
             label: "Projects",
             link: "/projects",
             image: <Projects
@@ -45,6 +47,7 @@ const BigSidebar = () => {
             isActive: false
         },
         {
+            user: true,
             label: "Allocations",
             link: "/allocations",
             image: <Allocation
@@ -53,6 +56,7 @@ const BigSidebar = () => {
             isActive: false
         },
         {
+            user: false,
             label: "Admin",
             link: "/admin",
             image: <Admin
@@ -61,6 +65,7 @@ const BigSidebar = () => {
             isActive: false
         },
         {
+            user: true,
             label: "Bot",
             link: "/bot",
             image: <Bot
@@ -70,53 +75,22 @@ const BigSidebar = () => {
         },
     ]
 
-    const userSideBar = [
-        {
-            label: "Dashboard",
-            link: "/dashboard",
-            image: <Dashboard
-                fill={fill}
-            />,
-            isActive: false,
-        },
-        {
-            label: "Projects",
-            link: "/projects",
-            image: <Projects
-                fill={fill}
-            />,
-            isActive: false
-        },
-        {
-            label: "Allocations",
-            link: "/allocations",
-            image: <Allocation
-                fill={fill}
-            />,
-            isActive: false
-        },
-        {
-            label: "Bot",
-            link: "/bot",
-            image: <Bot
-                fill={fill}
-            />,
-            isActive: false
-        },
-    ]
+    const isCheck = async () => {
+        const tempAdmin: boolean = await adminCheck()
+        const tempSide: any = tempAdmin ? sideBar : sideBar.filter(item => item.user == tempAdmin);
+
+        setIsAdmin(tempAdmin);
+        setSideData(tempSide);
+    }
 
     useEffect(() => {
-        const isCheck = async () => {
-            const isCheck: any = adminCheck()
-            if (isCheck.message == "User is an administrator") {
-                setIsAdmin(true);
-            }
-        }
         isCheck();
     }, [])
 
     useEffect(() => {
-        setSideData(isAdmin ? adminSideBar : userSideBar);
+        setSideData(sideBar)
+        console.log("bigside bar pathname", pathname);
+        
 
         if (pathname !== "/") {
             const updatedSideData = sideData.map(item => {
@@ -133,6 +107,7 @@ const BigSidebar = () => {
             }
         }
     }, [pathname, isAdmin]);
+
 
     return (
         <div className="flex flex-col">

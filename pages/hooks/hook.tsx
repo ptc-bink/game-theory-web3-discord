@@ -1,3 +1,4 @@
+import { error } from "console";
 import { giveAways, harvestWinners, } from "../utils/_data";
 import { ICreateGiveaway, IAdministrationTrustedServers } from "../utils/_type";
 
@@ -115,7 +116,7 @@ export const HandleCreateGiveaway = async (data: ICreateGiveaway) => {
         }),
     });
 
-    console.log("create giveaway",response);
+    console.log("create giveaway", response);
 
     // if (response.status == 200) {
     //     const data = await response.json();
@@ -147,8 +148,6 @@ export const GetServers = async () => {
 
     const response = await fetch(`/api/servers`);
 
-    console.log(response);
-
     if (response.status == 200) {
         const data = await response.json();
 
@@ -158,10 +157,65 @@ export const GetServers = async () => {
         return undefined;
     }
 }
+export const enterGiveaway = async (serverID: string, giveAwayID: string, userID: string) => {
+    const res = await fetch(`/api/enter-giveaway`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            serverID,
+            giveAwayID,
+            userID
+        })
+    }
+    )
 
-export const GetAdministrationTrustedServers = async () => {
+    if (res.status == 200) {
+        const data = await res.json();
 
-    const response = await fetch(`/api/administration/trusted-servers`);
+        return data;
+
+    } else {
+        return undefined;
+    }
+}
+
+export const getAllocation = async (serverID: string, id?: string) => {
+    const res = await fetch(`/api/allocation?serverId=${serverID}&id=${id}`);
+
+    if (res.status == 200) {
+        const data = await res.json();
+
+        console.log("get allocation ===>", data);
+        
+        return data;
+    } else {
+        return console.log("error : get allocation");
+    }
+}
+
+export const addAllocation = async (data: any) => {
+    const res = await fetch(`/api/allocation`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            data
+        })
+    }
+    )
+
+    if (res.status == 200) {
+        const data = await res.json();
+
+        return data;
+
+    } else {
+        return undefined;
+    }
+}
+
+export const GetAdministrationTrustedServers = async (serverID: string) => {
+
+    const response = await fetch(`/api/administration/trusted-servers/${serverID}`);
 
     if (response.status == 200) {
         const data = await response.json();
@@ -234,12 +288,13 @@ export const AdministrationChannellist = async (serverID: string) => {
 
 export const GetSeverRoles = async (serverID: string) => {
 
-    const response = await fetch(`/api/serverRoles/${serverID}`);
+    const res = await fetch(`/api/serverRoles/${serverID}`);
 
-    console.log(response);
+    console.log(res);
 
-    if (response.status == 200) {
-        const data = await response.json();
+    if (res.status == 200) {
+        const data = await res.json();
+        console.log("server roles ===>", data);
 
         return data;
 

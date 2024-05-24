@@ -8,25 +8,25 @@ import User from "@/public/avatar/user.svg"
 import Avartar from "@/public/img/Avatar.png"
 
 import { IPreviewCardProps } from "../utils/_type";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, quantity, restricted, requirements, price }) => {
 
-    const { data: session } = useSession();
     const router = useRouter();
-    const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
     const [userImage, setUserImage] = useState<string>("")
     const [username, setUsername] = useState<string>("")
     const date = new Date();
 
+    const initAction = async () => {
+        const session = await getSession();
+
+        setUserImage(session?.user?.image || "");
+        setUsername(session?.user?.name || "");
+    }
+
     useEffect(() => {
-        if (session) {
-            setUserImage(session?.user?.image || "");
-            setUsername(session?.user?.name || "");
-        } else {
-            router.push('/')
-        }
+        initAction()
     }, [])
 
     const handlePreviewEnter = () => { }

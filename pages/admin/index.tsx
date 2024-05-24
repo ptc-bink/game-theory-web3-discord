@@ -13,45 +13,54 @@ import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import Driver from "@/public/avatar/driver.svg"
 
 import AppContext from "../providers/AppContext";
-import { approvedDropdownList, approvedServerList } from "../utils/_data";
-import { IAdminProps } from "../utils/_type";
-import { getApprovedServers } from "../hooks/action";
+import { approvedDropdownList } from "../utils/_data";
+import { IAdminProps, IApprovedServer, IServer } from "../utils/_type";
+import { getApprovedServers, getServerList } from "../hooks/action";
 import { getSession } from "next-auth/react";
+import { GetAdministrationTrustedServers, GetSeverRoles } from "../hooks/hook";
+import { useRouter } from "next/router";
 
 const Admin: React.FC<IAdminProps> = () => {
 
-    const { addServerModalOpen, setAddServerModalOpen } = useContext(AppContext);
+    const { addServerModalOpen, setAddServerModalOpen, isAdmin } = useContext(AppContext);
     const [adminServerList, setAdminServerList] = useState<any>();
-    const [chain, setChain] = useState<string>("");
-    const [session, setSession] = useState<any>();
+    const [searchInput, setSearchInput] = useState<string>("");
+    const [server, setServer] = useState<string>("");
+    const [serverList, setServerList] = useState<IServer[]>([]);
+    const [serverDropdownList, setServerDropdownList] = useState<any>();
+    const [approvedServerList, setApprovedServerList] = useState<IApprovedServer[]>([]);
+
+    const router = useRouter();
 
     const handleOpenModal = () => {
         setAddServerModalOpen(!addServerModalOpen);
     }
 
+    const initAction = async () => {
+        const serverList: IServer[] = await getServerList();
+        const trustedServers: any = await GetAdministrationTrustedServers(serverList[0].guild.id);
+
+        console.log("trustedServers", trustedServers);
+
+
+        const serverDropdownList = serverList.map((item, index) => {
+            return { name: item.guild.name, id: item.guild.id }
+        })
+
+        setApprovedServerList(trustedServers);
+        setServerList(serverList);
+        setServerDropdownList(serverDropdownList);
+    }
     useEffect(() => {
-        const getServers = async () => {
-
-            const session = await getSession();
-            setSession(session);
-            console.log(session);
-            // const temp = await getApprovedServers();
-            // setAdminServerList(temp);
-
-
-
-        }
-
-        getServers();
-        console.log("adminServerList ===>", adminServerList);
-
+        if (!isAdmin) router.back();
+        initAction();
     }, [])
 
     return (
         <div className="flex flex-col gap-4 p-8 bg-cdark-100">
             <div className="flex flex-col">
                 <div className="flex gap-6 items-center">
-                    <div className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
+                    <div onClick={() => router.back()} className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
                         <Image
                             src={ArrowLeft}
                             width="24"
@@ -62,18 +71,18 @@ const Admin: React.FC<IAdminProps> = () => {
                     <p className="text-[#FFFFFF] text-2xl font-semibold">Approved Servers</p>
                 </div>
                 <div className="items-center w-full grid grid-cols-2 gap-4 pt-4 text-sm realtive">
-                    {/* <Dropdown
-                        dropdownList={approvedDropdownList}
+                    <Dropdown
+                        dropdownList={serverDropdownList}
                         placeholder="select"
                         className="hover:bg-cdark-100 bg-cdark-200"
-                        callback={setChain}
-                    /> */}
+                        callback={setServer}
+                    />
                     <div className="flex w-full text-sm font-normal">
                         <div className="flex flex-grow">
                             <SearchBtn
-                                placeholder="Search giveaway"
+                                placeholder="Search servers"
                                 endContent="Refresh"
-                                endContentImg="Search servers..."
+                                callback={setSearchInput}
                             />
                         </div>
                         <button onClick={handleOpenModal} className="ml-2 flex justify-between w-fit items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3">
@@ -93,8 +102,8 @@ const Admin: React.FC<IAdminProps> = () => {
                     )}
                 </div>
             </div>
-            {approvedServerList ? <div className="grid grid-cols-3 gap-4">
-                {approvedServerList.map((item, index) => (
+            {approvedServerList.length !== 0 ? <div className="grid grid-cols-3 gap-4">
+                {approvedServerList?.map((item, index) => (
                     <ServerCard
                         key={index}
                         server={item.server}

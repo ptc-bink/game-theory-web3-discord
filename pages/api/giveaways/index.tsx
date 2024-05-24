@@ -44,9 +44,6 @@ export default async function handler(
 
             const response = await axios.request(config);
 
-            console.log("get giveaways res ====>", response.data);
-            
-
             return res.json(response.data);
         } catch (error) {
             console.error("Error creating user: ", error);

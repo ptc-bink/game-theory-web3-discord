@@ -4,12 +4,15 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
-import { getHarvestWinners } from "@/pages/hooks/action";
+import { getHarvestWinners, getServerList } from "@/pages/hooks/action";
+import { IDropdownListProps, IServer } from "@/pages/utils/_type";
 // import { jsonFileDownload } from "@/pages/hooks/download";
 
 const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
     const [harvest, setHarvest] = useState<any>();
+    const [serverList, setServerList] = useState<IServer[]>([]);
+    const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [formattedData, setFormattedData] = useState<string>("");
 
     // Helper function to convert array of objects to CSV
@@ -30,8 +33,12 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
     };
 
     const initAction = async () => {
-        const temp = await getHarvestWinners("");
-        setHarvest(temp);
+        const tempHarvestWinners = await getHarvestWinners("");
+        const tempServerList: IServer[] = await getServerList();
+        const tempServerDropdownList = tempServerList.map((item, index) => ({ name: item.guild.name, id: item.guild.id }))
+
+        setHarvest(tempHarvestWinners);
+        setServerList(tempServerList)
     };
 
     useEffect(() => {
