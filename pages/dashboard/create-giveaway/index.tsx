@@ -3,13 +3,19 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-import Select, { ActionMeta, OnChangeValue, StylesConfig } from 'react-select';
+
+import { Link } from "@nextui-org/link";
+import { Snippet } from "@nextui-org/snippet";
+import { Code } from "@nextui-org/code";
+import { button as buttonStyles } from "@nextui-org/theme";
+import { Select, SelectItem, Chip } from "@nextui-org/react";
 
 import Dropdown from "@/pages/components/forms/Dropdown";
 import MultiDropdown from "@/pages/components/forms/MultiDripdown";
 import PreviewCard from "@/pages/components/PreviewCard";
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import Preview from "@/public/avatar/eye.svg"
+
 
 import {
     chainList,
@@ -23,22 +29,37 @@ import { useRouter } from "next/router";
 
 const CreateGiveaway: React.FC = () => {
 
-    const styles: StylesConfig<DataOption, true> = {
-        multiValue: (styles) => ({ ...styles, backgroundColor: '#202125', borderRadius: "10px", fontSize: "15px", padding: "1px 5px 1px 2px", gap: "0px" }),
-        multiValueLabel: (styles) => ({ ...styles, color: "#939393" }),
-        multiValueRemove: (styles) => ({ ...styles, color: "#939393", ":hover": { color: "#141518" } }),
-        control: (styles) => ({ ...styles, backgroundColor: "#141518", border: "1px", borderColor: "#292A2E", borderRadius: "8px", gap: "4px", padding: "10px 0px 10px 0px" }),
-        container: (styles) => ({ ...styles, fontSize: "14px" }),
-        group: (styles) => ({ ...styles, paddingLeft: "10px" }),
-        clearIndicator: (styles) => ({ ...styles, padding: "0px 0px 0px 0px" }),
-        indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "transparent" }),
-        dropdownIndicator: (styles) => ({ ...styles, padding: "0px 15px 0px 0px" }),
-        indicatorsContainer: (styles) => ({ ...styles, alignItems: "start", paddingTop: "5px" }),
-        menu: (styles) => ({ ...styles, backgroundColor: "#141518" }),
-        menuList: (styles) => ({ ...styles, color: "#FFFFFF", "::part": { ":hover": { color: "black", backgroundColor: "" } }, }),
-    };
+    const animals = [
+        { value: "cat", label: "catcatcat" },
+        { value: "dog", label: "dogdogdog" },
+        { value: "lion", label: "lionlionlion" },
+        { value: "duck", label: "duckduckduck" },
+        { value: "tiger", label: "tigertigertiger" },
+        { value: "shark", label: "sharksharkshark" },
+        { value: "shark1", label: "sharksharkshark" },
+        { value: "shark2", label: "sharksharkshark" },
+        { value: "shark3", label: "sharksharkshark" },
+        { value: "shark4", label: "sharksharkshark" },
+        { value: "shark5", label: "sharksharkshark" },
+        { value: "shark6", label: "sharksharkshark" },
+    ]
 
-    const orderOptions = (values: DataOption[]): DataOption[] => { return [...values] };
+    // const styles: StylesConfig<DataOption, true> = {
+    //     multiValue: (styles) => ({ ...styles, backgroundColor: '#202125', borderRadius: "10px", fontSize: "15px", padding: "1px 5px 1px 2px", gap: "0px" }),
+    //     multiValueLabel: (styles) => ({ ...styles, color: "#939393" }),
+    //     multiValueRemove: (styles) => ({ ...styles, color: "#939393", ":hover": { color: "#141518" } }),
+    //     control: (styles) => ({ ...styles, backgroundColor: "#141518", border: "1px", borderColor: "#292A2E", borderRadius: "8px", gap: "4px", padding: "10px 0px 10px 0px" }),
+    //     container: (styles) => ({ ...styles, fontSize: "14px" }),
+    //     group: (styles) => ({ ...styles, paddingLeft: "10px" }),
+    //     clearIndicator: (styles) => ({ ...styles, padding: "0px 0px 0px 0px" }),
+    //     indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "transparent" }),
+    //     dropdownIndicator: (styles) => ({ ...styles, padding: "0px 15px 0px 0px" }),
+    //     indicatorsContainer: (styles) => ({ ...styles, alignItems: "start", paddingTop: "5px" }),
+    //     menu: (styles) => ({ ...styles, backgroundColor: "#141518" }),
+    //     menuList: (styles) => ({ ...styles, color: "#FFFFFF", "::part": { ":hover": { color: "black", backgroundColor: "" } }, }),
+    // };
+
+    // const orderOptions = (values: DataOption[]): DataOption[] => { return [...values] };
 
     const [serverList, setServerList] = useState<IServer[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
@@ -62,12 +83,15 @@ const CreateGiveaway: React.FC = () => {
 
     const initAction = async () => {
         const serverList = await getServerList();
-        const serverDropdownList = serverList?.map((item, index) => {
-            return { name: item.guild.name, id: item.guild.id }
-        })
+
+        if (serverList.length > 0) {
+            const serverDropdownList = serverList?.map((item, index) => {
+                return { name: item.guild.name, id: item.guild.id }
+            })
+            setServerDropdownList(serverDropdownList);
+        }
 
         setServerList(serverList);
-        setServerDropdownList(serverDropdownList);
     }
 
     // const serverValueAction = async () => {
@@ -170,8 +194,8 @@ const CreateGiveaway: React.FC = () => {
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-[#FFFFFF]">Expires*</p>
                         {/* <div className="grid grid-cols-2 gap-3 w-full"> */}
-                            <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
-                            {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" /> */}
+                        <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" suppressContentEditableWarning={true} />
+                        {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" /> */}
                         {/* </div> */}
                     </div>
                     {/* Chain & Quantity */}
@@ -203,12 +227,36 @@ const CreateGiveaway: React.FC = () => {
                         </div>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-[#FFFFFF]">Winning Role*</p>
-                            <MultiDropdown
+                            {/* <MultiDropdown
                                 dropdownList={serverRoles}
                                 placeholder="Select winning role"
                                 className="hover:bg-cdark-200"
                                 callback={setWinningRole}
-                            />
+                            /> */}
+
+                            <Select
+                                placeholder="Select an animal"
+                                selectionMode="multiple"
+                                className="max-w-xs p-5"
+                                size="lg"
+                                selectorIcon={<></>}
+                                isMultiline={true}
+                                renderValue={(items) => {
+                                    return (
+                                        <div className="flex flex-wrap gap-2">
+                                            {items.map((item) => (
+                                                <Chip key={item.key}>{"@" + item.key}</Chip>
+                                            ))}
+                                        </div>
+                                    );
+                                }}
+                            >
+                                {animals.map((animal) => (
+                                    <SelectItem key={animal.value} value={animal.value}>
+                                        {animal.label}
+                                    </SelectItem>
+                                ))}
+                            </Select>
                         </div>
                     </div>
                     {/* Restricted Roles & Required Roles */}

@@ -9,36 +9,16 @@ import { getSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
 import { firUppercase } from "../utils/utils";
-import { useRouter } from "next/router";
 
 const Navbar = () => {
 
+    const { userImage, username } = useContext(AppContext);
     const path = usePathname();
     const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
-    const [userImage, setUserImage] = useState<string>("")
-    const [username, setUsername] = useState<string>("")
     const [temp, setTemp] = useState<string>("dashboard");
     const { profileModalOpen, serverID, userID, setProfileModalOpen } = useContext(AppContext);
-    const router = useRouter();
-
-    const initAction = async () => {
-        const session = await getSession();
-        console.log("navbar session ====>", session);
 
 
-        if (session) {
-            setUserImage(session?.user?.image || "");
-            setUsername(session?.user?.name || "");
-            // router.push('/dashboard')
-        } else {
-            router.push('/')
-        }
-    }
-
-    useEffect(() => {
-        initAction()
-    }, [])
-    
     useEffect(() => {
         if (path) {
             // setTemp("temp")

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.3.6",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
     "momentjs": "^2.0.0",

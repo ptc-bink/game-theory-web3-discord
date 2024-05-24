@@ -22,12 +22,12 @@ interface SideDataProps {
 
 const BigSidebar = () => {
 
-    const { setIsAdmin, isAdmin } = useContext(AppContext);
+    const { isAdmin } = useContext(AppContext);
     const [fill, setFill] = useState<string>("");
     const [sideData, setSideData] = useState<SideDataProps[]>([])
     const pathname = usePathname();
 
-    const sideBar = [
+    const adminSideBar = [
         {
             user: true,
             label: "Dashboard",
@@ -75,22 +75,58 @@ const BigSidebar = () => {
         },
     ]
 
-    const isCheck = async () => {
-        const tempAdmin: boolean = await adminCheck()
-        const tempSide: any = tempAdmin ? sideBar : sideBar.filter(item => item.user == tempAdmin);
+    const userSideBar = [
+        {
+            user: true,
+            label: "Dashboard",
+            link: "/dashboard",
+            image: <Dashboard
+                fill={fill}
+            />,
+            isActive: false,
+        },
+        {
+            user: true,
+            label: "Projects",
+            link: "/projects",
+            image: <Projects
+                fill={fill}
+            />,
+            isActive: false
+        },
+        {
+            user: true,
+            label: "Allocations",
+            link: "/allocations",
+            image: <Allocation
+                fill={fill}
+            />,
+            isActive: false
+        },
+        {
+            user: true,
+            label: "Bot",
+            link: "/bot",
+            image: <Bot
+                fill={fill}
+            />,
+            isActive: false
+        },
+    ]
 
-        setIsAdmin(tempAdmin);
-        setSideData(tempSide);
+    const initAction = async () => {
+        const tempSide: any = isAdmin ? adminSideBar : userSideBar;
+        setSideData(tempSide)
+        console.log("bigsidebar tempSide ====>", tempSide);
     }
 
     useEffect(() => {
-        isCheck();
+        initAction();
     }, [])
 
     useEffect(() => {
-        setSideData(sideBar)
         console.log("bigside bar pathname", pathname);
-        
+        console.log("bigside bar sideData", sideData);
 
         if (pathname !== "/") {
             const updatedSideData = sideData.map(item => {
@@ -106,7 +142,7 @@ const BigSidebar = () => {
                 setFill("#FFFFFF");
             }
         }
-    }, [pathname, isAdmin]);
+    }, [pathname]);
 
 
     return (

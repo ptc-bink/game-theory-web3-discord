@@ -17,24 +17,7 @@ import AppContext from "../providers/AppContext";
 const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, username, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
 
     const { setGiveawayID } = useContext(AppContext);
-    // const [biddersInfoList, setBiddersInfoList] = useState<any>();
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
-
-    const initAction = async () => {
-
-        // const biddersInfoList = bidders?.forEach((userID, index) => {
-        //     console.log();
-
-        //     return UserInfo();
-        // })
-        // setBiddersInfoList(biddersInfoList);
-        // console.log("biddersInfoList ====>", biddersInfoList);
-
-    }
-
-    useEffect(() => {
-        initAction()
-    }, [])
 
     const detailItem = (index: number, item: IUserInfo) => {
 
@@ -49,7 +32,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                     height="16"
                     alt={index + "th cancel"}
                 />
-                <p className={`text-xs leading-[18px] font-medium text-[${textColor}]`}>{`${index}. ${item.name}(${item.id})`}</p>
+                <p className={`text-xs leading-[18px] font-medium text-[${textColor}]`}>{`${index}. ${item.username}(${item.id})`}</p>
             </div>
         )
     }
@@ -113,9 +96,9 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
             {detailOpen &&
                 <div className="flex flex-col rounded-lg">
                     <div className="grid md:grid-rows-10 md:grid-flow-col max-h-[220px] overflow-scroll grid-flow-row gap-y-[1.5px] border border-cgrey-200 rounded-t-lg px-1 py-[10px] bg-[#141518]">
-                        {/* {biddersInfoList?.map((item: IUserInfo, index: number) => (
+                        {bidders?.map((item: IUserInfo, index: number) => (
                             detailItem(index + 1, item)
-                        ))} */}
+                        ))}
                     </div>
                     {harvested || <div className="flex justify-center items-center bg-cgrey-200 gap-1 px-4 py-2 rounded-b-lg">
                         <Image

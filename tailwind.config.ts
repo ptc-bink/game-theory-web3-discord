@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const {nextui} = require("@nextui-org/react")
 
 module.exports = {
   content: [
@@ -6,6 +7,7 @@ module.exports = {
     "./pages/*.{js,ts,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
@@ -24,5 +26,5 @@ module.exports = {
       "cblue-500": "#5865F2",
     }
   },
-  plugins: [],
+  plugins: [nextui()],
 };

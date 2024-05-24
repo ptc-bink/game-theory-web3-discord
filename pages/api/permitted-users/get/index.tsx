@@ -8,22 +8,18 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<ResponseData>
 ) {
-    if (req.method == "GET") {
+    if (req.method == "POST") {
         try {
             const axios = require("axios");
-            const { serverID, id } = req.query
-
-            console.log("get allocation ===>", serverID, ":", id);
+            const { serverID } = await req.body;
 
             let config = {
-                method: "get",
-                url: `${process.env.baseURL_back}/test/allocations?serverId=${serverID}`,
+                method: "post",
+                url: `${process.env.baseURL_back}/test/get-permitted-users?serverID=${serverID}`,
             }
 
             const response = await axios.request(config);
-
-            console.log(response.data);
-            
+            console.log("get permitted users =======> ",response.data);
 
             return res.json(response.data);
         } catch (error) {

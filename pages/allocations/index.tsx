@@ -21,7 +21,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
 
     const initAction = async () => {
         const tempServerList: IServer[] = await getServerList();
-        const tempAllocations: IAllocation[] = await getAllocation(tempServerList[0].guildID);
+        const tempAllocations: IAllocation[] = await getAllocation(tempServerList[0]?.guildID);
 
         setAllocations(tempAllocations)
     }

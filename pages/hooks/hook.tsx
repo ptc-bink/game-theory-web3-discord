@@ -86,6 +86,25 @@ export const UserInfo = async () => {
     }
 }
 
+export const GetPermittedusers = async (serverID: string) => {
+    const response = await fetch(`/api/permitted-users/get`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            serverID
+        }),
+    })
+
+    if (response.status == 200) {
+        const data = await response.json();
+
+        return data;
+
+    } else {
+        return undefined;
+    }
+}
+
 export const GetGiveaways = async () => {
 
     const response = await fetch(`/api/giveaways/`);
@@ -180,13 +199,13 @@ export const enterGiveaway = async (serverID: string, giveAwayID: string, userID
 }
 
 export const getAllocation = async (serverID: string, id?: string) => {
-    const res = await fetch(`/api/allocation?serverId=${serverID}&id=${id}`);
+    const res = await fetch(`/api/allocation/${serverID}`);
 
     if (res.status == 200) {
         const data = await res.json();
 
         console.log("get allocation ===>", data);
-        
+
         return data;
     } else {
         return console.log("error : get allocation");

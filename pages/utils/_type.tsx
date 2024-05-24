@@ -14,23 +14,23 @@ export interface IAdministrationTrustedServers {
 }
 
 export interface IAllocation {
-        id: string,
-        title: string,
+    id: string,
+    title: string,
+    allocation: number,
+    for_server: string,
+    role: string,
+    contract: string,
+    mint_date: string,
+    presale: number,
+    vesting: {
         allocation: number,
-        for_server: string,
-        role: string,
-        contract: string,
-        mint_date: string,
-        presale: number,
-        vesting: {
-          allocation: number,
-          mint_hold_days: number,
-          secondary_buy_hold_days: number,
-          secondary_buy_hours: number,
-          secondary_buy_amount: number,
-          price_void: number,
-          is_void : number
-        }
+        mint_hold_days: number,
+        secondary_buy_hold_days: number,
+        secondary_buy_hours: number,
+        secondary_buy_amount: number,
+        price_void: number,
+        is_void: number
+    }
 }
 
 export interface ICreateGiveaway {
@@ -89,7 +89,7 @@ export interface IAdminof {
 
 export interface IUserInfo {
     id: string;
-    name: string;
+    username: string;
     avatar: string;
 }
 
@@ -135,7 +135,11 @@ export interface IGiveaway {
     sealedBids: number,
     entrants: number,
     bids: string[],
-    bidders: string[],
+    bidders: {
+        id: string,
+        username: string,
+        avatar: string
+    }[],
     bidderWallets: string[],
     bidEntryTimes: number[],
     SQLID: number,
@@ -186,7 +190,11 @@ export interface IGiveawayCardProps {
     enterDate?: string;
     timeRemaining: number;
     harvested: boolean;
-    bidders: string[];
+    bidders: {
+        id: string,
+        username: string,
+        avatar: string
+    }[];
     winners: string[];
 }
 

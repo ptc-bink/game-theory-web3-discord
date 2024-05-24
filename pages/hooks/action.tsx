@@ -25,32 +25,32 @@ import {
 
 export const getDashboardInfo = async () => {
 
-    const adminof: IAdminof = await GetAdminof();
-    const serverList: IServer[] = await getServerList();
-    let biddersGiveawayList: IBiddersGiveaway[] = [];
-    let giveawayList: IGiveaway[] = [];
+    // const adminof: IAdminof = await GetAdminof();
+    // const serverList: IServer[] = await getServerList();
+    // let biddersGiveawayList: IBiddersGiveaway[] = [];
+    // let giveawayList: IGiveaway[] = [];
 
-    if (adminof) {
-        if (serverList) {
-            giveawayList = await GetGiveaways();
+    // if (adminof) {
+    //     if (serverList) {
+    //         giveawayList = await GetGiveaways();
 
-            if (giveawayList.length) {
-                biddersGiveawayList = giveawayList.map(item => {
-                    return { bidders: item.bidders, giveaway: item.messageID }
-                })
-            }
+    //         if (giveawayList.length) {
+    //             biddersGiveawayList = giveawayList.map(item => {
+    //                 return { bidders: item.bidders, giveaway: item.messageID }
+    //             })
+    //         }
 
-            // console.log("adminof =====>", giveawayList);
-        }
-    }
+    //         // console.log("adminof =====>", giveawayList);
+    //     }
+    // }
 
-    const res: IDashboardres = {
-        serverList: serverList,
-        biddersGiveawayList: biddersGiveawayList,
-        initGiveawayList: giveawayList
-    }
+    // const res: IDashboardres = {
+    //     serverList: serverList,
+    //     biddersGiveawayList: biddersGiveawayList,
+    //     initGiveawayList: giveawayList
+    // }
 
-    return res
+    // return res
 }
 
 export const getHarvestWinners = async (giveawayID: string) => {

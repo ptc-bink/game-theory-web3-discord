@@ -12,6 +12,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userImage, setUserImage] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [giveawayID, setGiveawayID] = useState<string> ("");
 
   return (
     <AppContext.Provider
@@ -24,6 +26,10 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         username,
         userImage,
         isAdmin,
+        isLoading,
+        giveawayID,
+        setGiveawayID,
+        setIsLoading,
         setIsAdmin,
         setUserImage,
         setUsername,

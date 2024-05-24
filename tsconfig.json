@@ -34,7 +34,7 @@
     "pages/api/auth/redirect.js",
     "pages/api/auth/[...nextauth].s",
     "pages/api/auth/[...nextauth].js"
-  ],
+, "pages/api/allocation/[...slug].js"  ],
   "exclude": [
     "node_modules"
   ]

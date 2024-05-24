@@ -28,12 +28,13 @@ const Dashboard: React.FC<IDashboard> = () => {
     const [serverList, setServerList] = useState<IServer[]>([]);
     const [searchInput, setSearchInput] = useState<string>();
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
-    const [biddersGiveawayList, setBiddersGiveawayList] = useState<IBiddersGiveaway[]>([]);
 
     const initAction = async () => {
-        const res: any = await getDashboardInfo();
         const serverList: IServer[] = await getServerList();
         const giveAways: any = await GetGiveaways();
+
+        console.log("dashboard giveaways =====>", giveAways);
+
 
         const isCheck: any = adminCheck()
 
@@ -41,16 +42,17 @@ const Dashboard: React.FC<IDashboard> = () => {
             setIsAdmin(true);
         }
 
-        const serverDropdownList = serverList.map((item, index) => {
-            return {name:item.guild.name, id:item.guild.id}
-        })
+        if (serverList.length > 0) {
+            const serverDropdownList: IDropdownListProps[] = serverList.map((item, index) => {
+                return { name: item.guild.name, id: item.guild.id }
+            })
+            setServerDropdownList(serverDropdownList);
+        }
 
         setIsAdmin(true)
         setGiveAways(giveAways);
-        setServerDropdownList(serverDropdownList);
 
         setServerList(serverList);
-        setBiddersGiveawayList(res.biddersGiveawayList);
     }
 
     const chainValueAction = async () => {
@@ -101,7 +103,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col gap-4">
+            {giveAways.length > 0 && <div className="flex flex-col gap-4">
                 {giveAways?.map((item, index) => (
                     < GiveawayCard
                         id={item.messageID}
@@ -117,7 +119,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                         winners={item.winners}
                     />
                 ))}
-            </div>
+            </div>}
         </div>
     );
 }

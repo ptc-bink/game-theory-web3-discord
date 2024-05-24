@@ -1,17 +1,29 @@
 'use client'
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
-import Dropdown from "@/pages/components/forms/Dropdown";
 
 import { userList } from "@/pages/utils/_data";
 
 import Cancel from "@/public/avatar/close.svg"
+import { GetPermittedusers } from "@/pages/hooks/hook";
+import { getServerList } from "@/pages/hooks/action";
+import { IServer } from "@/pages/utils/_type";
 
-const PremittedUser: React.FC<IPremittedUser> = ({ }) => {
+const PermittedUsers: React.FC<IPermittedUsers> = ({ }) => {
 
     const [users, setUsers] = useState<string[]>([]);
+    const [permittedusers, setPermittedusers] = useState<any>();
     const [flags, setFlags] = useState<boolean[]>([]);
+
+    const initAction = async () => {
+        const tempServerList: IServer[] = await getServerList();
+
+        if (tempServerList.length > 0) {
+            const temppermmittedusers = await GetPermittedusers(tempServerList[0].guildID);
+            setPermittedusers(temppermmittedusers);
+        }
+    }
 
     const handleSetUser = (user: string, index: number) => {
         setFlags(prevFlags => {
@@ -25,9 +37,14 @@ const PremittedUser: React.FC<IPremittedUser> = ({ }) => {
             setUsers([...users, user]);
         }
     }
+
     const handleAddUser = () => {
         console.log("users ===>", users);
     }
+
+    useEffect(() => {
+        initAction();
+    }, [])
 
     return (
         <div className="flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
@@ -62,9 +79,9 @@ const PremittedUser: React.FC<IPremittedUser> = ({ }) => {
     )
 }
 
-export default PremittedUser;
+export default PermittedUsers;
 
-interface IPremittedUser {
+interface IPermittedUsers {
     server: string
     marketChannel: string
     generalChannel: string
