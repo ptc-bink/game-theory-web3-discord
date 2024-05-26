@@ -1,6 +1,6 @@
 import { error } from "console";
 import { giveAways, harvestWinners, } from "../utils/_data";
-import { ICreateGiveaway, IAdministrationTrustedServers } from "../utils/_type";
+import { ICreateGiveaway, IAdministrationTrustedServers, IAddserverInfo, IEditserverInfo } from "../utils/_type";
 
 
 export const test = async () => {
@@ -86,6 +86,16 @@ export const UserInfo = async () => {
     }
 }
 
+export const removeEntrants = async (serverID: string, marketID: string, removeUserID: string) => {
+    const response = await fetch(`api/entrants/remove`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            removeUserID, serverID, marketID
+        })
+    })
+}
+
 export const GetPermittedusers = async (serverID: string) => {
     const response = await fetch(`/api/permitted-users/get`, {
         method: "POST",
@@ -119,7 +129,7 @@ export const GetGiveaways = async () => {
     }
 }
 
-export const HandleCreateGiveaway = async (data: ICreateGiveaway) => {
+export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
 
     const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles } = data;
 
@@ -163,7 +173,7 @@ export const Logout = async () => {
     }
 }
 
-export const GetServers = async () => {
+export const getServers = async () => {
 
     const response = await fetch(`/api/servers`);
 
@@ -219,20 +229,18 @@ export const addAllocation = async (data: any) => {
         body: JSON.stringify({
             data
         })
-    }
-    )
+    })
 
     if (res.status == 200) {
         const data = await res.json();
 
         return data;
-
     } else {
         return undefined;
     }
 }
 
-export const GetAdministrationTrustedServers = async (serverID: string) => {
+export const getAdministrationTrustedServers = async (serverID: string) => {
 
     const response = await fetch(`/api/administration/trusted-servers/${serverID}`);
 
@@ -334,8 +342,30 @@ export const Administration = async () => {
     }
 }
 
+export const getMarketChannelList = async () => {
+    const res = await fetch(`api/channel/market-channel`);
+
+    if (res.status == 200) {
+        const data = await res.json();
+        return data
+    } else {
+        return undefined;
+    }
+}
+
+export const getGeneralChannelList = async () => {
+    const res = await fetch(`api/channel/general-list`);
+
+    if (res.status == 200) {
+        const data = await res.json();
+        return data;
+    } else {
+        return undefined;
+    }
+}
+
 export const RemoveEntry = async (marketID: string, serverID: string, removeUserID: string) => {
-    const response = await fetch(`/api/removeenty`, {
+    const res = await fetch(`/api/removeenty`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -345,11 +375,63 @@ export const RemoveEntry = async (marketID: string, serverID: string, removeUser
         }),
     });
 
-    console.log(response);
+    console.log(res);
 
-    if (response.status == 200) {
-        const data = await response.json();
+    if (res.status == 200) {
+        const data = await res.json();
 
         return data;
+    } else {
+        return undefined
     }
+}
+
+export const addServer = async (data: IAddserverInfo) => {
+    const res = await fetch(`api/servers/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            data
+        }),
+    })
+
+    console.log(res);
+
+    if (res.status == 200) {
+        const data = await res.json();
+
+        return data;
+    } else {
+        return undefined
+    }
+}
+
+export const editServer = async (data: IEditserverInfo) => {
+    const res = await fetch(`api/servers/edit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            data
+        }),
+    })
+
+    console.log(res);
+
+    if (res.status == 200) {
+        const data = await res.json();
+
+        return data;
+    } else {
+        return undefined
+    }
+}
+
+export const adminCheck = async () => {
+
+    const res = await Administration();
+
+    if (res.message == "User is an administrator")
+        return true
+
+    return false;
 }

@@ -3,27 +3,32 @@
 import Logo from "./Logo";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import ProfileModal from "./forms/ProfileModal";
-import AppContext from "../providers/AppContext";
-import { getSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
+import Image from "next/image";
 
+import User from "@/public/avatar/user.svg"
+
+import AppContext from "../providers/AppContext";
+import ProfileModal from "./forms/ProfileModal";
+import { signOut } from "next-auth/react";
 import { firUppercase } from "../utils/utils";
+
 
 const Navbar = () => {
 
-    const { userImage, username } = useContext(AppContext);
-    const path = usePathname();
+    const { profileModalOpen, serverID, userID, userImage, username, setProfileModalOpen } = useContext(AppContext);
     const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
-    const [temp, setTemp] = useState<string>("dashboard");
-    const { profileModalOpen, serverID, userID, setProfileModalOpen } = useContext(AppContext);
+    const [temp, setTemp] = useState<string>();
+    const path = usePathname();
 
 
     useEffect(() => {
+
         if (path) {
             // setTemp("temp")
             setTemp(firUppercase(path?.split("/")[1]));
         }
+        console.log("navbar : userimage ===>", userImage);
+
     }, [path])
 
     const handleProfileModalOpen = () => {
@@ -47,7 +52,15 @@ const Navbar = () => {
             </div>
             <div className="flex justify-center items-center relative" >
                 <div className="flex justify-center items-center hover:cursor-pointer" onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
-                    <img src={userImage} alt="user avatar" className="rounded-full border-[1.5px] border-cgrey-200" width={40} height={40} />
+                    {userImage ? <img src={userImage} alt="user avatar" className="rounded-full border-[1.5px] border-cgrey-200" width={40} height={40} />
+                        : <Image
+                            src={User}
+                            width={40}
+                            height={40}
+                            alt="user avatar"
+                            className="rounded-full border-[1.5px] border-cgrey-200"
+                        />
+                    }
                     <p className="px-3 hover:underline text-[#FFFFFF] text-base font-semibold md:block hidden">{firUppercase(username)}</p>
                 </div>
                 {profileDropdownOpen && (

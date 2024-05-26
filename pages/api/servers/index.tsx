@@ -17,6 +17,8 @@ export default async function handler(
                 url: `${process.env.baseURL_back}/test/servers`,
             }
 
+            console.log("here : get server list");
+
             const response = await axios.request(config);
 
             return res.json(response.data);

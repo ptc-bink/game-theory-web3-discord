@@ -16,49 +16,49 @@ import Add from "@/public/avatar/add.svg"
 
 // import { giveAways } from "../utils/_data";
 
-import { adminCheck, getDashboardInfo, getServerList } from "@/pages/hooks/action";
-import { GetGiveaways } from "../hooks/hook";
+import { GetGiveaways, getServers } from "../hooks/hook";
 import AppContext from "../providers/AppContext";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin, setIsAdmin } = useContext(AppContext);
+    const { isAdmin, serverList, setServerList } = useContext(AppContext);
     const [serverValue, setServerValue] = useState<string>("");
-    const [giveAways, setGiveAways] = useState<IGiveaway[]>([]);
-    const [serverList, setServerList] = useState<IServer[]>([]);
+    const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
     const [searchInput, setSearchInput] = useState<string>();
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
 
     const initAction = async () => {
-        const serverList: IServer[] = await getServerList();
-        const giveAways: any = await GetGiveaways();
+        const tempServerList: IServer[] = await getServers();
+        const tempGiveaways: IGiveaway[] = await GetGiveaways();
 
-        console.log("dashboard giveaways =====>", giveAways);
-
-
-        const isCheck: any = adminCheck()
-
-        if (isCheck.message == "User is an administrator") {
-            setIsAdmin(true);
-        }
-
-        if (serverList.length > 0) {
+        if (tempServerList.length > 0) {
             const serverDropdownList: IDropdownListProps[] = serverList.map((item, index) => {
                 return { name: item.guild.name, id: item.guild.id }
             })
             setServerDropdownList(serverDropdownList);
+            setServerList(tempServerList);
         }
 
-        setIsAdmin(true)
-        setGiveAways(giveAways);
+        setGiveaways(tempGiveaways);
 
-        setServerList(serverList);
     }
 
     const chainValueAction = async () => {
         const giveAways: any = await GetGiveaways();
 
-        setGiveAways(giveAways);
+        setGiveaways(giveAways);
+    }
+
+    const serachValueAction = async () => {
+        if (searchInput !== undefined) {
+
+            const tempGiveaways: IGiveaway[] = giveaways.filter(giveaway =>
+                giveaway.creator.username.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                giveaway.creator.id.toLowerCase().includes(searchInput?.toLowerCase())
+            )
+
+            setGiveaways(tempGiveaways);
+        }
     }
 
     useEffect(() => {
@@ -68,6 +68,10 @@ const Dashboard: React.FC<IDashboard> = () => {
     useEffect(() => {
         chainValueAction();
     }, [serverValue])
+
+    useEffect(() => {
+        serachValueAction();
+    }, [searchInput])
 
     return (
         <div className="flex flex-col gap-4 p-8 bg-cdark-100">
@@ -103,8 +107,8 @@ const Dashboard: React.FC<IDashboard> = () => {
                     </div>
                 </div>
             </div>
-            {giveAways.length > 0 && <div className="flex flex-col gap-4">
-                {giveAways?.map((item, index) => (
+            {giveaways.length > 0 && <div className="flex flex-col gap-4">
+                {giveaways?.map((item, index) => (
                     < GiveawayCard
                         id={item.messageID}
                         chain={item.chain}

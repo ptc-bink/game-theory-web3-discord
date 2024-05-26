@@ -10,7 +10,6 @@ import Allocation from "@/public/avatar/allocation"
 import Admin from "@/public/avatar/admin"
 import Bot from "@/public/avatar/bot";
 import { usePathname } from "next/navigation";
-import { adminCheck } from "../hooks/action";
 import AppContext from "../providers/AppContext";
 
 interface SideDataProps {
@@ -22,14 +21,13 @@ interface SideDataProps {
 
 const SmallSidebar = () => {
 
-    const { setIsAdmin, isAdmin } = useContext(AppContext);
-    const [fill, setFill] = useState<string>("");
     const [sideData, setSideData] = useState<SideDataProps[]>([])
-    const pathname = usePathname();
+    const { isAdmin } = useContext(AppContext);
+    const [fill, setFill] = useState<string>("");
+    const path = usePathname();
 
-    const sideBar = [
+    const adminSideBar = [
         {
-            user: true,
             label: "Dashboard",
             link: "/dashboard",
             image: <Dashboard
@@ -38,7 +36,6 @@ const SmallSidebar = () => {
             isActive: false,
         },
         {
-            user: true,
             label: "Projects",
             link: "/projects",
             image: <Projects
@@ -47,7 +44,6 @@ const SmallSidebar = () => {
             isActive: false
         },
         {
-            user: true,
             label: "Allocations",
             link: "/allocations",
             image: <Allocation
@@ -56,7 +52,6 @@ const SmallSidebar = () => {
             isActive: false
         },
         {
-            user: false,
             label: "Admin",
             link: "/admin",
             image: <Admin
@@ -65,7 +60,14 @@ const SmallSidebar = () => {
             isActive: false
         },
         {
-            user: true,
+            label: "Vesting",
+            link: "/vesting",
+            image: <Allocation
+                fill={fill}
+            />,
+            isActive: false
+        },
+        {
             label: "Bot",
             link: "/bot",
             image: <Bot
@@ -75,24 +77,67 @@ const SmallSidebar = () => {
         },
     ]
 
-    const isCheck = async () => {
-        const tempAdmin: boolean = await adminCheck()
-        const tempSide: any = tempAdmin ? sideBar : sideBar.filter(item => item.user == tempAdmin);
+    const userSideBar = [
+        {
+            label: "Dashboard",
+            link: "/dashboard",
+            image: <Dashboard
+                fill={fill}
+            />,
+            isActive: false,
+        },
+        {
+            label: "Projects",
+            link: "/projects",
+            image: <Projects
+                fill={fill}
+            />,
+            isActive: false
+        },
+        {
+            label: "Allocations",
+            link: "/allocations",
+            image: <Allocation
+                fill={fill}
+            />,
+            isActive: false
+        },
+        {
+            label: "Bot",
+            link: "/bot",
+            image: <Bot
+                fill={fill}
+            />,
+            isActive: false
+        },
+    ]
 
-        setIsAdmin(tempAdmin);
-        setSideData(tempSide);
+    const initAction = async () => {
+        const tempSide: SideDataProps[] = isAdmin ? adminSideBar : userSideBar;
+
+        const initSideData = tempSide.map(item => {
+            const isActive = path.includes(item.link);
+            return {
+                ...item,
+                isActive,
+            };
+        });
+
+        setSideData(initSideData);
+
+        if (initSideData.some(item => item.isActive)) {
+            setFill("#FFFFFF");
+        }
     }
 
     useEffect(() => {
-        isCheck();
+        initAction();
     }, [])
 
     useEffect(() => {
-        setSideData(sideBar)
-
-        if (pathname !== "/") {
+        if (sideData.length > 0 && path !== "/") {
             const updatedSideData = sideData.map(item => {
-                const isActive = pathname.includes(item.link);
+                const isActive = path.includes(item.link);
                 return {
                     ...item,
                     isActive,
@@ -104,24 +149,7 @@ const SmallSidebar = () => {
                 setFill("#FFFFFF");
             }
         }
-    }, [pathname, isAdmin]);
-
-    useEffect(() => {
-        if (pathname !== "/") {
-            const updatedSideData = sideData.map(item => {
-                const isActive = pathname.includes(item.link);
-                return {
-                    ...item,
-                    isActive,
-                };
-            });
-            setSideData(updatedSideData);
-
-            if (updatedSideData.some(item => item.isActive)) {
-                setFill("[#FFFFFF]");
-            }
-        }
-    }, [pathname]);
+    }, [path]);
 
     return (
         <div className="grid grid-cols-5 bg-cgrey-100">

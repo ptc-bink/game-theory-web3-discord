@@ -3,7 +3,7 @@
 import React, { useEffect, useContext } from "react";
 
 import AppContext from "../providers/AppContext";
-import { IAdminof, IDashboard, IGiveaway, IBiddersGiveaway, IDashboardres, IServer } from "../utils/_type"
+import { IAdminof, IDashboard, IGiveaway, IBiddersGiveaway, IDashboardres, IServer, IAddserverInfo } from "../utils/_type"
 import {
     test,
     User,
@@ -12,7 +12,7 @@ import {
     GetAdminof,
     UserInfo,
     GetGiveaways,
-    GetServers,
+    getServers,
     HandleCreateGiveaway,
     ActiveServers,
     Administration,
@@ -20,13 +20,13 @@ import {
     GetSeverRoles,
     AdministrationChannellist,
     PutAdministrationTrustedServers,
-    GetAdministrationTrustedServers,
+    getAdministrationTrustedServers,
 } from "./hook"
 
 export const getDashboardInfo = async () => {
 
     // const adminof: IAdminof = await GetAdminof();
-    // const serverList: IServer[] = await getServerList();
+    // const serverList: IServer[] = await getServers();
     // let biddersGiveawayList: IBiddersGiveaway[] = [];
     // let giveawayList: IGiveaway[] = [];
 
@@ -61,7 +61,7 @@ export const getHarvestWinners = async (giveawayID: string) => {
 
 export const getApprovedServers = async (serverID: string) => {
 
-    const adminTrustedServers = await GetAdministrationTrustedServers(serverID);
+    const adminTrustedServers = await getAdministrationTrustedServers(serverID);
     // const adminTrustedServers = {
     //     "1187912294773039136": {
     //         "name": "Game Theory",
@@ -155,19 +155,4 @@ export const getApprovedServers = async (serverID: string) => {
     console.log("userInfoList ===>", userInfoList);
 
     return channel;
-}
-
-export const adminCheck = async () => {
-    const res = await Administration();
-
-    if (res.message == "User is an administrator")
-        return true
-
-    return false;
-}
-
-export const getServerList = async () => {
-    const serverList: IServer[] = await GetServers();
-
-    return serverList;
 }

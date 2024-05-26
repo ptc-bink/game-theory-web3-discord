@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
 import Dropdown from "./Dropdown";
 
@@ -8,6 +8,7 @@ import { marketChannelIdList, generalChannelIdList } from "@/pages/utils/_data";
 
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/pages/providers/AppContext";
+import { IDropdownListProps } from "@/pages/utils/_type";
 
 const EditServerModal: React.FC<EditServerModalProps> = ({ server, marketChannel, generalChannel }) => {
 
@@ -15,6 +16,22 @@ const EditServerModal: React.FC<EditServerModalProps> = ({ server, marketChannel
     const [inputValue, setInputValue] = useState<string>(server);
     const [marketChannelId, setMarketChannelId] = useState<string>("");
     const [generalChannelId, setGeneralChannelId] = useState<string>("");
+    const [generalChannelDropDownList, setGeneralChannelDropDownList] = useState<IDropdownListProps[]>([]);
+    const [marketChannelDropDownList, setMarketChannelDropDownList] = useState<IDropdownListProps[]>([]);
+
+    const initAction = async () => {
+        if (marketChannelIdList.length > 0) {
+
+        }
+
+        if (generalChannelIdList.length > 0) {
+
+        }
+    }
+
+    useEffect(() => {
+        initAction();
+    }, [])
 
     const closeModal = () => {
         setEditServerModalOpen(false);
@@ -49,11 +66,11 @@ const EditServerModal: React.FC<EditServerModalProps> = ({ server, marketChannel
                 </div>
                 <div className="flex flex-col gap-2">
                     <p className="text-sm font-normal text-[#FFFFFF]">Market Channel ID</p>
-                    <Dropdown dropdownList={marketChannelIdList} placeholder={marketChannel} callback={setMarketChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                    <Dropdown dropdownList={marketChannelDropDownList} placeholder={marketChannel} callback={setMarketChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                 </div>
                 <div className="flex flex-col gap-2">
                     <p className="text-sm font-normal text-[#FFFFFF]">General Channel ID</p>
-                    <Dropdown dropdownList={generalChannelIdList} placeholder={generalChannel} callback={setGeneralChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                    <Dropdown dropdownList={generalChannelDropDownList} placeholder={generalChannel} callback={setGeneralChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                 </div>
             </div>
             <div className="bg-[#FFFFFF] p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-[#FFFFFF] border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={() => handleSaveChange()}>Save Changes</div>

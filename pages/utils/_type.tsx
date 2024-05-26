@@ -87,6 +87,17 @@ export interface IAdminof {
     }[]
 }
 
+export interface IEditserverInfo {
+
+}
+
+export interface IAddserverInfo {
+    rediskey: string,
+    marketChannelID: string,
+    generalChannelID: string,
+    date: string
+}
+
 export interface IUserInfo {
     id: string;
     username: string;

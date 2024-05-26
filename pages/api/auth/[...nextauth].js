@@ -1,13 +1,7 @@
 import NextAuth from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
-import { JWT } from 'next-auth';
-import { Account } from 'next-auth';
-import { Session } from 'next-auth';
-import { User } from 'next-auth';
-import { Profile } from 'next-auth';
 
-const scopes = ['identify',];
-// const scopes = [''];
+const scopes = ['identify'];
 
 export const authOptions = {
   providers: [
@@ -37,6 +31,9 @@ export const authOptions = {
         session.id = token.sub;
       }
       return session;
+    },
+    async sign({ }) {
+      return true
     }
   }
 }

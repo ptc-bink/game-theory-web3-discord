@@ -14,45 +14,66 @@ import Driver from "@/public/avatar/driver.svg"
 
 import AppContext from "../providers/AppContext";
 import { approvedDropdownList } from "../utils/_data";
-import { IAdminProps, IApprovedServer, IServer } from "../utils/_type";
-import { getApprovedServers, getServerList } from "../hooks/action";
-import { getSession } from "next-auth/react";
-import { GetAdministrationTrustedServers, GetSeverRoles } from "../hooks/hook";
+import { IAdminProps, IApprovedServer, IServer, IDropdownListProps } from "../utils/_type";
+import { getAdministrationTrustedServers, getGeneralChannelList, getMarketChannelList, getServers } from "../hooks/hook";
 import { useRouter } from "next/router";
+import BackBtn from "../components/BackBtn";
 
 const Admin: React.FC<IAdminProps> = () => {
 
-    const { addServerModalOpen, setAddServerModalOpen, isAdmin } = useContext(AppContext);
-    const [adminServerList, setAdminServerList] = useState<any>();
+    const { addServerModalOpen, isAdmin, serverList, setAddServerModalOpen, setMarketChannelList, setGeneralChannelList } = useContext(AppContext);
     const [searchInput, setSearchInput] = useState<string>("");
     const [server, setServer] = useState<string>("");
-    const [serverList, setServerList] = useState<IServer[]>([]);
-    const [serverDropdownList, setServerDropdownList] = useState<any>();
+    const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [approvedServerList, setApprovedServerList] = useState<IApprovedServer[]>([]);
 
     const router = useRouter();
 
-    const handleOpenModal = () => {
-        setAddServerModalOpen(!addServerModalOpen);
-    }
-
     const initAction = async () => {
-        const serverList: IServer[] = await getServerList();
-        const trustedServers: any = await GetAdministrationTrustedServers(serverList[0].guild.id);
+        if (serverList.length > 0) {
+            const trustedServers: any = await getAdministrationTrustedServers(serverList[0].guildID);
 
-        console.log("trustedServers", trustedServers);
+            setApprovedServerList(trustedServers);
 
+            const serverDropdownList: IDropdownListProps[] = serverList.map((item, index) => {
+                return { name: item.guild.name, id: item.guild.id }
+            })
 
-        const serverDropdownList = serverList.map((item, index) => {
-            return { name: item.guild.name, id: item.guild.id }
-        })
+            if (serverDropdownList.length > 0) {
+                setServerDropdownList(serverDropdownList);
+            }
+        }
 
-        setApprovedServerList(trustedServers);
-        setServerList(serverList);
-        setServerDropdownList(serverDropdownList);
+        const tempMarketChannelList: any[] = await getMarketChannelList();
+        const tempGeneralChannelList: any[] = await getGeneralChannelList();
+
+        if (tempMarketChannelList.length > 0) {
+            setMarketChannelList(tempGeneralChannelList);
+        }
+
+        if (tempGeneralChannelList.length > 0) {
+            setGeneralChannelList(tempGeneralChannelList);
+        }
+
+        if (tempMarketChannelList.length > 0) {
+            const marketChannelList = tempMarketChannelList.map((item, index) => (
+                { name: item.name, id: item.id }
+            ))
+        }
+
+        if (tempGeneralChannelList.length > 0) {
+            const generalChannelList = tempGeneralChannelList.map((item, index) => (
+                { name: item.name, id: item.id }
+            ))
+        }
     }
+
     useEffect(() => {
-        if (!isAdmin) router.back();
+        if (!isAdmin) {
+            router.back();
+            console.log("you should be admin");
+
+        }
         initAction();
     }, [])
 
@@ -60,15 +81,8 @@ const Admin: React.FC<IAdminProps> = () => {
         <div className="flex flex-col gap-4 p-8 bg-cdark-100">
             <div className="flex flex-col">
                 <div className="flex gap-6 items-center">
-                    <div onClick={() => router.back()} className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
-                        <Image
-                            src={ArrowLeft}
-                            width="24"
-                            height="24"
-                            alt="arrow left"
-                        />
-                    </div>
-                    <p className="text-[#FFFFFF] text-2xl font-semibold">Approved Servers</p>
+                    <BackBtn />
+                    <p className="text-[#FFFFFF] text-2xl font-semibold">Admin</p>
                 </div>
                 <div className="items-center w-full grid grid-cols-2 gap-4 pt-4 text-sm realtive">
                     <Dropdown
@@ -85,14 +99,14 @@ const Admin: React.FC<IAdminProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        <button onClick={handleOpenModal} className="ml-2 flex justify-between w-fit items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3">
+                        <button onClick={() => setAddServerModalOpen(true)} className="ml-2 flex justify-between w-fit items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3">
                             <Image
                                 src={Add}
                                 width="16"
                                 height="16"
                                 alt="add button"
                             />
-                            <p className="text-cdark-100">Create Giveaway</p>
+                            <p className="text-cdark-100">Add Server</p>
                         </button>
                     </div>
                     {addServerModalOpen && (

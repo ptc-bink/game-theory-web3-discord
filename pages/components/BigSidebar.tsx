@@ -10,7 +10,6 @@ import Allocation from "../../public/avatar/allocation"
 import Admin from "../../public/avatar/admin"
 import Bot from "../../public/avatar/bot";
 import { usePathname } from "next/navigation";
-import { adminCheck } from "../hooks/action";
 import AppContext from "../providers/AppContext";
 
 interface SideDataProps {
@@ -22,136 +21,148 @@ interface SideDataProps {
 
 const BigSidebar = () => {
 
-    const { isAdmin } = useContext(AppContext);
-    const [fill, setFill] = useState<string>("");
     const [sideData, setSideData] = useState<SideDataProps[]>([])
-    const pathname = usePathname();
+    const { isAdmin } = useContext(AppContext);
+    const [selectedItem, setSelectedItem] = useState(0);
+    const path = usePathname();
 
     const adminSideBar = [
         {
-            user: true,
             label: "Dashboard",
             link: "/dashboard",
             image: <Dashboard
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false,
         },
         {
-            user: true,
             label: "Projects",
             link: "/projects",
             image: <Projects
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
         {
-            user: true,
             label: "Allocations",
             link: "/allocations",
             image: <Allocation
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
         {
-            user: false,
             label: "Admin",
             link: "/admin",
             image: <Admin
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
         {
-            user: true,
-            label: "Bot",
-            link: "/bot",
-            image: <Bot
-                fill={fill}
-            />,
-            isActive: false
-        },
-    ]
-
-    const userSideBar = [
-        {
-            user: true,
-            label: "Dashboard",
-            link: "/dashboard",
-            image: <Dashboard
-                fill={fill}
-            />,
-            isActive: false,
-        },
-        {
-            user: true,
-            label: "Projects",
-            link: "/projects",
-            image: <Projects
-                fill={fill}
-            />,
-            isActive: false
-        },
-        {
-            user: true,
-            label: "Allocations",
-            link: "/allocations",
+            label: "Vesting",
+            link: "/vesting",
             image: <Allocation
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
         {
-            user: true,
             label: "Bot",
             link: "/bot",
             image: <Bot
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
     ]
 
-    const initAction = async () => {
-        const tempSide: any = isAdmin ? adminSideBar : userSideBar;
-        setSideData(tempSide)
-        console.log("bigsidebar tempSide ====>", tempSide);
-    }
+    // const userSideBar = [
+    //     {
+    //         label: "Dashboard",
+    //         link: "/dashboard",
+    //         image: <Dashboard
+    //             fill={fill}
+    //         />,
+    //         isActive: false,
+    //     },
+    //     {
+    //         label: "Projects",
+    //         link: "/projects",
+    //         image: <Projects
+    //             fill={fill}
+    //         />,
+    //         isActive: false
+    //     },
+    //     {
+    //         label: "Allocations",
+    //         link: "/allocations",
+    //         image: <Allocation
+    //             fill={fill}
+    //         />,
+    //         isActive: false
+    //     },
+    //     {
+    //         label: "Bot",
+    //         link: "/bot",
+    //         image: <Bot
+    //             fill={fill}
+    //         />,
+    //         isActive: false
+    //     },
+    // ]
 
-    useEffect(() => {
-        initAction();
-    }, [])
+    // const initAction = async () => {
+    //     console.log("isAdmin ===>", isAdmin);
 
-    useEffect(() => {
-        console.log("bigside bar pathname", pathname);
-        console.log("bigside bar sideData", sideData);
+    //     const tempSide: SideDataProps[] = isAdmin ? adminSideBar : userSideBar;
 
-        if (pathname !== "/") {
-            const updatedSideData = sideData.map(item => {
-                const isActive = pathname.includes(item.link);
-                return {
-                    ...item,
-                    isActive,
-                };
-            });
-            setSideData(updatedSideData);
+    //     const initSideData = tempSide.map(item => {
+    //         const isActive = path.includes(item.link);
+    //         return {
+    //             ...item,
+    //             isActive,
+    //         };
+    //     });
 
-            if (updatedSideData.some(item => item.isActive)) {
-                setFill("#FFFFFF");
-            }
-        }
-    }, [pathname]);
+    //     setSideData(initSideData);
+
+    //     if (initSideData.some(item => item.isActive)) {
+    //         setFill("#FFFFFF");
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     initAction();
+    // }, [])
+
+    // useEffect(() => {
+    //     if (sideData.length > 0 && path !== "/") {
+    //         const updatedSideData = sideData.map(item => {
+    //             const isActive = path.includes(item.link);
+    //             return {
+    //                 ...item,
+    //                 isActive,
+    //             };
+
+    //         });
+
+    //         setSideData(updatedSideData);
+
+    //         if (updatedSideData.some(item => item.isActive)) {
+    //             setFill("#FFFFFF");
+    //         }
+    //     }
+    // }, [path]);
 
 
     return (
         <div className="flex flex-col">
-            {sideData.map((side: any, index: number) => (
+            {adminSideBar.map((side: any, index: number) => (
                 <Link key={index} href={side.link}>
-                    <div className={`flex flex-col p-6 items-center justify-center cursor-pointer  hover:bg-cdark-100 ${side.isActive ? "border-r border-r-[#FFFFFF] bg-cdark-100" : ""}`}>
+                    <div className={`flex flex-col p-6 items-center justify-center cursor-pointer  hover:bg-cdark-100 ${path.includes(side.link) ? "border-r border-r-[#FFFFFF] bg-cdark-100" : ""}`} onClick={() => { setSelectedItem(index) }}>
                         {side.image}
-                        <p className={`pt-2 text-base font-semibold ${side.isActive ? "text-[#FFFFFF]" : "text-[#939393]"}`}>{side.label}</p>
+                        <p className={`pt-2 text-base font-semibold ${path.includes(side.link) ? "text-[#FFFFFF]" : "text-[#939393]"}`}>{side.label}</p>
                     </div>
                 </Link>
             ))}

@@ -12,6 +12,16 @@ interface ContextType {
   isAdmin: boolean;
   giveawayID: string;
   isLoading: boolean;
+  marketChannelList: any[];
+  generalChannelList: any[];
+  serverList: IServer[];
+  removeEntrantModalOpen: boolean;
+  addAllocationModalOpen: boolean;
+  setAddAllocationModalOpen: (addAllocationModalOpen: boolean) => void,
+  setRemoveEntrantModalOpen: (removeEntrantModalOpen: boolean) => void;
+  setServerList: (serverList: IServer[]) => void;
+  setGeneralChannelList: (generalChannelList: any[]) => void;
+  setMarketChannelList: (marketChannelList: any[]) => void;
   setIsLoading: (isLoading: boolean) => void;
   setGiveawayID: (giveawayID: string) => void;
   setIsAdmin: (isAdmin: boolean) => void;
@@ -28,19 +38,29 @@ interface ContextType {
 const initialValue: ContextType = {
   addServerModalOpen: false,
   editServerModalOpen: false,
+  removeEntrantModalOpen: false,
   profileModalOpen: false,
   serverID: "123",
   userID: "456",
   userImage: "",
   username: "",
-  isAdmin: false,
+  isAdmin: true,
   giveawayID: "",
-  isLoading: true,
-  setIsLoading:(isLoading)=> { },
-  setGiveawayID:(giveawayID)=> { },
-  setIsAdmin:(isAdmin) => { },
-  setUserImage:(userImage) => { },
-  setUsername:(username) => { },
+  isLoading: false,
+  marketChannelList: [],
+  generalChannelList: [],
+  serverList: [],
+  addAllocationModalOpen: false,
+  setAddAllocationModalOpen(addAllocationModalOpen) { },
+  setRemoveEntrantModalOpen(removeEntrantModalOpen) { },
+  setServerList(serverList) { },
+  setGeneralChannelList: (generalChannelList) => { },
+  setMarketChannelList: (marketChannelIdList) => { },
+  setIsLoading: (isLoading) => { },
+  setGiveawayID: (giveawayID) => { },
+  setIsAdmin: (isAdmin) => { },
+  setUserImage: (userImage) => { },
+  setUsername: (username) => { },
   setUserID: (userID) => { },
   setServerID: (serverID) => { },
   setAddServerModalOpen: (addServerModalOpen) => { },

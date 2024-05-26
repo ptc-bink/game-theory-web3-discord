@@ -5,24 +5,19 @@ import Image from "next/image";
 
 import Preview from "@/public/avatar/eye.svg"
 import User from "@/public/avatar/user.svg"
-import Avartar from "@/public/img/Avatar.png"
 
 import { IPreviewCardProps } from "../utils/_type";
-import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import AppContext from "../providers/AppContext";
 
 const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, quantity, restricted, requirements, price }) => {
 
     const router = useRouter();
-    const [userImage, setUserImage] = useState<string>("")
-    const [username, setUsername] = useState<string>("")
     const date = new Date();
+    const { userImage, username, isAdmin } = useContext(AppContext);
 
     const initAction = async () => {
-        const session = await getSession();
-
-        setUserImage(session?.user?.image || "");
-        setUsername(session?.user?.name || "");
+        isAdmin
     }
 
     useEffect(() => {
@@ -48,7 +43,9 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                         <p className="text-base font-semibold">{title ? title : "Title"}</p>
                         <p className="text-xs leading-[18px] font-normal">{description ? description : "Description"}</p>
                     </div>
-                    <img src={userImage} alt="user avatar" width={48} height={48} className="rounded-lg" />
+                    {userImage ? <img src={userImage} alt="user image" width={48} height={48} className="rounded-lg" />
+                        : <img src={User} alt="user image" width={48} height={48} className="rounded-lg" />
+                    }
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1">
@@ -90,7 +87,9 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                 </div>
                 <div className="border border-[#393A3D]"></div>
                 <div className="flex gap-2 items-center justify-start">
-                    <img src={userImage} alt="user avatar" width={24} height={24} className="rounded-full" />
+                    {userImage ? <img src={userImage} alt="user avatar" width={24} height={24} className="rounded-full" />
+                        : <img src={User} alt="user avatar" width={24} height={24} className="rounded-full" />
+                    }
                     <p className=" text-xs leading-[18px] font-normal text-[#FFFFFF]">Created By - {username}<span className="border mx-1 rounded-full border-[#[#FFFFFF]]" />Today at {date.toLocaleTimeString()}</p>
                 </div>
             </div>

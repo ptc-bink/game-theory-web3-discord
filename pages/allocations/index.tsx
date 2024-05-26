@@ -1,29 +1,36 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
+import Driver from "@/public/avatar/driver.svg"
 import Search from "@/public/avatar/search-normal.svg"
 import Add from "@/public/avatar/add.svg"
 
 import SearchBtn from "@/pages/components/forms/SearchBtn";
 import Table from "@/pages/components/forms/Table";
-import { getAllocation } from "../hooks/hook";
-import { getServerList } from "../hooks/action";
+import { getAllocation, getServers } from "../hooks/hook";
 import { IAllocation, IServer } from "../utils/_type";
+import AppContext from "../providers/AppContext";
 
 const Allocation: React.FC<IAllocationProps> = () => {
+
+    const { serverList } = useContext(AppContext);
 
     const [searchInput, setSearchInput] = useState<string>();
     const [allocations, setAllocations] = useState<IAllocation[]>([]);
 
     const initAction = async () => {
-        const tempServerList: IServer[] = await getServerList();
-        const tempAllocations: IAllocation[] = await getAllocation(tempServerList[0]?.guildID);
 
-        setAllocations(tempAllocations)
+        console.log("serverList  ========>", serverList);
+
+        const tempAllocations: IAllocation[] = await getAllocation(serverList[0]?.guildID);
+
+        if (tempAllocations && tempAllocations.length > 0) {
+            setAllocations(tempAllocations)
+        }
     }
 
     useEffect(() => {
@@ -59,11 +66,27 @@ const Allocation: React.FC<IAllocationProps> = () => {
                             height="16"
                             alt="add button"
                         />
-                        <p className="text-cdark-100">Add</p>
+                        <p className="text-cdark-100">Submit</p>
                     </Link>
                 </div>
             </div>
-            <Table allocations={allocations} />
+            {allocations.length > 0 ? <Table
+                allocations={allocations}
+            /> : <div className="flex justify-center items-center min-h-[calc(100vh-280px)]">
+                <div className="flex flex-col w-fit border border-cgrey-100 gap-4 px-3 py-4 justify-center items-center">
+                    <Image
+                        src={Driver}
+                        width="32"
+                        height="32"
+                        alt="no server to show"
+                    />
+                    <div className="flex flex-col w-full text-center justify-center gap-2">
+                        <p className="text-2xl font-medium text-[#FFFFFF]">No Allocation To Show</p>
+                        <p className="text-base leading-[18px] font-normal text-[#939393]">Your trusted server will show here</p>
+                    </div>
+                </div>
+            </div>
+            }
         </div>
     );
 }

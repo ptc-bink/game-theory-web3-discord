@@ -9,10 +9,11 @@ import Edit from "@/public/avatar/edit.svg"
 import AppContext from "../providers/AppContext";
 
 import EditServerModal from "./forms/EditServerModal";
+import RemoveEntrantsModal from "./forms/RemoveEntrantsModal";
 
 const ServerCard: React.FC<ServerCardProps> = ({ server, createdBy, paymentExpires, marketChannel, generalChannel }) => {
 
-    const { editServerModalOpen, setEditServerModalOpen } = useContext(AppContext);
+    const { userID, editServerModalOpen, removeEntrantModalOpen, setRemoveEntrantModalOpen, setEditServerModalOpen } = useContext(AppContext);
 
     return (
         <div className="w-full flex flex-col gap-4 p-4 border border-cgrey-200">
@@ -52,14 +53,25 @@ const ServerCard: React.FC<ServerCardProps> = ({ server, createdBy, paymentExpir
                     <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{generalChannel}</p>
                 </div>
             </div>
-            <div className="flex justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={() => setEditServerModalOpen(true)}>
-                <p className="text-sm font-normal text-[#FFFFFF]">Edit Server</p>
-                <Image
-                    src={Edit}
-                    width="16"
-                    height="16"
-                    alt="edit"
-                />
+            <div className="grid grid-cols-2">
+                <div className="flex justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={() => setEditServerModalOpen(true)}>
+                    <p className="text-sm font-normal text-[#FFFFFF]">Edit Server</p>
+                    <Image
+                        src={Edit}
+                        width="16"
+                        height="16"
+                        alt="edit"
+                    />
+                </div>
+                <div className="flex justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={() => setRemoveEntrantModalOpen(true)}>
+                    <p className="text-sm font-normal text-[#FFFFFF]">Remove Server</p>
+                    <Image
+                        src={Edit}
+                        width="16"
+                        height="16"
+                        alt="edit"
+                    />
+                </div>
             </div>
             {editServerModalOpen && (
                 <div className="flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
@@ -70,6 +82,17 @@ const ServerCard: React.FC<ServerCardProps> = ({ server, createdBy, paymentExpir
                     />
                 </div>
             )}
+            {
+                removeEntrantModalOpen && (
+                    <div className="flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                        <RemoveEntrantsModal
+                            serverID={server}
+                            marketID={marketChannel}
+                            removeUserID={userID}
+                        />
+                    </div>
+                )
+            }
         </div>
     )
 }

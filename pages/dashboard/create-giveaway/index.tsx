@@ -22,10 +22,10 @@ import {
     giveawayTypeList,
     serverRoles
 } from "@/pages/utils/_data";
-import { GetAdminof, GetSeverRoles, HandleCreateGiveaway } from "@/pages/hooks/hook";
+import { GetAdminof, getServers, GetSeverRoles, handleCreateGiveaway } from "@/pages/hooks/hook";
 import { IDropdownListProps, IDropdownProps, IServer, IServerRole } from "@/pages/utils/_type";
-import { getServerList } from "@/pages/hooks/action";
 import { useRouter } from "next/router";
+import BackBtn from "@/pages/components/BackBtn";
 
 const CreateGiveaway: React.FC = () => {
 
@@ -77,12 +77,10 @@ const CreateGiveaway: React.FC = () => {
     const [links, setLinks] = useState<string>("");
     const [requirements, setRequirements] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
-    // const [serverRoles, setServerRoles] = useState<any>();
     const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
-    const router = useRouter();
 
     const initAction = async () => {
-        const serverList = await getServerList();
+        const serverList: IServer[] = await getServers();
 
         if (serverList.length > 0) {
             const serverDropdownList = serverList?.map((item, index) => {
@@ -94,19 +92,9 @@ const CreateGiveaway: React.FC = () => {
         setServerList(serverList);
     }
 
-    // const serverValueAction = async () => {
-    //     const res = await GetSeverRoles(serverValue);
-
-    //     setServerRoles(res);
-    // }
-
     useEffect(() => {
         initAction();
     }, [])
-
-    // useEffect(() => {
-    //     serverValueAction();
-    // }, [serverValue])
 
     useEffect(() => {
         // Initialize the date to current datetime if not already set
@@ -136,10 +124,7 @@ const CreateGiveaway: React.FC = () => {
             requiredAllRoles: requiredAllRoles
         }
 
-        console.log("===============================", data);
-
-
-        await HandleCreateGiveaway(data);
+        await handleCreateGiveaway(data);
 
     }
 
@@ -152,14 +137,7 @@ const CreateGiveaway: React.FC = () => {
             <div className="flex flex-col gap-4">
                 <div className="flex gap-6 items-center justify-between">
                     <div className="flex gap-6 items-center">
-                        <div onClick={() => router.back()} className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
-                            <Image
-                                src={ArrowLeft}
-                                width="24"
-                                height="24"
-                                alt="arrow left"
-                            />
-                        </div>
+                        <BackBtn />
                         <p className="text-[#FFFFFF] text-2xl font-semibold">Create Giveaway</p>
                     </div>
                     <div onClick={handleCreditCard} className="md:hidden block">

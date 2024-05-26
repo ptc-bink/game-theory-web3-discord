@@ -4,15 +4,16 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
-import { getHarvestWinners, getServerList } from "@/pages/hooks/action";
+import { getHarvestWinners } from "@/pages/hooks/action";
+import BackBtn from "@/pages/components/BackBtn";
 import { IDropdownListProps, IServer } from "@/pages/utils/_type";
+import { getServers } from "@/pages/hooks/hook";
 // import { jsonFileDownload } from "@/pages/hooks/download";
 
 const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
     const [harvest, setHarvest] = useState<any>();
     const [serverList, setServerList] = useState<IServer[]>([]);
-    const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [formattedData, setFormattedData] = useState<string>("");
 
     // Helper function to convert array of objects to CSV
@@ -34,8 +35,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
     const initAction = async () => {
         const tempHarvestWinners = await getHarvestWinners("");
-        const tempServerList: IServer[] = await getServerList();
-        const tempServerDropdownList = tempServerList.map((item, index) => ({ name: item.guild.name, id: item.guild.id }))
+        const tempServerList: IServer[] = await getServers();
 
         setHarvest(tempHarvestWinners);
         setServerList(tempServerList)
@@ -69,14 +69,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
             <div className="flex justify-between">
                 <div className="md:block hidden">
                     <div className="flex gap-6 items-center">
-                        <div className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
-                            <Image
-                                src={ArrowLeft}
-                                width="24"
-                                height="24"
-                                alt="arrow left"
-                            />
-                        </div>
+                        <BackBtn />
                         <p className="text-[#FFFFFF] text-2xl font-semibold">Harvest Winners</p>
                     </div>
                 </div>

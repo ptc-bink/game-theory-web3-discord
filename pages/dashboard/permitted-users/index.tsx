@@ -6,8 +6,7 @@ import Image from "next/image";
 import { userList } from "@/pages/utils/_data";
 
 import Cancel from "@/public/avatar/close.svg"
-import { GetPermittedusers } from "@/pages/hooks/hook";
-import { getServerList } from "@/pages/hooks/action";
+import { GetPermittedusers, getServers } from "@/pages/hooks/hook";
 import { IServer } from "@/pages/utils/_type";
 
 const PermittedUsers: React.FC<IPermittedUsers> = ({ }) => {
@@ -17,7 +16,7 @@ const PermittedUsers: React.FC<IPermittedUsers> = ({ }) => {
     const [flags, setFlags] = useState<boolean[]>([]);
 
     const initAction = async () => {
-        const tempServerList: IServer[] = await getServerList();
+        const tempServerList: IServer[] = await getServers();
 
         if (tempServerList.length > 0) {
             const temppermmittedusers = await GetPermittedusers(tempServerList[0].guildID);

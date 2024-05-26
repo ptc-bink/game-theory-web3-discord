@@ -16,8 +16,6 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
     const [secondaryBuyAmount, setSecondaryBuyAmount] = useState<number>(1);
     const [priceVoid, setPriceVoid] = useState<number>(0.00);
     const [isVoid, setIsVoid] = useState<number>(2);
-    const router = useRouter();
-
 
     const handleSubmit = async () => {
 
@@ -26,9 +24,8 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
         }
 
         const data: any = { allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHours, secondaryBuyAmount, priceVoid, isVoid };
-  
+
         // await addAllocation(data);
-        router.back();
     }
 
 
