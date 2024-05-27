@@ -4,11 +4,11 @@ import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link"
 
-import Dashboard from "@/public/avatar/dashboard"
-import Projects from "@/public/avatar/projects"
-import Allocation from "@/public/avatar/allocation"
-import Admin from "@/public/avatar/admin"
-import Bot from "@/public/avatar/bot";
+import Dashboard from "../../public/avatar/dashboard"
+import Projects from "../../public/avatar/projects"
+import Allocation from "../../public/avatar/allocation"
+import Admin from "../../public/avatar/admin"
+import Bot from "../../public/avatar/bot";
 import { usePathname } from "next/navigation";
 import AppContext from "../providers/AppContext";
 
@@ -23,7 +23,7 @@ const SmallSidebar = () => {
 
     const [sideData, setSideData] = useState<SideDataProps[]>([])
     const { isAdmin } = useContext(AppContext);
-    const [fill, setFill] = useState<string>("");
+    const [selectedItem, setSelectedItem] = useState<string>("");
     const path = usePathname();
 
     const adminSideBar = [
@@ -31,7 +31,7 @@ const SmallSidebar = () => {
             label: "Dashboard",
             link: "/dashboard",
             image: <Dashboard
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false,
         },
@@ -39,7 +39,7 @@ const SmallSidebar = () => {
             label: "Projects",
             link: "/projects",
             image: <Projects
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
@@ -47,7 +47,7 @@ const SmallSidebar = () => {
             label: "Allocations",
             link: "/allocations",
             image: <Allocation
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
@@ -55,7 +55,7 @@ const SmallSidebar = () => {
             label: "Admin",
             link: "/admin",
             image: <Admin
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
@@ -63,7 +63,7 @@ const SmallSidebar = () => {
             label: "Vesting",
             link: "/vesting",
             image: <Allocation
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
@@ -71,93 +71,26 @@ const SmallSidebar = () => {
             label: "Bot",
             link: "/bot",
             image: <Bot
-                fill={fill}
+                fill={selectedItem}
             />,
             isActive: false
         },
     ]
 
-    const userSideBar = [
-        {
-            label: "Dashboard",
-            link: "/dashboard",
-            image: <Dashboard
-                fill={fill}
-            />,
-            isActive: false,
-        },
-        {
-            label: "Projects",
-            link: "/projects",
-            image: <Projects
-                fill={fill}
-            />,
-            isActive: false
-        },
-        {
-            label: "Allocations",
-            link: "/allocations",
-            image: <Allocation
-                fill={fill}
-            />,
-            isActive: false
-        },
-        {
-            label: "Bot",
-            link: "/bot",
-            image: <Bot
-                fill={fill}
-            />,
-            isActive: false
-        },
-    ]
-
-    const initAction = async () => {
-        const tempSide: SideDataProps[] = isAdmin ? adminSideBar : userSideBar;
-
-        const initSideData = tempSide.map(item => {
-            const isActive = path.includes(item.link);
-            return {
-                ...item,
-                isActive,
-            };
-        });
-
-        setSideData(initSideData);
-
-        if (initSideData.some(item => item.isActive)) {
-            setFill("#FFFFFF");
-        }
-    }
-
     useEffect(() => {
-        initAction();
-    }, [])
+        console.log("selectedItem ====>", selectedItem);
 
-    useEffect(() => {
-        if (sideData.length > 0 && path !== "/") {
-            const updatedSideData = sideData.map(item => {
-                const isActive = path.includes(item.link);
-                return {
-                    ...item,
-                    isActive,
-                };
-            });
-            setSideData(updatedSideData);
-
-            if (updatedSideData.some(item => item.isActive)) {
-                setFill("#FFFFFF");
-            }
-        }
-    }, [path]);
+    }, [
+        selectedItem
+    ])
 
     return (
-        <div className="grid grid-cols-5 bg-cgrey-100">
-            {sideData.map((side: any, index: number) => (
+        <div className="flex justify-between overflow-hidden bg-cgrey-100">
+            {adminSideBar.map((side: any, index: number) => (
                 <Link key={index} href={side.link}>
-                    <div className={`flex flex-col p-6 items-center justify-center cursor-pointer  hover:bg-cdark-100 ${side.isActive ? "border-t border-t-[#FFFFFF] bg-cdark-100" : ""}`}>
+                    <div className={`flex flex-col p-6 items-center justify-center cursor-pointer  hover:bg-cdark-100 ${path.includes(side.link) ? "border-t border-t-[#FFFFFF] bg-cdark-100" : ""}`} onClick={() => { setSelectedItem(side.label) }}>
                         {side.image}
-                        <p className={`pt-2 text-base font-semibold ${side.isActive ? "text-[#FFFFFF]" : "text-[#939393]"}`}>{side.label}</p>
+                        <p className={`pt-2 text-base font-semibold ${path.includes(side.link) ? "text-[#FFFFFF]" : "text-[#939393]"}`}>{side.label}</p>
                     </div>
                 </Link>
             ))}

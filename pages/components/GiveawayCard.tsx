@@ -52,7 +52,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                     <p className="text-[#939393] text-xs leading-[18px] font-normal">{id}</p>
                 </div>
             </div>
-            <div className="grid md:grid-cols-2 grid-row-2">
+            <div className="grid md:grid-cols-2 grid-row-2 gap-3">
                 <div className="grid grid-cols-3">
                     <div className="flex flex-col gap-1">
                         <p className="text-[#939393] text-xs leading-[18px] font-normal">Chain:</p>
@@ -88,7 +88,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                         </div>
                         <div className="flex flex-col gap-1">
                             <p className="text-[#939393] text-xs leading-[18px] font-normal">Time remaining:</p>
-                            <p className="text-[#FFFFFF] text-sm font-semibold">{Math.floor(timeRemaining / 3600 / 60 /24)} days</p>
+                            <p className="text-[#FFFFFF] text-sm font-semibold">{Math.floor(timeRemaining / 3600 / 60 / 24)} days</p>
                             {/* <p className="text-[#FFFFFF] text-sm font-semibold">{timeRemaining}</p> */}
                         </div>
                     </div>}
@@ -134,7 +134,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                             />
                         </button>
                     )}
-                {/* <button className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-[#141518] outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
+                <button onClick={ } className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-[#141518] outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
                     <p className="text-[#FFFFFF] text-sm font-normal hidden md:block">Edit</p>
                     <Image
                         src={Edit}
@@ -142,7 +142,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                         height="16"
                         alt="edit"
                     />
-                </button> */}
+                </button>
             </div >
         </div >
     )

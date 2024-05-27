@@ -118,7 +118,7 @@ const Admin: React.FC<IAdminProps> = () => {
                 </div>
             </div>
             {approvedServerList.length !== 0 ? <div className="grid grid-cols-3 gap-4">
-                {approvedServerList?.map((item, index) => (
+                {approvedServerList.map((item, index) => (
                     <ServerCard
                         key={index}
                         server={item.server}
