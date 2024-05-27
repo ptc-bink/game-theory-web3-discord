@@ -20,6 +20,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [marketChannelList, setMarketChannelList] = useState<any[]>([]);
   const [generalChannelList, setGeneralChannelList] = useState<any[]>([]);
   const [serverList, setServerList] = useState<IServer[]>([]);
+  const [permittedUserModalOpen, setPermittedUserModalOpen] = useState<boolean>(false);
 
   return (
     <AppContext.Provider
@@ -39,6 +40,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         removeEntrantModalOpen,
         serverList,
         addAllocationModalOpen,
+        permittedUserModalOpen,
+        setPermittedUserModalOpen,
         setAddAllocationModalOpen,
         setRemoveEntrantModalOpen,
         setServerList,

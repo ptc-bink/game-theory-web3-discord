@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
 
 import Cancel from "@/public/avatar/close.svg"
@@ -14,24 +14,26 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
     const [sol, setSol] = useState<string>("");
     const [btc, setBtc] = useState<string>("");
 
-    const closeProfileModal = () => {
+    const handleEdit = async () => {
+
+        const data = { ethHot, ethCold, sol, btc }
+
         setProfileModalOpen(false);
     }
 
-    const handleEdit = async () => {
-        console.log("ethHot ====>", ethHot);
-        console.log("ethCold ====>", ethCold);
-        console.log("btc ====>", btc);
-        console.log("sol ====>", sol);
-
-        closeProfileModal();
+    const initAction = async () => {
+        console.log("init action");
     }
+
+    useEffect(() => {
+        initAction()
+    }, [])
 
     return (
         <div className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
                 <p className="text-base text-[#FFFFFF] font-semibold">User Profile</p>
-                <div onClick={closeProfileModal} className="cursor-pointer">
+                <div onClick={() => setProfileModalOpen(false)} className="cursor-pointer">
                     <Image
                         src={Cancel}
                         width="24"

@@ -23,7 +23,7 @@ const BigSidebar = () => {
 
     const [sideData, setSideData] = useState<SideDataProps[]>([])
     const { isAdmin } = useContext(AppContext);
-    const [selectedItem, setSelectedItem] = useState(0);
+    const [selectedItem, setSelectedItem] = useState<string>("");
     const path = usePathname();
 
     const adminSideBar = [
@@ -76,6 +76,13 @@ const BigSidebar = () => {
             isActive: false
         },
     ]
+
+    useEffect(() => {
+        console.log("selectedItem ====>", selectedItem);
+
+    }, [
+        selectedItem
+    ])
 
     // const userSideBar = [
     //     {
@@ -160,7 +167,7 @@ const BigSidebar = () => {
         <div className="flex flex-col">
             {adminSideBar.map((side: any, index: number) => (
                 <Link key={index} href={side.link}>
-                    <div className={`flex flex-col p-6 items-center justify-center cursor-pointer  hover:bg-cdark-100 ${path.includes(side.link) ? "border-r border-r-[#FFFFFF] bg-cdark-100" : ""}`} onClick={() => { setSelectedItem(index) }}>
+                    <div className={`flex flex-col p-6 items-center justify-center cursor-pointer  hover:bg-cdark-100 ${path.includes(side.link) ? "border-r border-r-[#FFFFFF] bg-cdark-100" : ""}`} onClick={() => { setSelectedItem(side.label) }}>
                         {side.image}
                         <p className={`pt-2 text-base font-semibold ${path.includes(side.link) ? "text-[#FFFFFF]" : "text-[#939393]"}`}>{side.label}</p>
                     </div>

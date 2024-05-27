@@ -11,6 +11,7 @@ import AddServerModal from "../components/forms/AddServerModal";
 import Add from "@/public/avatar/add.svg"
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import Driver from "@/public/avatar/driver.svg"
+import Refresh from "@/public/avatar/refresh.svg"
 
 import AppContext from "../providers/AppContext";
 import { approvedDropdownList } from "../utils/_data";
@@ -82,12 +83,12 @@ const Admin: React.FC<IAdminProps> = () => {
             <div className="flex flex-col">
                 <div className="flex gap-6 items-center">
                     <BackBtn />
-                    <p className="text-[#FFFFFF] text-2xl font-semibold">Admin</p>
+                    <p className="text-[#FFFFFF] text-2xl font-semibold">Approved Servers</p>
                 </div>
                 <div className="items-center w-full grid grid-cols-2 gap-4 pt-4 text-sm realtive">
                     <Dropdown
                         dropdownList={serverDropdownList}
-                        placeholder="select"
+                        placeholder="Select"
                         className="hover:bg-cdark-100 bg-cdark-200"
                         callback={setServer}
                     />

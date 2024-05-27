@@ -96,8 +96,8 @@ export const removeEntrants = async (serverID: string, marketID: string, removeU
     })
 }
 
-export const GetPermittedusers = async (serverID: string) => {
-    const response = await fetch(`/api/permitted-users/get`, {
+export const getPermittedusers = async (serverID: string) => {
+    const res = await fetch(`/api/permitted-users/get`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -105,8 +105,8 @@ export const GetPermittedusers = async (serverID: string) => {
         }),
     })
 
-    if (response.status == 200) {
-        const data = await response.json();
+    if (res.status == 200) {
+        const data = await res.json();
 
         return data;
 
@@ -115,7 +115,26 @@ export const GetPermittedusers = async (serverID: string) => {
     }
 }
 
-export const GetGiveaways = async () => {
+export const putPermittedusers = async (data: any) => {
+    const res = await fetch(`api/permitted-users/put`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            data
+        })
+    })
+
+    if (res.status == 200) {
+        const data = await res.json();
+
+        return data;
+    }
+
+    return console.log("put permitted user error");
+
+}
+
+export const getGiveaways = async () => {
 
     const response = await fetch(`/api/giveaways/`);
 
@@ -169,7 +188,8 @@ export const Logout = async () => {
         return data;
 
     } else {
-        return undefined;
+        return console.log("log out error");
+        ;
     }
 }
 
@@ -183,7 +203,8 @@ export const getServers = async () => {
         return data;
 
     } else {
-        return undefined;
+        return console.log("get servers error");
+        ;
     }
 }
 export const enterGiveaway = async (serverID: string, giveAwayID: string, userID: string) => {
@@ -204,7 +225,8 @@ export const enterGiveaway = async (serverID: string, giveAwayID: string, userID
         return data;
 
     } else {
-        return undefined;
+        return console.log("enter giveaway error");
+        ;
     }
 }
 
@@ -222,8 +244,21 @@ export const getAllocation = async (serverID: string, id?: string) => {
     }
 }
 
+export const getVestingReports = async () => {
+    const res = await fetch(`api/vesting-reports`)
+
+    if (res.status == 200) {
+        const data = await res.json();
+
+        return data;
+    } else {
+        return console.log("get vesting reports error");
+
+    }
+}
+
 export const addAllocation = async (data: any) => {
-    const res = await fetch(`/api/allocation`, {
+    const res = await fetch(`/api/allocation/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -236,7 +271,8 @@ export const addAllocation = async (data: any) => {
 
         return data;
     } else {
-        return undefined;
+        return console.log("add allocation error");
+        ;
     }
 }
 
@@ -253,7 +289,8 @@ export const getAdministrationTrustedServers = async (serverID: string) => {
         return data;
 
     } else {
-        return undefined;
+        return console.log("get administratin trusted servers error");
+        ;
     }
 }
 
@@ -277,7 +314,8 @@ export const PutAdministrationTrustedServers = async (data: IAdministrationTrust
         return data;
 
     } else {
-        return undefined;
+        return console.log("put administration trusted servers error");
+        ;
     }
 }
 
@@ -293,7 +331,8 @@ export const ActiveServers = async (serverID: string) => {
         return data;
 
     } else {
-        return undefined;
+        return console.log("active servers error");
+        ;
     }
 }
 
@@ -309,7 +348,8 @@ export const AdministrationChannellist = async (serverID: string) => {
         return data;
 
     } else {
-        return undefined;
+        return console.log("administration channel list error");
+        ;
     }
 }
 
@@ -326,19 +366,23 @@ export const GetSeverRoles = async (serverID: string) => {
         return data;
 
     } else {
-        return undefined;
+        return console.log("get server roles error");
+        ;
     }
 }
 
-export const Administration = async () => {
+export const adminCheck = async () => {
 
     const res = await fetch(`/api/administration`);
 
     if (res.status == 200) {
         const data = await res.json();
-        return data;
+
+        if (data.message == "User is an administrator")
+            return true
     } else {
-        return undefined;
+        return false;
+        ;
     }
 }
 
@@ -426,12 +470,3 @@ export const editServer = async (data: IEditserverInfo) => {
     }
 }
 
-export const adminCheck = async () => {
-
-    const res = await Administration();
-
-    if (res.message == "User is an administrator")
-        return true
-
-    return false;
-}

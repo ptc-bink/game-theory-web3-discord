@@ -3,25 +3,24 @@
 import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
 
-import { userList } from "@/pages/utils/_data";
-
 import Cancel from "@/public/avatar/close.svg"
-import { GetPermittedusers, getServers } from "@/pages/hooks/hook";
-import { IServer } from "@/pages/utils/_type";
+import { getPermittedusers } from "@/pages/hooks/hook";
+import AppContext from "@/pages/providers/AppContext";
 
-const PermittedUsers: React.FC<IPermittedUsers> = ({ }) => {
+const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
 
+    const { serverList, setPermittedUserModalOpen } = useContext(AppContext);
     const [users, setUsers] = useState<string[]>([]);
-    const [permittedusers, setPermittedusers] = useState<any>();
+    const [permittedusersModal, setPermittedusersModal] = useState<any>();
     const [flags, setFlags] = useState<boolean[]>([]);
 
     const initAction = async () => {
-        const tempServerList: IServer[] = await getServers();
-
-        if (tempServerList.length > 0) {
-            const temppermmittedusers = await GetPermittedusers(tempServerList[0].guildID);
-            setPermittedusers(temppermmittedusers);
+        if (serverList.length > 0) {
+            const temppermmittedusers = await getPermittedusers(serverList[0].guildID);
+            return setPermittedusersModal(temppermmittedusers);
         }
+
+        return alert("no users to show");
     }
 
     const handleSetUser = (user: string, index: number) => {
@@ -39,6 +38,8 @@ const PermittedUsers: React.FC<IPermittedUsers> = ({ }) => {
 
     const handleAddUser = () => {
         console.log("users ===>", users);
+
+        setPermittedUserModalOpen(false);
     }
 
     useEffect(() => {
@@ -56,6 +57,7 @@ const PermittedUsers: React.FC<IPermittedUsers> = ({ }) => {
                         height="24"
                         alt="cancel"
                         className="cursor-pointer"
+                        onClick={() => setPermittedUserModalOpen(false)}
                     />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -69,19 +71,17 @@ const PermittedUsers: React.FC<IPermittedUsers> = ({ }) => {
                     </button>
                 </div>
                 <div className="flex flex-col px-1 py-[10px] gap-[6px] rounded-lg bg-[#141518] border overflow-y-auto  border-[#292A2E] max-h-[235px]">
-                    {userList.map((item, index) => (
+                    {/* {userList.map((item, index) => (
                         <div className={`text-sm cursor-pointer leading-[18px] font-medium hover:text-[#FFFFFF] hover:bg-cgrey-100 text-[#939393] ${flags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetUser(item, index)}>{item}</div>
-                    ))}
+                    ))} */}
                 </div>
             </div>
         </div >
     )
 }
 
-export default PermittedUsers;
+export default PermittedUsersModal;
 
-interface IPermittedUsers {
-    server: string
-    marketChannel: string
-    generalChannel: string
+interface IPermittedUsersModal {
+
 }

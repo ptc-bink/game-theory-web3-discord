@@ -17,6 +17,8 @@ interface ContextType {
   serverList: IServer[];
   removeEntrantModalOpen: boolean;
   addAllocationModalOpen: boolean;
+  permittedUserModalOpen: boolean;
+  setPermittedUserModalOpen: (permittedUserModalOpen: boolean) => void,
   setAddAllocationModalOpen: (addAllocationModalOpen: boolean) => void,
   setRemoveEntrantModalOpen: (removeEntrantModalOpen: boolean) => void;
   setServerList: (serverList: IServer[]) => void;
@@ -34,14 +36,13 @@ interface ContextType {
   setUserImage: (userImage: string) => void;
 }
 
-
 const initialValue: ContextType = {
   addServerModalOpen: false,
   editServerModalOpen: false,
   removeEntrantModalOpen: false,
   profileModalOpen: false,
-  serverID: "123",
-  userID: "456",
+  serverID: "",
+  userID: "",
   userImage: "",
   username: "",
   isAdmin: true,
@@ -51,6 +52,8 @@ const initialValue: ContextType = {
   generalChannelList: [],
   serverList: [],
   addAllocationModalOpen: false,
+  permittedUserModalOpen: false,
+  setPermittedUserModalOpen(permittedUserModalOpen) { },
   setAddAllocationModalOpen(addAllocationModalOpen) { },
   setRemoveEntrantModalOpen(removeEntrantModalOpen) { },
   setServerList(serverList) { },

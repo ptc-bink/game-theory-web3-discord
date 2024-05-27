@@ -6,6 +6,7 @@ import Image from "next/image";
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import { useRouter } from "next/router";
 import BackBtn from "@/pages/components/BackBtn";
+import { addAllocation } from "@/pages/hooks/hook";
 
 const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
@@ -25,7 +26,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
         const data: any = { allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHours, secondaryBuyAmount, priceVoid, isVoid };
 
-        // await addAllocation(data);
+        await addAllocation(data);
     }
 
 

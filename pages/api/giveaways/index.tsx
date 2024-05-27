@@ -25,6 +25,9 @@ export default async function handler(
                 }),
             }
 
+            console.log("here post giveaways");
+
+
             const response = await axios.request(config);
             console.log(response.data);
 
@@ -41,6 +44,8 @@ export default async function handler(
                 method: "get",
                 url: `${process.env.baseURL_back}/test/giveaways`,
             }
+
+            console.log("here get giveaways");
 
             const response = await axios.request(config);
 

@@ -16,7 +16,6 @@ import PreviewCard from "@/pages/components/PreviewCard";
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import Preview from "@/public/avatar/eye.svg"
 
-
 import {
     chainList,
     giveawayTypeList,
@@ -43,23 +42,6 @@ const CreateGiveaway: React.FC = () => {
         { value: "shark5", label: "sharksharkshark" },
         { value: "shark6", label: "sharksharkshark" },
     ]
-
-    // const styles: StylesConfig<DataOption, true> = {
-    //     multiValue: (styles) => ({ ...styles, backgroundColor: '#202125', borderRadius: "10px", fontSize: "15px", padding: "1px 5px 1px 2px", gap: "0px" }),
-    //     multiValueLabel: (styles) => ({ ...styles, color: "#939393" }),
-    //     multiValueRemove: (styles) => ({ ...styles, color: "#939393", ":hover": { color: "#141518" } }),
-    //     control: (styles) => ({ ...styles, backgroundColor: "#141518", border: "1px", borderColor: "#292A2E", borderRadius: "8px", gap: "4px", padding: "10px 0px 10px 0px" }),
-    //     container: (styles) => ({ ...styles, fontSize: "14px" }),
-    //     group: (styles) => ({ ...styles, paddingLeft: "10px" }),
-    //     clearIndicator: (styles) => ({ ...styles, padding: "0px 0px 0px 0px" }),
-    //     indicatorSeparator: (styles) => ({ ...styles, backgroundColor: "transparent" }),
-    //     dropdownIndicator: (styles) => ({ ...styles, padding: "0px 15px 0px 0px" }),
-    //     indicatorsContainer: (styles) => ({ ...styles, alignItems: "start", paddingTop: "5px" }),
-    //     menu: (styles) => ({ ...styles, backgroundColor: "#141518" }),
-    //     menuList: (styles) => ({ ...styles, color: "#FFFFFF", "::part": { ":hover": { color: "black", backgroundColor: "" } }, }),
-    // };
-
-    // const orderOptions = (values: DataOption[]): DataOption[] => { return [...values] };
 
     const [serverList, setServerList] = useState<IServer[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
@@ -205,23 +187,48 @@ const CreateGiveaway: React.FC = () => {
                         </div>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-[#FFFFFF]">Winning Role*</p>
-                            {/* <MultiDropdown
+                            <MultiDropdown
                                 dropdownList={serverRoles}
                                 placeholder="Select winning role"
                                 className="hover:bg-cdark-200"
                                 callback={setWinningRole}
-                            /> */}
-
+                            />
+                        </div>
+                    </div>
+                    {/* Restricted Roles & Required Roles */}
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-[#FFFFFF]">Restricted Roles*</p>
                             <Select
-                                placeholder="Select an animal"
+                                placeholder="Select Restricted Roles"
                                 selectionMode="multiple"
-                                className="max-w-xs p-5"
+                                className="rounded-lg hover:bg-cgrey-100"
+                                classNames={{
+                                    base: "mt-[24px] ",
+                                    mainWrapper: "hover:bg-cgrey-100",
+                                    trigger: "bg-cdark-100 px-0 border-cgrey-200 border  rounded-lg",
+                                    innerWrapper: "px-4 py-3",
+                                }}
+                                listboxProps={{
+                                    itemClasses: {
+                                        base: [
+                                            "rounded-none"
+                                        ],
+                                    }
+                                }}
+                                popoverProps={{
+                                    classNames: {
+                                        base: " rounded-none",
+                                        content: "p-0 border border-cgrey-200 text-[#FFFFFF] hover:bg-cgrey-100 bg-cgrey-100 rounded-lg ",
+                                    },
+                                }}
                                 size="lg"
                                 selectorIcon={<></>}
                                 isMultiline={true}
+                                radius="sm"
                                 renderValue={(items) => {
                                     return (
-                                        <div className="flex flex-wrap gap-2">
+                                        <div className="flex flex-wrap hover:bg-cdark-100 gap-2">
                                             {items.map((item) => (
                                                 <Chip key={item.key}>{"@" + item.key}</Chip>
                                             ))}
@@ -230,36 +237,57 @@ const CreateGiveaway: React.FC = () => {
                                 }}
                             >
                                 {animals.map((animal) => (
-                                    <SelectItem key={animal.value} value={animal.value}>
+                                    <SelectItem key={animal.value} value={animal.value} className="bg-cgrey-100 border border-cgrey-100">
                                         {animal.label}
                                     </SelectItem>
                                 ))}
                             </Select>
                         </div>
-                    </div>
-                    {/* Restricted Roles & Required Roles */}
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Restricted Roles*</p>
-                            <div>
-                                <MultiDropdown
-                                    dropdownList={serverRoles}
-                                    placeholder="Select restricted role"
-                                    className="hover:bg-cdark-200"
-                                    callback={setWinningRole}
-                                />
-                            </div>
-                        </div>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-[#FFFFFF]">Required Roles*</p>
-                            <div>
-                                <MultiDropdown
-                                    dropdownList={serverRoles}
-                                    placeholder="Select required role"
-                                    className="hover:bg-cdark-200"
-                                    callback={setWinningRole}
-                                />
-                            </div>
+                            <Select
+                                placeholder="Select Restricted Roles"
+                                selectionMode="multiple"
+                                className="rounded-lg hover:bg-cgrey-100"
+                                classNames={{
+                                    base: "mt-[24px] ",
+                                    mainWrapper: "hover:bg-cgrey-100",
+                                    trigger: "bg-cdark-100 px-0 border-cgrey-200 border  rounded-lg",
+                                    innerWrapper: "px-4 py-3"
+                                }}
+                                listboxProps={{
+                                    itemClasses: {
+                                        base: [
+                                            "rounded-none"
+                                        ],
+                                    }
+                                }}
+                                popoverProps={{
+                                    classNames: {
+                                        base: " rounded-none",
+                                        content: "p-0 border border-cgrey-200 text-[#FFFFFF] hover:bg-cgrey-100 bg-cgrey-100 rounded-lg ",
+                                    },
+                                }}
+                                size="lg"
+                                selectorIcon={<></>}
+                                isMultiline={true}
+                                radius="sm"
+                                renderValue={(items) => {
+                                    return (
+                                        <div className="flex flex-wrap hover:bg-cdark-100 gap-2">
+                                            {items.map((item) => (
+                                                <Chip key={item.key}>{"@" + item.key}</Chip>
+                                            ))}
+                                        </div>
+                                    );
+                                }}
+                            >
+                                {animals.map((animal) => (
+                                    <SelectItem key={animal.value} value={animal.value} className="bg-cgrey-100 border border-cgrey-100">
+                                        {animal.label}
+                                    </SelectItem>
+                                ))}
+                            </Select>
                         </div>
                     </div>
                     {/* Required all roles */}
@@ -270,7 +298,7 @@ const CreateGiveaway: React.FC = () => {
                     {/* Price */}
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-[#FFFFFF]">Price*</p>
-                        <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                        <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border grey-200grey-200 bg-[#141518] rounded-md" />
                     </div>
                     {/* Links & Requirements */}
                     <div className="grid grid-cols-2 gap-3">

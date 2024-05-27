@@ -32,7 +32,7 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
     return (
         <div className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
-                <p className="text-base text-[#FFFFFF] font-semibold">Server Details</p>
+                <p className="text-base text-[#FFFFFF] font-semibold">Add Allocation</p>
                 <div onClick={() => setAddAllocationModalOpen(false)} className="cursor-pointer">
                     <Image
                         src={Cancel}

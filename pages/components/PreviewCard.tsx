@@ -9,20 +9,27 @@ import User from "@/public/avatar/user.svg"
 import { IPreviewCardProps } from "../utils/_type";
 import { useRouter } from "next/router";
 import AppContext from "../providers/AppContext";
+import { formatDate } from "../utils/utils";
 
 const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, quantity, restricted, requirements, price }) => {
 
+    const [date, setDate] = useState<string | null>(null);
+
     const router = useRouter();
-    const date = new Date();
     const { userImage, username, isAdmin } = useContext(AppContext);
 
-    const initAction = async () => {
-        isAdmin
-    }
-
     useEffect(() => {
-        initAction()
-    }, [])
+        const updateDate = () => {
+            setDate(formatDate(new Date()));
+        };
+
+        updateDate(); // Initial call to set the date
+        const intervalId = setInterval(updateDate, 1000); // Update every second
+
+        return () => clearInterval(intervalId); // Cleanup interval on unmount
+    }, []);
+
+
 
     const handlePreviewEnter = () => { }
 
@@ -90,7 +97,7 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                     {userImage ? <img src={userImage} alt="user avatar" width={24} height={24} className="rounded-full" />
                         : <img src={User} alt="user avatar" width={24} height={24} className="rounded-full" />
                     }
-                    <p className=" text-xs leading-[18px] font-normal text-[#FFFFFF]">Created By - {username}<span className="border mx-1 rounded-full border-[#[#FFFFFF]]" />Today at {date.toLocaleTimeString()}</p>
+                    <p className=" text-xs leading-[18px] font-normal text-[#FFFFFF]">Created By - {username}<span className="border mx-1 rounded-full border-[#[#FFFFFF]]" />Today at {date}</p>
                 </div>
             </div>
             <button className="rounded outline-none px-6 py-3 bg-[#248047] w-fit text-[#FFFFFF]" onClick={handlePreviewEnter}>Enter</button>

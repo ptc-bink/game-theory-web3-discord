@@ -16,7 +16,7 @@ import Add from "@/public/avatar/add.svg"
 
 // import { giveAways } from "../utils/_data";
 
-import { GetGiveaways, getServers } from "../hooks/hook";
+import { getGiveaways, getServers } from "../hooks/hook";
 import AppContext from "../providers/AppContext";
 
 const Dashboard: React.FC<IDashboard> = () => {
@@ -29,7 +29,7 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     const initAction = async () => {
         const tempServerList: IServer[] = await getServers();
-        const tempGiveaways: IGiveaway[] = await GetGiveaways();
+        const tempGiveaways: IGiveaway[] = await getGiveaways();
 
         if (tempServerList.length > 0) {
             const serverDropdownList: IDropdownListProps[] = serverList.map((item, index) => {
@@ -44,20 +44,20 @@ const Dashboard: React.FC<IDashboard> = () => {
     }
 
     const chainValueAction = async () => {
-        const giveAways: any = await GetGiveaways();
+        const giveAways: any = await getGiveaways();
 
         setGiveaways(giveAways);
     }
 
     const serachValueAction = async () => {
         if (searchInput !== undefined) {
-
-            const tempGiveaways: IGiveaway[] = giveaways.filter(giveaway =>
-                giveaway.creator.username.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                giveaway.creator.id.toLowerCase().includes(searchInput?.toLowerCase())
-            )
-
-            setGiveaways(tempGiveaways);
+            if (giveaways.length > 0) {
+                const tempGiveaways: IGiveaway[] = giveaways.filter(giveaway =>
+                    giveaway.creator.username.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                    giveaway.creator.id.toLowerCase().includes(searchInput?.toLowerCase())
+                )
+                setGiveaways(tempGiveaways);
+            }
         }
     }
 
@@ -81,7 +81,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                     <div>
                         <Dropdown
                             dropdownList={serverDropdownList}
-                            placeholder="Select"
+                            placeholder="Select Server"
                             className="hover:bg-cdark-100 bg-cdark-200"
                             callback={setServerValue}
                         />
@@ -107,23 +107,27 @@ const Dashboard: React.FC<IDashboard> = () => {
                     </div>
                 </div>
             </div>
-            {giveaways.length > 0 && <div className="flex flex-col gap-4">
-                {giveaways?.map((item, index) => (
-                    < GiveawayCard
-                        id={item.messageID}
-                        chain={item.chain}
-                        avatar={item.creator.avatar}
-                        username={item.creator.username}
-                        entrants={item.entrants}
-                        quantity={item.quantity}
-                        enterDate={item.chain}
-                        timeRemaining={item.expiry}
-                        harvested={item.harvested}
-                        bidders={item.bidders}
-                        winners={item.winners}
-                    />
-                ))}
-            </div>}
+            {
+                giveaways.length > 0 ?
+                    <div className="flex flex-col gap-4">
+                        {giveaways?.map((item, index) => (
+                            < GiveawayCard
+                                id={item.messageID}
+                                chain={item.chain}
+                                avatar={item.creator.avatar}
+                                username={item.creator.username}
+                                entrants={item.entrants}
+                                quantity={item.quantity}
+                                enterDate={item.chain}
+                                timeRemaining={item.expiry}
+                                harvested={item.harvested}
+                                bidders={item.bidders}
+                                winners={item.winners}
+                            />
+                        ))}
+                    </div> :
+                    <div className="text-[#FFFFFF] text-2xl leading-8 font-medium text-center w-full">No Giveaway to Show</div>
+            }
         </div>
     );
 }

@@ -12,7 +12,7 @@ import AppContext from '../providers/AppContext';
 import SmallSidebar from './SmallSidebar';
 import BigSidebar from './BigSidebar';
 import Navbar from './Navbar';
-// import { adminCheck } from '../hooks/hook';
+import { adminCheck } from '../hooks/hook';
 
 
 const Layout = ({ children }: { children: ReactNode }) => {
@@ -44,10 +44,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
             router.push('/');
     }
 
-    const pathAction = async () => {
-
-    }
-
     useEffect(() => {
         initAction()
     }, [])
@@ -55,10 +51,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         sessionAction()
     }, [session])
-
-    useEffect(() => {
-        pathAction()
-    }, [path])
 
     return (
         <div className="bg-cgrey-100 min-h-screen relative">
