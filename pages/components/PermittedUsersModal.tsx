@@ -2,25 +2,32 @@
 
 import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 import Cancel from "@/public/avatar/close.svg"
-import { getPermittedusers } from "@/pages/hooks/hook";
+import { getPermittedusers, getServers } from "@/pages/hooks/hook";
 import AppContext from "@/pages/providers/AppContext";
+import { IPermittedUser, IServer } from "../utils/_type";
 
 const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
 
-    const { serverList, setPermittedUserModalOpen } = useContext(AppContext);
+    const { setPermittedUserModalOpen } = useContext(AppContext);
     const [users, setUsers] = useState<string[]>([]);
-    const [permittedusersModal, setPermittedusersModal] = useState<any>();
+    const [PermittedUsers, setPermittedusers] = useState<IPermittedUser[]>([]);
     const [flags, setFlags] = useState<boolean[]>([]);
 
     const initAction = async () => {
-        if (serverList.length > 0) {
-            const temppermmittedusers = await getPermittedusers(serverList[0].guildID);
-            return setPermittedusersModal(temppermmittedusers);
+        const tempServerList: IServer[] = await getServers();
+
+        if (tempServerList) {
+            if (tempServerList.length > 0) {
+                const tempPermmittedusers: IPermittedUser[] = await getPermittedusers(tempServerList[0].guildID);
+                return setPermittedusers(tempPermmittedusers);
+            }
+            toast.error("No server to show")
         }
 
-        return alert("no users to show");
+        return toast.error("No user to show");
     }
 
     const handleSetUser = (user: string, index: number) => {
@@ -47,7 +54,7 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
     }, [])
 
     return (
-        <div className="flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+        <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
             <div className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
                 <div className="flex justify-between gap-4">
                     <p className="text-base text-[#FFFFFF] font-semibold">Permitted Users</p>
@@ -66,14 +73,14 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
                             users.map((item, index) => (item + ", "))
                         }</p>
                     </div>
-                    <button className="flex justify-center items-center rounded-md outline-none bg-[#FFFFFF] border border-[#EEEEEE] text-[#16171B] text-sm leading-4 font-medium p-3" onClick={handleAddUser}>
+                    <button aria-label="add user" className="flex justify-center items-center rounded-md outline-none bg-[#FFFFFF] border border-[#EEEEEE] text-[#16171B] text-sm leading-4 font-medium p-3" onClick={handleAddUser}>
                         Add user
                     </button>
                 </div>
                 <div className="flex flex-col px-1 py-[10px] gap-[6px] rounded-lg bg-[#141518] border overflow-y-auto  border-[#292A2E] max-h-[235px]">
-                    {/* {userList.map((item, index) => (
-                        <div className={`text-sm cursor-pointer leading-[18px] font-medium hover:text-[#FFFFFF] hover:bg-cgrey-100 text-[#939393] ${flags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetUser(item, index)}>{item}</div>
-                    ))} */}
+                    {PermittedUsers.map((item, index) => (
+                        <div className={`text-sm cursor-pointer leading-[18px] font-medium hover:text-[#FFFFFF] hover:bg-cgrey-100 text-[#939393] ${flags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetUser(item.id, index)}>{item.id}</div>
+                    ))}
                 </div>
             </div>
         </div >

@@ -1,13 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import qs from "qs"
 
-type ResponseData = {
-    message: string
-}
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ResponseData>
+    res: NextApiResponse
 ) {
     if (req.method == "POST") {
         try {
@@ -17,22 +14,21 @@ export default async function handler(
             console.log("here : edit server");
 
 
-            // let config = {
-            //     method: "post",
-            //     url: `${process.env.baseURL_back}/test/create-giveaway`,
-            //     headers: { "Content-Type": "application/json" },
-            //     data: qs.stringify({
-            //         data
-            //     }),
-            // }
+            let config = {
+                method: "post",
+                url: `${process.env.baseURL_back}/test/create-giveaway`,
+                headers: { "Content-Type": "application/json" },
+                data: qs.stringify({
+                    data
+                }),
+            }
 
-            // const response = await axios.request(config);
-            // console.log(response.data);
+            const response = await axios.request(config);
+            console.log(response.data);
 
-            // return res.json(response.data);
+            return res.status(200).json(response.data);
         } catch (error) {
-            console.error("Error creating user: ", error);
-            return res.json({ message: "Failed to create user" });
+            return res.status(500).json({ error: error });
         }
     }
 }

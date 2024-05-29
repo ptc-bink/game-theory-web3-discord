@@ -14,66 +14,111 @@ import Driver from "@/public/avatar/driver.svg"
 import Refresh from "@/public/avatar/refresh.svg"
 
 import AppContext from "../providers/AppContext";
-import { approvedDropdownList } from "../utils/_data";
-import { IAdminProps, IApprovedServer, IServer, IDropdownListProps } from "../utils/_type";
-import { getAdministrationTrustedServers, getGeneralChannelList, getMarketChannelList, getServers } from "../hooks/hook";
+import { IAdminProps, IServer, IDropdownListProps, IAdministrationTrustedServers, IChannel } from "../utils/_type";
+import { administrationChannellist, getAdministrationTrustedServers, getServers } from "../hooks/hook";
 import { useRouter } from "next/router";
 import BackBtn from "../components/BackBtn";
+import toast from "react-hot-toast";
+import { tempFilterApprovedServerList } from "../utils/_data";
 
 const Admin: React.FC<IAdminProps> = () => {
 
-    const { addServerModalOpen, isAdmin, serverList, setAddServerModalOpen, setMarketChannelList, setGeneralChannelList } = useContext(AppContext);
+    const { addServerModalOpen, allChannelList, isAdmin, setServerID, setAllChannelList, setAddServerModalOpen, } = useContext(AppContext);
     const [searchInput, setSearchInput] = useState<string>("");
     const [server, setServer] = useState<string>("");
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
-    const [approvedServerList, setApprovedServerList] = useState<IApprovedServer[]>([]);
+    const [approvedServerList, setApprovedServerList] = useState<IAdministrationTrustedServers[]>([]);
+    const [filterApprovedServerList, setFilterApprovedServerList] = useState<IAdministrationTrustedServers[]>([]);
+    const [channelDropdownList, setChannelDropdownList] = useState<IDropdownListProps[]>();
 
     const router = useRouter();
 
     const initAction = async () => {
-        if (serverList.length > 0) {
-            const trustedServers: any = await getAdministrationTrustedServers(serverList[0].guildID);
+        const tempServerList: IServer[] = await getServers();
 
-            setApprovedServerList(trustedServers);
+        if (tempServerList) {
+            if (tempServerList.length > 0) {
+                const tempData = await getAdministrationTrustedServers(tempServerList[0].guildID);
 
-            const serverDropdownList: IDropdownListProps[] = serverList.map((item, index) => {
-                return { name: item.guild.name, id: item.guild.id }
-            })
+                const tempTrustedServers: IAdministrationTrustedServers[] = Object.keys(tempData).map((key) => {
+                    return {
+                        id: key,
+                        data: tempData[key]
+                    }
+                })
 
-            if (serverDropdownList.length > 0) {
-                setServerDropdownList(serverDropdownList);
+                setApprovedServerList(tempTrustedServers);
+                setFilterApprovedServerList(tempTrustedServers);
+
+                const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
+                    return {
+                        name: item.guild.name,
+                        id: item.guild.id
+                    }
+                })
+
+                if (tempServerDropdownList.length > 0) {
+                    setServerDropdownList(tempServerDropdownList);
+                }
+
+                let tempAllChannelList: IChannel[] = [];
+
+                for (let i = 0; i < tempServerList.length; i++) {
+                    const tempChannelList: IChannel[] = await administrationChannellist(tempServerList[i].guildID);
+
+                    if (tempChannelList) {
+                        if (tempChannelList.length > 0) {
+                            console.log("tempChannelList ====>", tempChannelList);
+                            tempAllChannelList = tempAllChannelList.concat(tempChannelList);
+                        }
+                    }
+                }
+
+                setAllChannelList(tempAllChannelList);
+
+            } else {
+                return toast.error('No Server to Show')
             }
-        }
-
-        const tempMarketChannelList: any[] = await getMarketChannelList();
-        const tempGeneralChannelList: any[] = await getGeneralChannelList();
-
-        if (tempMarketChannelList.length > 0) {
-            setMarketChannelList(tempGeneralChannelList);
-        }
-
-        if (tempGeneralChannelList.length > 0) {
-            setGeneralChannelList(tempGeneralChannelList);
-        }
-
-        if (tempMarketChannelList.length > 0) {
-            const marketChannelList = tempMarketChannelList.map((item, index) => (
-                { name: item.name, id: item.id }
-            ))
-        }
-
-        if (tempGeneralChannelList.length > 0) {
-            const generalChannelList = tempGeneralChannelList.map((item, index) => (
-                { name: item.name, id: item.id }
-            ))
+        } else {
+            return toast.error('No server to show')
         }
     }
+
+    const searchInputAction = async () => {
+        console.log("approvedServerList ====>", approvedServerList);
+        console.log("searchInput ====>", searchInput);
+
+        if (searchInput !== undefined) {
+            if (approvedServerList.length > 0) {
+                const tempFilterApprovedServerList = approvedServerList.filter(item =>
+                    item.data.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.data.admin.toLowerCase().includes(searchInput.toLowerCase())
+                )
+                setFilterApprovedServerList(tempFilterApprovedServerList);
+
+                console.log("tempFilterApprovedServerList ====>", tempFilterApprovedServerList);
+                console.log("searchInput ====>", searchInput);
+            }
+        }
+    }
+
+    const handleAddBtn = async () => {
+        if (server) {
+            return toast.error("Please select server")
+        }
+
+        setServerID(server);
+        setAddServerModalOpen(true);
+    }
+
+    useEffect(() => {
+        searchInputAction();
+    }, [searchInput, server])
 
     useEffect(() => {
         if (!isAdmin) {
             router.back();
             console.log("you should be admin");
-
         }
         initAction();
     }, [])
@@ -81,11 +126,13 @@ const Admin: React.FC<IAdminProps> = () => {
     return (
         <div className="flex flex-col gap-4 p-8 bg-cdark-100">
             <div className="flex flex-col">
-                <div className="flex gap-6 items-center">
-                    <BackBtn />
-                    <p className="text-[#FFFFFF] text-2xl font-semibold">Approved Servers</p>
+                <div className="hidden md:block">
+                    <div className=" flex gap-6 items-center">
+                        <BackBtn />
+                        <p className="text-[#FFFFFF] text-2xl font-semibold">Approved Servers</p>
+                    </div>
                 </div>
-                <div className="items-center w-full grid grid-cols-2 gap-4 pt-4 text-sm realtive">
+                <div className="items-center w-full grid md:grid-cols-2 grid-cols-1 gap-4 pt-4 text-sm realtive">
                     <Dropdown
                         dropdownList={serverDropdownList}
                         placeholder="Select"
@@ -100,32 +147,40 @@ const Admin: React.FC<IAdminProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        <button onClick={() => setAddServerModalOpen(true)} className="ml-2 flex justify-between w-fit items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3">
+                        <button aria-label="add server" onClick={handleAddBtn} className="ml-2 flex justify-between w-fit items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3">
                             <Image
                                 src={Add}
                                 width="16"
                                 height="16"
                                 alt="add button"
                             />
-                            <p className="text-cdark-100">Add Server</p>
+                            <p className="text-[#16171B] text-sm leading-5 font-medium lg:block hidden">Add Server</p>
                         </button>
                     </div>
                     {addServerModalOpen && (
-                        <div className="flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                        <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
                             <AddServerModal />
                         </div>
                     )}
                 </div>
             </div>
-            {approvedServerList.length !== 0 ? <div className="grid grid-cols-3 gap-4">
-                {approvedServerList.map((item, index) => (
+            {filterApprovedServerList.length > 0 ? <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
+                {filterApprovedServerList.map((item, index) => (
                     <ServerCard
                         key={index}
-                        server={item.server}
-                        createdBy={item.createdBy}
-                        paymentExpires={item.paymentExpires}
-                        marketChannel={item.marketChannel}
-                        generalChannel={item.generalChannel}
+                        id={item.id}
+                        rediskey={item.data.redisKey}
+                        name={item.data.name}
+                        createdBy={item.data.admin}
+                        serverImg={item.data.serverImage}
+                        adminImg={item.data.adminImage}
+                        paymentExpires={item.data.paymentExpires}
+                        marketChannel={item.data.Market_Channel_ID}
+                        submitWallet={item.data.Submit_Wallet_ID}
+                        vestingChannel={item.data.Vesting_Channel_ID}
+                        reminderChannel={item.data.Reminder_Channel_ID}
+                        winnersChannel={item.data.Winners_Channel_ID}
+                        generalChannel={item.data.General_Channel_ID}
                     />
                 ))}
             </div> : <div className="flex flex-col gap-4 px-3 py-4 min-h-[calc(100vh-280px)] justify-center items-center">
@@ -135,14 +190,14 @@ const Admin: React.FC<IAdminProps> = () => {
                     height="32"
                     alt="no server to show"
                 />
-                <div className="flex flex-col w-full text-center justify-center gap-2">
+                <div className="z-[60] flex flex-col w-full text-center justify-center gap-2">
                     <p className="text-2xl font-medium text-[#FFFFFF]">No Server To Show</p>
                     <p className="text-base leading-[18px] font-normal text-[#939393]">Your trusted server will show here</p>
                 </div>
             </div>
             }
             {addServerModalOpen && (
-                <div className="flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                <div className="z-[60] flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
                     <AddServerModal />
                 </div>
             )}

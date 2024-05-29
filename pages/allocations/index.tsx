@@ -18,19 +18,26 @@ import BackBtn from "../components/BackBtn";
 
 const Allocation: React.FC<IAllocationProps> = () => {
 
-    const { serverList } = useContext(AppContext);
-
-    const [searchInput, setSearchInput] = useState<string>();
+    const [searchInput, setSearchInput] = useState<string>("");
     const [allocations, setAllocations] = useState<IAllocation[]>([]);
+    const [filterAllocations, setFilterAllocations] = useState<IAllocation[]>([]);
 
     const initAction = async () => {
 
-        console.log("serverList  ========>", serverList);
+        const tempServerList = await getServers();
 
-        const tempAllocations: IAllocation[] = await getAllocation(serverList[0]?.guildID);
+        if (tempServerList) {
+            if (tempServerList.length > 0) {
+                const tempAllocations: IAllocation[] = await getAllocation(tempServerList[0]?.guildID);
 
-        if (tempAllocations && tempAllocations.length > 0) {
-            setAllocations(tempAllocations)
+                console.log("tempAllocations====================>", tempAllocations);
+
+
+                if (tempAllocations && tempAllocations.length > 0) {
+                    setAllocations(tempAllocations);
+                    setFilterAllocations(tempAllocations);
+                }
+            }
         }
     }
 
@@ -41,7 +48,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
                     allocation.title.toLowerCase().includes(searchInput?.toLowerCase()) ||
                     allocation.id.toLowerCase().includes(searchInput?.toLowerCase())
                 )
-                setAllocations(tempAllocations);
+                setFilterAllocations(tempAllocations);
             }
         }
     }
@@ -57,44 +64,46 @@ const Allocation: React.FC<IAllocationProps> = () => {
     return (
         <div className="flex flex-col p-8 gap-4">
             <div className="flex flex-col gap-4">
-                <div className="flex gap-6 items-center">
-                    <BackBtn />
-                    <p className="text-[#FFFFFF] text-2xl font-semibold">Allocations</p>
+                <div className="md:block hidden">
+                    <div className="flex gap-6 items-center">
+                        <BackBtn />
+                        <p className="text-[#FFFFFF] text-2xl font-semibold">Allocations</p>
+                    </div>
                 </div>
                 <div className="flex gap-2">
                     <div className="flex flex-grow">
                         <SearchBtn
-                            placeholder="Search Allocation"
-                            endContent="Search"
+                            placeholder="Search ..."
+                            endContent="Refresh"
                             callback={setSearchInput}
                         />
                     </div>
-                    <Link href="/allocations/add" className="flex justify-between items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3 gap-2">
+                    <Link href="/allocations/add" className="w-fit flex justify-between items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3 gap-2">
                         <Image
                             src={Add}
                             width="16"
                             height="16"
                             alt="add button"
                         />
-                        <p className="text-cdark-100">Submit</p>
+                        <p className="text-[#16171B] text-sm md:leading-5 leading-4 font-medium md:block hidden">Submit</p>
                     </Link>
                 </div>
             </div>
-            {allocations.length > 0 ? <Table
-                allocations={allocations}
-            /> : <div className="flex justify-center items-center min-h-[calc(100vh-280px)]">
-                <div className="flex flex-col w-fit gap-4 px-3 py-4 justify-center items-center">
-                    <Image
-                        src={Driver}
-                        width="32"
-                        height="32"
-                        alt="no server to show"
-                    />
-                    <div className="flex flex-col w-full text-center justify-center gap-2">
-                        <p className="text-2xl font-medium text-[#FFFFFF]">No Allocations To Show</p>
+            {filterAllocations.length > 0 ?
+                <Table allocations={filterAllocations}
+                /> : <div className="flex justify-center items-center min-h-[calc(100vh-280px)]">
+                    <div className="flex flex-col w-fit gap-4 px-3 py-4 justify-center items-center">
+                        <Image
+                            src={Driver}
+                            width="32"
+                            height="32"
+                            alt="no server to show"
+                        />
+                        <div className="flex flex-col w-full text-center justify-center gap-2">
+                            <p className="text-2xl text-center font-medium text-[#FFFFFF]">No Allocations To Show</p>
+                        </div>
                     </div>
                 </div>
-            </div>
             }
         </div>
     );

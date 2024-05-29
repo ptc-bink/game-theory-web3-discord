@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import Refresh from "@/public/avatar/refresh.svg"
@@ -30,5 +30,5 @@ export default SearchBtn;
 interface SearchBtnProps {
     placeholder: string
     endContent: string
-    callback: any
+    callback: (value: string) => void;
 }

@@ -8,15 +8,14 @@ import {
     test,
     User,
     Logout,
-    GetHarvest,
-    GetAdminof,
+    getAdminof,
     UserInfo,
     getGiveaways,
     getServers,
     handleCreateGiveaway,
     ActiveServers,
     RemoveEntry,
-    GetSeverRoles,
+    getServerRoles,
     AdministrationChannellist,
     PutAdministrationTrustedServers,
     getAdministrationTrustedServers,
@@ -50,12 +49,6 @@ export const getDashboardInfo = async () => {
     // }
 
     // return res
-}
-
-export const getHarvestWinners = async (giveawayID: string) => {
-    const harvest = await GetHarvest(giveawayID);
-
-    return harvest;
 }
 
 export const getApprovedServers = async (serverID: string) => {

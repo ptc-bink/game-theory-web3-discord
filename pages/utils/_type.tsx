@@ -1,35 +1,49 @@
 export interface IAdministrationTrustedServers {
-    id: string,
-    redisKey: string,
-    name: string,
-    paymentExpires: string,
-    General_Channel_ID: string,
-    Market_Channel_ID: string,
-    Submit_Wallet_ID: string,
-    Database: string,
-    Vesting_Channel_ID: string,
-    Reminder_Channel_ID: string,
-    Winners_Channel_ID: string,
-    Supported_Wallets: string
+    id: string;
+    data: {
+        name: string,
+        admin: string,
+        serverImage?: string,
+        adminImage?: string,
+        redisKey: string,
+        paymentExpires: number,
+        Market_Channel_ID: string,
+        General_Channel_ID: string,
+        Submit_Wallet_ID: string,
+        Database: string,
+        Vesting_Channel_ID: string,
+        Reminder_Channel_ID: string,
+        Winners_Channel_ID: string,
+        Supported_Wallets: string[]
+    }
+}
+
+export interface IEditServerModalProps {
+    server: string;
+    rediskey: string;
+    marketChannel: string;
+    generalChannel: string;
+    submitWallet: string;
+    vestingChannel: string;
+    reminderChannel: string;
+    winnersChannel: string;
 }
 
 export interface IAllocation {
     id: string,
     title: string,
     allocation: number,
-    for_server: string,
-    role: string,
+    for_server: number,
+    role: number,
     contract: string,
-    mint_date: string,
-    presale: number,
-    vesting: {
+    mint_date: number,
+    vesting?: {
         allocation: number,
         mint_hold_days: number,
         secondary_buy_hold_days: number,
         secondary_buy_hours: number,
         secondary_buy_amount: number,
         price_void: number,
-        is_void: number
     }
 }
 
@@ -92,6 +106,10 @@ export interface IEditserverInfo {
 }
 
 export interface IAddserverInfo {
+    Submit_Wallet_ID: string,
+    Vesting_Channel_ID: string,
+    Reminder_Channel_ID: string,
+    Winners_Channel_ID: string,
     rediskey: string,
     marketChannelID: string,
     generalChannelID: string,
@@ -113,7 +131,14 @@ export interface IDropdownProps {
     dropdownList: IDropdownListProps[];
     placeholder: string;
     className: string;
+    initValue?: string;
     callback: any;
+}
+
+export interface IPermittedUser {
+    id: string,
+    vesting_reports_ids: string,
+    added_by: string
 }
 
 export interface IMultiDropdownProps {
@@ -121,6 +146,12 @@ export interface IMultiDropdownProps {
     placeholder: string;
     className: string;
     callback: any;
+}
+
+export interface IChannel {
+    id: string;
+    name: string;
+    type: string;
 }
 
 export interface IGiveaway {
@@ -165,14 +196,6 @@ export interface IBiddersGiveaway {
     giveaway: string
 }
 
-export interface IApprovedServer {
-    server: string,
-    createdBy: string,
-    paymentExpires: any,
-    marketChannel: string,
-    generalChannel: string
-}
-
 export interface IDashboardres {
     serverList: IServer[],
     biddersGiveawayList: IBiddersGiveaway[],
@@ -191,9 +214,37 @@ export interface IServer {
     owner: string
 }
 
+export interface IActiveServer {
+    name: string,
+    icon: string,
+    members: string
+}
+
+export interface IRemoveEntrants {
+    marketID: string;
+    serverID: string;
+    removeUserID: string;
+}
+
+export interface IServerCardProps {
+    id: string
+    name: string;
+    rediskey: string;
+    createdBy: string;
+    paymentExpires: number;
+    marketChannel: string;
+    generalChannel: string;
+    submitWallet: string;
+    vestingChannel: string;
+    reminderChannel: string;
+    winnersChannel: string;
+    adminImg?: string;
+    serverImg?: string;
+}
+
 export interface IGiveawayCardProps {
-    id: string;
-    username?: string;
+    giveawayID: string;
+    title: string;
     avatar?: string;
     chain?: string;
     entrants?: number;
@@ -214,10 +265,10 @@ export interface IPreviewCardProps {
     description: string
     type: string,
     expiry: string,
-    winningRole: string,
+    winningRole?: IServerRole,
     chain: string,
     quantity: number,
-    restricted: IServerRole,
+    required: IServerRole[],
     requirements: string,
     price?: number
 }

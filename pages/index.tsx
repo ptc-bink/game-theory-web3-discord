@@ -13,7 +13,7 @@ import AppContext from "./providers/AppContext";
 export default function Page() {
 
   return (
-    <div className="flex absolute top-0 left-0 w-screen h-screen bg-[#141518] backdrop-blur-sm justify-center items-center">
+    <div className="flex absolute z-[60] top-0 left-0 w-screen h-screen bg-[#141518] backdrop-blur-sm justify-center items-center">
       <div className="bg-cdark-100 h-screen flex justify-center items-center">
         <div className="grid gap-8 bg-center sm:bg-cdark-200 bg-[#141518] h-[348px] w-[393px] rounded-2xl border p-[50px] border-transparent sm:border-cdark-200">
           <div className="grid gap-4 w-full">
@@ -33,7 +33,7 @@ export default function Page() {
             </div>
           </div>
           <div className="flex justify-center">
-            <button onClick={() => signIn('discord')} className="flex items-center hover:cursor-pointer hover:bg-[#5815F2] bg-cblue-500 rounded-lg px-6 py-3 border border-cblue-500 border-opacity-[0.08]">
+            <button aria-label="discord" onClick={() => signIn('discord')} className="flex items-center hover:cursor-pointer hover:bg-[#5815F2] bg-cblue-500 rounded-lg px-6 py-3 border border-cblue-500 border-opacity-[0.08]">
               <p className=" text-[#FFFFFF] text-base font-semibold pr-2">
                 Login with Discord
               </p>

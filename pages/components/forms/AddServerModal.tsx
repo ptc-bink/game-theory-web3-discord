@@ -8,26 +8,37 @@ import { marketChannelIdList, generalChannelIdList } from "@/pages/utils/_data";
 
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/pages/providers/AppContext";
-import { addServer } from "@/pages/hooks/hook";
-import { IDropdownListProps } from "@/pages/utils/_type";
+import { addServer, getChainList } from "@/pages/hooks/hook";
+import { IChannel, IDropdownListProps } from "@/pages/utils/_type";
+import toast from "react-hot-toast";
 
 const AddServerModal: React.FC<AddServerModalProps> = () => {
 
-    const { marketChannelList, generalChannelList, setAddServerModalOpen } = useContext(AppContext);
-    const [marketChannelId, setMarketChannelId] = useState<string>("");
-    const [generalChannelId, setGeneralChannelId] = useState<string>("");
-    const [generalChannelDropDownList, setGeneralChannelDropDownList] = useState<IDropdownListProps[]>([]);
-    const [marketChannelDropDownList, setMarketChannelDropDownList] = useState<IDropdownListProps[]>([]);
+    const { setAddServerModalOpen, serverID } = useContext(AppContext);
+    const [channelDropdownList, setChannelDropdownList] = useState<IDropdownListProps[]>([])
+    const [marketChannelID, setMarketChannelId] = useState<string>();
+    const [generalChannelID, setGeneralChannelId] = useState<string>();
+    const [submitWalletID, setSubmitWalletId] = useState<string>();
+    const [vestingChannelID, setVestingChannelId] = useState<string>();
+    const [reminderChannelID, setReminderChannelId] = useState<string>();
+    const [winnersChannelID, setWinnersChannelId] = useState<string>();
     const [date, setDate] = useState<string>("");
     const [redisKey, setRediskey] = useState<string>("");
 
     const initAction = async () => {
-        if (marketChannelIdList.length > 0) {
+        const tempChannelList: IChannel[] = await getChainList(serverID);
 
-        }
+        if (tempChannelList) {
+            if (tempChannelList.length > 0) {
+                const tempChannelDropdownList: IDropdownListProps[] = tempChannelList.map((item) => (
+                    {
+                        name: item.name,
+                        id: item.id,
+                    }
+                ))
 
-        if (generalChannelIdList.length > 0) {
-
+                setChannelDropdownList(tempChannelDropdownList);
+            }
         }
     }
 
@@ -36,15 +47,22 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
     }, [])
 
     const handleSave = async () => {
+        if (!redisKey || !marketChannelID || !generalChannelID || !submitWalletID || !vestingChannelID || !reminderChannelID || !winnersChannelID || !date) {
+            return toast.error("Please insert all values")
+        }
 
         const data = {
             rediskey: redisKey,
-            marketChannelID: marketChannelId,
-            generalChannelID: generalChannelId,
+            marketChannelID: marketChannelID,
+            generalChannelID: generalChannelID,
+            Submit_Wallet_ID: submitWalletID,
+            Vesting_Channel_ID: vestingChannelID,
+            Reminder_Channel_ID: reminderChannelID,
+            Winners_Channel_ID: winnersChannelID,
             date: date
         }
 
-        const res = addServer(data);
+        const res = await addServer(data);
 
         console.log("add server response:", res);
         setAddServerModalOpen(false);
@@ -68,13 +86,35 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
                     <p className="text-sm font-normal text-[#FFFFFF]">Redis Key</p>
                     <input type="text" placeholder="Input redis key" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" value={redisKey} onChange={(e) => setRediskey(e.target.value)} />
                 </div>
-                <div className="flex flex-col gap-2">
-                    <p className="text-sm font-normal text-[#FFFFFF]">Market Channel ID</p>
-                    <Dropdown dropdownList={marketChannelDropDownList} placeholder="Select market ID" callback={setMarketChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                <div className="grid grid-cols-2 gap-2">
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-[#FFFFFF]">Market Channel ID</p>
+                        <Dropdown dropdownList={channelDropdownList} placeholder="Select market ID" callback={setMarketChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-[#FFFFFF]">General Channel ID</p>
+                        <Dropdown dropdownList={channelDropdownList} placeholder="Select general ID" callback={setGeneralChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                    </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                    <p className="text-sm font-normal text-[#FFFFFF]">General Channel ID</p>
-                    <Dropdown dropdownList={generalChannelDropDownList} placeholder="Select general ID" callback={setGeneralChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                <div className="grid grid-cols-2 gap-2">
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-[#FFFFFF]">Submit Wallet ID</p>
+                        <Dropdown dropdownList={channelDropdownList} placeholder="Select wallet ID" callback={setSubmitWalletId} className="hover:bg-cdark-200 bg-cdark-100" />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-[#FFFFFF]">Vesting Channel ID</p>
+                        <Dropdown dropdownList={channelDropdownList} placeholder="Select vesting ID" callback={setVestingChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-[#FFFFFF]">Reminder Channel ID</p>
+                        <Dropdown dropdownList={channelDropdownList} placeholder="Select reminder ID" callback={setReminderChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-[#FFFFFF]">Winners Channel ID</p>
+                        <Dropdown dropdownList={channelDropdownList} placeholder="Select winners ID" callback={setWinnersChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
+                    </div>
                 </div>
                 <div className="flex flex-col gap-2">
                     <p className="text-sm font-normal text-[#FFFFFF]">Date</p>

@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import AppContext from "../providers/AppContext";
 import { formatDate } from "../utils/utils";
 
-const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, quantity, restricted, requirements, price }) => {
+const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, quantity, required, requirements, price }) => {
 
     const [date, setDate] = useState<string | null>(null);
 
@@ -76,12 +76,28 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                         </div>
                         <div className="flex flex-col gap-1">
                             <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Winning Role</label>
-                            <p className="text-xs font-medium text-[#FFFFFF]">{winningRole ? winningRole : "-"}</p>
+                            {
+                                winningRole ?
+                                    <p className="text-xs font-medium text-[#FFFFFF] w-fit rounded-sm px-1" style={{ backgroundColor: `${winningRole.color}` }}>
+                                        {winningRole.name}
+                                    </p> :
+                                    <p className="text-xs font-medium text-[#FFFFFF]">-</p>
+                            }
                         </div>
                     </div>
                     <div className="flex flex-col gap-1">
                         <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Requirements</label>
-                        <p className="text-[#FFFFFF] text-xs leading-[18px] font-medium">{requirements ? requirements : "-"}</p>
+                        {
+                            required.length > 0 ?
+                                <div className="flex gap-1">
+                                    {required.map(item =>
+                                        <p className="text-xs font-medium text-[#FFFFFF] w-fit rounded-sm px-1" style={{ backgroundColor: `${item.color}` }}>
+                                            {item.name}
+                                        </p>
+                                    )}
+                                </div> :
+                                <p className="text-xs font-medium text-[#FFFFFF]">-</p>
+                        }
                     </div>
                     <div className="flex flex-col gap-1">
                         <label className="text-[#FFFFFF] text-xs leading-[18px] font-semibold">Entrants</label>
@@ -100,7 +116,7 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                     <p className=" text-xs leading-[18px] font-normal text-[#FFFFFF]">Created By - {username}<span className="border mx-1 rounded-full border-[#[#FFFFFF]]" />Today at {date}</p>
                 </div>
             </div>
-            <button className="rounded outline-none px-6 py-3 bg-[#248047] w-fit text-[#FFFFFF]" onClick={handlePreviewEnter}>Enter</button>
+            <button aria-label="enter" className="rounded outline-none px-6 py-3 bg-[#248047] w-fit text-[#FFFFFF]" onClick={handlePreviewEnter}>Enter</button>
         </div>
     )
 }

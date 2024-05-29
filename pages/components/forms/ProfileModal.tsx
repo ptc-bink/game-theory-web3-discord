@@ -5,10 +5,16 @@ import Image from "next/image";
 
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/pages/providers/AppContext";
+import { IDropdownListProps, IServer } from "@/pages/utils/_type";
+import Dropdown from "./Dropdown";
+import { getUserDetails } from "@/pages/hooks/hook";
 
 const ProfileModal: React.FC<ProfileModalProps> = () => {
 
-    const { setProfileModalOpen, serverID, userID, setServerID, setUserID } = useContext(AppContext);
+    const { setProfileModalOpen, username, userImage, userID, serverList, setServerID, setUserID } = useContext(AppContext);
+    const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
+    const [userProfile, setUserProfile] = useState<any>();
+    const [serverValue, setServerValue] = useState<string>("");
     const [ethHot, setEthHot] = useState<string>("");
     const [ethCold, setEthCold] = useState<string>("");
     const [sol, setSol] = useState<string>("");
@@ -22,8 +28,31 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
     }
 
     const initAction = async () => {
-        console.log("init action");
+        if (serverList.length > 0) {
+            const initServerValue: string = serverList[0].guildID;
+
+            const tempUserProfile = await getUserDetails(userID, initServerValue);
+            const tempServerDropdownList: IDropdownListProps[] = serverList?.map((item, index) => {
+                return { name: item.guild.name, id: item.guild.id }
+            })
+
+            setServerDropdownList(tempServerDropdownList);
+            setServerValue(initServerValue)
+            setUserProfile(userProfile);
+
+            console.log("getUserProfile =====>", tempUserProfile);
+
+        }
     }
+
+    const serverValueAction = async () => {
+        const tempUserProfile = await getUserDetails(userID, serverValue);
+        setUserProfile(tempUserProfile);
+    }
+
+    useEffect(() => {
+        serverValueAction();
+    }, [serverValue])
 
     useEffect(() => {
         initAction()
@@ -43,18 +72,34 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                 </div>
             </div>
             <div className="flex flex-col gap-3">
-                <div className="flex flex-col gap-2">
-                    <p className="text-sm font-normal text-[#FFFFFF]">Server ID</p>
-                    <input type="text" placeholder="Input Server ID" value={serverID} onChange={(e) => { setServerID(e.target.value) }} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
+                <div className="grid grid-cols-2 gap-2">
+                    <div>
+                        <img src={userImage} width="155" height="155" alt="user avatar" className="rounded-lg" />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-[#FFFFFF]">User Name</p>
+                            <input type="text" disabled placeholder="Input User ID" value={username} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-[#FFFFFF]">User ID</p>
+                            <input type="text" disabled placeholder="Input User ID" value={userID} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
+                        </div>
+                    </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <p className="text-sm font-normal text-[#FFFFFF]">User ID</p>
-                    <input type="text" placeholder="Input User ID" value={userID} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
+                    <p className="text-sm font-normal text-[#FFFFFF]">Server ID</p>
+                    <Dropdown
+                        dropdownList={serverDropdownList}
+                        placeholder="Select Server"
+                        className="hover:bg-cdark-200 bg-cdark-100"
+                        callback={setServerValue}
+                    />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-[#FFFFFF]">ETH HOT*</p>
-                        <input type="text" placeholder="Input User ID" onChange={(e) => setEthCold(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
+                        <input type="text" placeholder="0" onChange={(e) => setEthCold(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-[#FFFFFF]">ETH COLD*</p>

@@ -85,7 +85,7 @@ const SmallSidebar = () => {
     ])
 
     return (
-        <div className="flex justify-between overflow-hidden bg-cgrey-100">
+        <div className="flex justify-between overflow-auto bg-cgrey-100">
             {adminSideBar.map((side: any, index: number) => (
                 <Link key={index} href={side.link}>
                     <div className={`flex flex-col p-6 items-center justify-center cursor-pointer  hover:bg-cdark-100 ${path.includes(side.link) ? "border-t border-t-[#FFFFFF] bg-cdark-100" : ""}`} onClick={() => { setSelectedItem(side.label) }}>

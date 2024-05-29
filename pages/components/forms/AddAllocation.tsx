@@ -80,7 +80,7 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                     </div>
                 </div>
             </div>
-            <button className="flex self-end outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-4 py-3 w-fit rounded-md text-[#16171B]" onClick={handleSubmit}>Submit</button>
+            <button aria-label="submit" className="flex self-end outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-4 py-3 w-fit rounded-md text-[#16171B]" onClick={handleSubmit}>Submit</button>
         </div>
     )
 }

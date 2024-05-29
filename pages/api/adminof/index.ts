@@ -1,12 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-type ResponseData = {
-    message: string
-}
-
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ResponseData>
+    res: NextApiResponse
 ) {
     if (req.method == "GET") {
         try {
@@ -19,10 +15,9 @@ export default async function handler(
 
             const response = await axios.request(config);
 
-            return res.json(response.data);
+            return res.status(200).json(response.data);
         } catch (error) {
-            console.error("Error creating user: ", error);
-            return res.json({ message: "Failed to create user" });
+            return res.status(500).json({ error: error });
         }
     }
 }

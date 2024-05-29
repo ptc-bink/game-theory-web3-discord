@@ -2,7 +2,7 @@
 
 import React, { ReactNode, useState } from "react";
 import AppContext from "./AppContext";
-import { IServer } from "../utils/_type";
+import { IChannel, IServer } from "../utils/_type";
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [addServerModalOpen, setAddServerModalOpen] = useState<boolean>(false);
@@ -15,12 +15,11 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [username, setUsername] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [giveawayID, setGiveawayID] = useState<string>("");
+  const [selectedGiveawayID, setSelectedGiveawayID] = useState<string>("");
   const [removeEntrantModalOpen, setRemoveEntrantModalOpen] = useState<boolean>(false);
-  const [marketChannelList, setMarketChannelList] = useState<any[]>([]);
-  const [generalChannelList, setGeneralChannelList] = useState<any[]>([]);
-  const [serverList, setServerList] = useState<IServer[]>([]);
   const [permittedUserModalOpen, setPermittedUserModalOpen] = useState<boolean>(false);
+  const [removeApproval, setRemoveApproval] = useState<boolean>(false);
+  const [allChannelList, setAllChannelList] = useState<IChannel[]>([]);
 
   return (
     <AppContext.Provider
@@ -34,20 +33,18 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         userImage,
         isAdmin,
         isLoading,
-        giveawayID,
-        marketChannelList,
-        generalChannelList,
+        selectedGiveawayID,
         removeEntrantModalOpen,
-        serverList,
         addAllocationModalOpen,
         permittedUserModalOpen,
+        removeApproval,
+        allChannelList,
+        setAllChannelList,
+        setRemoveApproval,
         setPermittedUserModalOpen,
         setAddAllocationModalOpen,
         setRemoveEntrantModalOpen,
-        setServerList,
-        setGeneralChannelList,
-        setMarketChannelList,
-        setGiveawayID,
+        setSelectedGiveawayID,
         setIsLoading,
         setIsAdmin,
         setUserImage,

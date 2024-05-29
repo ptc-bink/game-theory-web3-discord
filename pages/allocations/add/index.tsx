@@ -32,10 +32,12 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
     return (
         <div className="flex flex-col p-8 gap-4">
-            <div className="w-3/5 flex flex-col gap-4">
-                <div className="flex gap-6 items-center">
-                    <BackBtn />
-                    <p className="text-[#FFFFFF] text-2xl font-semibold">Add</p>
+            <div className="md:w-3/5 w-full flex flex-col gap-4">
+                <div className="md:block hidden">
+                    <div className="flex gap-6 items-center">
+                        <BackBtn />
+                        <p className="text-[#FFFFFF] text-2xl font-semibold">Add</p>
+                    </div>
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-3">
@@ -75,7 +77,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                         </div>
                     </div>
                 </div>
-                <button className="flex self-end outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-4 py-3 w-fit rounded-md text-[#16171B]" onClick={handleSubmit}>Submit</button>
+                <button aria-label="submit" className="flex self-end outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-4 py-3 w-fit rounded-md text-[#16171B]" onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     );

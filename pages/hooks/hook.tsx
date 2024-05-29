@@ -1,61 +1,81 @@
-import { error } from "console";
-import { giveAways, harvestWinners, } from "../utils/_data";
+import toast from "react-hot-toast";
+
 import { ICreateGiveaway, IAdministrationTrustedServers, IAddserverInfo, IEditserverInfo } from "../utils/_type";
 
 
 export const test = async () => {
-    console.log("====================fetching raffles");
+    try {
+        const res = await fetch(`/api/administration`);
 
-    const response = await fetch(`/api/administration`, {
-        method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({
-        //     inscriptionId,
-        //     paymentAddress,
-        //     ordinalPublicKey,
-        //     walletType,
-        //   }),
-    });
-    console.log(response);
-    if (response.status == 200) {
-        const data = await response.json();
-        return data;
-    } else {
-        return undefined;
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
+
+        return result
+
+    } catch (error: any) {
+        toast.error(error.message)
     }
 };
 
 export const User = async () => {
-    const response = await fetch(`/api/user`);
-    console.log(response);
-    if (response.status == 200) {
-        const data = await response.json();
-        return data;
-    } else {
-        return undefined;
+    try {
+        const res = await fetch(`/api/user`);
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
+
+        return result
+
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
-export const GetHarvest = async (giveawayID: string) => {
-    // const response = await fetch(`/api/harvest`, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //         giveawayID,
-    //     }),
-    // });
-    // console.log(response);
-    // if (response.status == 200) {
-    //     const data = await response.json();
-    //     return data;
-    // } else {
-    //     return undefined;
-    // }
+export const getHarvestWinners = async () => {
+    try {
+        const res = await fetch(`/api/harvest`)
 
-    return harvestWinners
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
+
+        return result
+
+    } catch (error: any) {
+        toast.error(error.message)
+    }
 }
 
-export const GetAdminof = async () => {
+export const getUserDetails = async (userID: string, serverID: string) => {
+    try {
+        const res = await fetch(`/api/user-details/get`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userID, serverID
+            })
+        });
+
+        if (res.status == 200) {
+            const data = await res.json();
+            return data;
+        } else {
+            return "undefined";
+        }
+    } catch (error: any) {
+        toast.error(error.message)
+    }
+}
+
+export const getAdminof = async () => {
     try {
         const res = await fetch(`/api/adminof`);
 
@@ -65,86 +85,87 @@ export const GetAdminof = async () => {
         } else {
             return "undefined";
         }
-    } catch (error) {
-        return error
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const UserInfo = async () => {
+    try {
+        const res = await fetch("/api/userinfo");
 
-    const response = await fetch("/api/userinfo");
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    console.log(response);
+        return result
 
-    if (response.status == 200) {
-        const data = await response.json();
-
-        return data;
-
-    } else {
-        return undefined;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
-export const removeEntrants = async (serverID: string, marketID: string, removeUserID: string) => {
-    const response = await fetch(`api/entrants/remove`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            removeUserID, serverID, marketID
-        })
-    })
-}
-
 export const getPermittedusers = async (serverID: string) => {
-    const res = await fetch(`/api/permitted-users/get`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            serverID
-        }),
-    })
+    try {
+        const res = await fetch(`/api/permitted-users/get`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                serverID
+            }),
+        })
 
-    if (res.status == 200) {
-        const data = await res.json();
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-        return data;
+        return result.data;
 
-    } else {
-        return undefined;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const putPermittedusers = async (data: any) => {
-    const res = await fetch(`api/permitted-users/put`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            data
+    try {
+        const res = await fetch(`api/permitted-users/put`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data
+            })
         })
-    })
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    if (res.status == 200) {
-        const data = await res.json();
+        return result
 
-        return data;
+    } catch (error: any) {
+        toast.error(error.message)
     }
-
-    return console.log("put permitted user error");
-
 }
 
 export const getGiveaways = async () => {
+    try {
+        const res = await fetch(`/api/giveaways/`);
 
-    const response = await fetch(`/api/giveaways/`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    if (response.status == 200) {
-        const data = await response.json();
+        return result
 
-        return data;
-
-    } else {
-        return undefined;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
@@ -153,320 +174,367 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
     const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles } = data;
 
     if (!serverID || !Expiry || !title || !description || !chain || !type || !quantity || !price) {
-        return console.log("Plz input all values");
+        return toast.error("Plz input all values");
     }
 
-    const response = await fetch(`/api/giveaways/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            data
-        }),
-    });
+    try {
+        const res = await fetch(`/api/giveaways/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data
+            }),
+        });
 
-    console.log("create giveaway", response);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    // if (response.status == 200) {
-    //     const data = await response.json();
+        return result
 
-    //     return data;
+    } catch (error: any) {
+        toast.error(error.message)
+    }
+}
 
-    // } else {
-    //     return undefined;
-    // }
+export const handleEditGiveaway = async (data: ICreateGiveaway) => {
+
+    const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles } = data;
+
+    if (!serverID || !Expiry || !title || !description || !chain || !type || !quantity || !price) {
+        return toast.error("Plz input all values");
+    }
+
+    try {
+        // const res = await fetch(`/api/giveaways/`, {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify({
+        //         data
+        //     }),
+        // });
+
+        // if (!res.ok) {
+        //     const errorData = await res.json();
+        //     throw new Error(errorData.error);
+        // }
+        // const result = await res.json();
+
+        // return result
+
+    } catch (error: any) {
+        toast.error(error.message)
+    }
+}
+
+export const handleEditGiveAway = async () => {
+    console.log("handle edit giveaway");
+
 }
 
 export const Logout = async () => {
+    try {
+        const res = await fetch(`/api/logout`);
 
-    const response = await fetch(`/api/logout`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    console.log(response);
+        return result
 
-    if (response.status == 200) {
-        const data = await response.json();
-
-        return data;
-
-    } else {
-        return console.log("log out error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const getServers = async () => {
+    try {
+        const res = await fetch(`/api/servers`);
 
-    const response = await fetch(`/api/servers`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    if (response.status == 200) {
-        const data = await response.json();
+        return result
 
-        return data;
-
-    } else {
-        return console.log("get servers error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
+
 export const enterGiveaway = async (serverID: string, giveAwayID: string, userID: string) => {
-    const res = await fetch(`/api/enter-giveaway`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            serverID,
-            giveAwayID,
-            userID
+    try {
+        const res = await fetch(`/api/enter-giveaway`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                serverID,
+                giveAwayID,
+                userID
+            })
         })
-    }
-    )
 
-    if (res.status == 200) {
-        const data = await res.json();
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-        return data;
+        return result
 
-    } else {
-        return console.log("enter giveaway error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const getAllocation = async (serverID: string, id?: string) => {
-    const res = await fetch(`/api/allocation/${serverID}`);
+    try {
+        const res = await fetch(`/api/allocation?serverID=${serverID}`);
 
-    if (res.status == 200) {
-        const data = await res.json();
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
 
-        console.log("get allocation ===>", data);
+        const result = await res.json();
 
-        return data;
-    } else {
-        return console.log("error : get allocation");
+        return result
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const getVestingReports = async () => {
-    const res = await fetch(`api/vesting-reports`)
+    try {
+        const res = await fetch(`api/vesting-reports`)
 
-    if (res.status == 200) {
-        const data = await res.json();
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-        return data;
-    } else {
-        return console.log("get vesting reports error");
+        return result
 
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const addAllocation = async (data: any) => {
-    const res = await fetch(`/api/allocation/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            data
+    try {
+        const res = await fetch(`/api/allocation`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data
+            })
         })
-    })
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    if (res.status == 200) {
-        const data = await res.json();
+        return result
 
-        return data;
-    } else {
-        return console.log("add allocation error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const getAdministrationTrustedServers = async (serverID: string) => {
+    try {
+        const res = await fetch(`/api/administration/trusted-servers?serverID=${serverID}`);
 
-    const response = await fetch(`/api/administration/trusted-servers/${serverID}`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    if (response.status == 200) {
-        const data = await response.json();
+        return result
 
-        console.log("data ====>", data);
-
-
-        return data;
-
-    } else {
-        return console.log("get administratin trusted servers error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const PutAdministrationTrustedServers = async (data: IAdministrationTrustedServers) => {
+    try {
+        const res = await fetch(`/api/administration/trusted-servers`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data
+            }),
+        });
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    console.log("data ========>", data);
+        return result
 
-    const response = await fetch(`/api/administration/trusted-servers`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            data
-        }),
-    });
-
-    console.log(response);
-
-    if (response.status == 200) {
-        const data = await response.json();
-
-        return data;
-
-    } else {
-        return console.log("put administration trusted servers error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
-export const ActiveServers = async (serverID: string) => {
+export const getActiveServers = async () => {
+    try {
+        const res = await fetch(`/api/active-servers`);
 
-    const response = await fetch(`/api/active-servers`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    console.log(response);
+        return result
 
-    if (response.status == 200) {
-        const data = await response.json();
-
-        return data;
-
-    } else {
-        return console.log("active servers error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
-export const AdministrationChannellist = async (serverID: string) => {
+export const administrationChannellist = async (serverID: string) => {
+    try {
+        const res = await fetch(`/api/administration/channellist?serverID=${serverID}`);
 
-    const response = await fetch(`/api/administration/channellist/${serverID}`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    console.log(response);
+        return result
 
-    if (response.status == 200) {
-        const data = await response.json();
-
-        return data;
-
-    } else {
-        return console.log("administration channel list error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
-export const GetSeverRoles = async (serverID: string) => {
+export const getChainList = async (serverID: string) => {
+    try {
+        const res = await fetch(`/api/chainList?serverId=${serverID}`)
 
-    const res = await fetch(`/api/serverRoles/${serverID}`);
+        if (res.status == 200) {
+            const data = await res.json();
+            return data;
+        } else {
+            return "undefined";
+        }
+    } catch (error: any) {
+        toast.error(error.message)
+    }
+}
 
-    console.log(res);
+export const getServerRoles = async (serverID: string) => {
+    try {
+        const res = await fetch(`/api/serverRoles/${serverID}`);
 
-    if (res.status == 200) {
-        const data = await res.json();
-        console.log("server roles ===>", data);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-        return data;
+        return result
 
-    } else {
-        return console.log("get server roles error");
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const adminCheck = async () => {
+    try {
+        const res = await fetch(`/api/administration`);
 
-    const res = await fetch(`/api/administration`);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    if (res.status == 200) {
-        const data = await res.json();
+        return result
 
-        if (data.message == "User is an administrator")
-            return true
-    } else {
-        return false;
-        ;
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
-export const getMarketChannelList = async () => {
-    const res = await fetch(`api/channel/market-channel`);
+export const removeEntry = async ({ marketID, serverID, removeUserID }: { marketID: string, serverID: string, removeUserID: string }) => {
+    try {
+        const res = await fetch(`/api/entrants/remove`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                marketID,
+                serverID,
+                removeUserID
+            }),
+        });
 
-    if (res.status == 200) {
-        const data = await res.json();
-        return data
-    } else {
-        return undefined;
-    }
-}
+        const result = await res.json();
 
-export const getGeneralChannelList = async () => {
-    const res = await fetch(`api/channel/general-list`);
-
-    if (res.status == 200) {
-        const data = await res.json();
-        return data;
-    } else {
-        return undefined;
-    }
-}
-
-export const RemoveEntry = async (marketID: string, serverID: string, removeUserID: string) => {
-    const res = await fetch(`/api/removeenty`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            marketID,
-            serverID,
-            removeUserID
-        }),
-    });
-
-    console.log(res);
-
-    if (res.status == 200) {
-        const data = await res.json();
-
-        return data;
-    } else {
-        return undefined
+        toast.success("removed success")
+    } catch (error: any) {
+        console.log(error);
+        toast.error(error.message)
     }
 }
 
 export const addServer = async (data: IAddserverInfo) => {
-    const res = await fetch(`api/servers/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            data
-        }),
-    })
+    try {
+        const res = await fetch(`api/servers/add`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data
+            }),
+        })
 
-    console.log(res);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    if (res.status == 200) {
-        const data = await res.json();
+        return result
 
-        return data;
-    } else {
-        return undefined
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 
 export const editServer = async (data: IEditserverInfo) => {
-    const res = await fetch(`api/servers/edit`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            data
-        }),
-    })
+    try {
+        const res = await fetch(`api/servers/edit`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data
+            }),
+        })
 
-    console.log(res);
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+        }
+        const result = await res.json();
 
-    if (res.status == 200) {
-        const data = await res.json();
+        return result
 
-        return data;
-    } else {
-        return undefined
+    } catch (error: any) {
+        toast.error(error.message)
     }
 }
 

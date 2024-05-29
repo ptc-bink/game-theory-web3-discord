@@ -1,40 +1,106 @@
 "use client"
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 import Driver from "@/public/avatar/driver.svg"
-import Avatar from "@/public/img/Avatar.png"
 import Edit from "@/public/avatar/edit.svg"
-import AppContext from "../providers/AppContext";
+import Trash from "@/public/avatar/trash.svg"
 
+import AppContext from "../providers/AppContext";
 import EditServerModal from "./forms/EditServerModal";
 import RemoveEntrantsModal from "./forms/RemoveEntrantsModal";
+import { IChannel, IServerCardProps } from "../utils/_type";
+import { removeEntry } from "../hooks/hook";
 
-const ServerCard: React.FC<ServerCardProps> = ({ server, createdBy, paymentExpires, marketChannel, generalChannel }) => {
+const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg, adminImg, createdBy, paymentExpires, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel }) => {
 
-    const { userID, editServerModalOpen, removeEntrantModalOpen, setRemoveEntrantModalOpen, setEditServerModalOpen } = useContext(AppContext);
+    const { userID, allChannelList, editServerModalOpen, removeEntrantModalOpen, removeApproval, setRemoveApproval, setRemoveEntrantModalOpen, setEditServerModalOpen } = useContext(AppContext);
+    const [marketChannelName, setMarketChannelName] = useState<string>();
+    const [generalChannelName, setGeneralChannelName] = useState<string>();
+    const [submitWalletName, setSubmitWalletName] = useState<string>();
+    const [vestingChannelName, setVestingChannelName] = useState<string>();
+    const [reminderChannelName, setReminderChannelName] = useState<string>();
+    const [winnersChannelName, setWinnersChannelName] = useState<string>();
+
+    const initAction = async () => {
+        if (allChannelList) {
+            if (allChannelList.length > 0) {
+                const tempMarketChannelName = allChannelList[allChannelList.findIndex(item => (item.id === marketChannel))].name;
+                const tempGeneralChannelName = allChannelList[allChannelList.findIndex(item => (item.id === generalChannel))].name;
+                const tempSubmitWalletName = allChannelList[allChannelList.findIndex(item => (item.id === submitWallet))].name;
+                const tempVestingChannelName = allChannelList[allChannelList.findIndex(item => (item.id === vestingChannel))].name;
+                const tempReminderChannelName = allChannelList[allChannelList.findIndex(item => (item.id === reminderChannel))].name;
+                const tempWinnersChannelName = allChannelList[allChannelList.findIndex(item => (item.id === winnersChannel))].name;
+
+                setMarketChannelName(tempMarketChannelName);
+                setGeneralChannelName(tempGeneralChannelName);
+                setSubmitWalletName(tempSubmitWalletName);
+                setVestingChannelName(tempVestingChannelName);
+                setReminderChannelName(tempReminderChannelName);
+                setWinnersChannelName(tempWinnersChannelName);
+            }
+        }
+    }
+
+    const removeApprovalAction = async () => {
+        if (!marketChannel || !createdBy || id) {
+            return toast.error("Please input all value")
+        }
+
+        const data = {
+            marketID: marketChannel,
+            serverID: id,
+            removeUserID: createdBy
+        }
+        console.log("server card remove call");
+
+        const res = await removeEntry(data);
+
+        setRemoveApproval(false);
+    }
+
+    useEffect(() => {
+        initAction()
+    }, [])
+
+    useEffect(() => {
+
+        if (removeApproval) {
+            console.log("removeApproval ===>");
+            removeApprovalAction();
+        }
+    }, [removeApproval])
 
     return (
-        <div className="w-full flex flex-col gap-4 p-4 border border-cgrey-200">
-            <div className="flex gap-4">
+        <div className="w-full flex flex-col rounded gap-4 hover:border-2 hover:border-[#FFFFFF] p-4 border border-cgrey-200">
+            <div className="flex gap-4 rounded">
                 <div className="flex justify-center items-center p-3 border border-[#292A2E] bg-[#202125] rounded-lg">
-                    <Image
-                        src={Driver}
-                        width="24"
-                        height="24"
-                        alt="server mark"
-                    />
+                    {
+                        serverImg ?
+                            <img src={serverImg} width={24} height={24} alt="server image" />
+                            : <Image
+                                src={Driver}
+                                width="24"
+                                height="24"
+                                alt="server mark"
+                            />
+                    }
                 </div>
                 <div className="flex flex-col gap-1">
-                    <p className="text-base font-semibold text-[#FFFFFF]">{server}</p>
+                    <p className="text-base font-semibold text-[#FFFFFF]">{name}</p>
                     <div className="flex gap-2">
-                        <Image
-                            src={Avatar}
-                            width="16"
-                            height="16"
-                            alt="created avatar"
-                        />
+                        {
+                            adminImg ?
+                                <img src={adminImg} width={16} height={24} alt="created image" />
+                                : <Image
+                                    src={Driver}
+                                    width="24"
+                                    height="24"
+                                    alt="server mark"
+                                />
+                        }
                         <p className="text-[#939393] text-xs leading-[18px] font-normal">Created by {createdBy}</p>
                     </div>
                 </div>
@@ -42,20 +108,36 @@ const ServerCard: React.FC<ServerCardProps> = ({ server, createdBy, paymentExpir
             <div className="flex flex-col gap-1">
                 <div className="flex justify-between">
                     <p className="text-xs leading-[18px] font-normal text-[#939393]">Payment Expires</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{paymentExpires}</p>
+                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{paymentExpires ? paymentExpires / (60 * 60 * 24) : "-"}</p>
                 </div>
                 <div className="flex justify-between">
                     <p className="text-xs leading-[18px] font-normal text-[#939393]">Market Channel</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{marketChannel}</p>
+                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{marketChannelName}</p>
                 </div>
                 <div className="flex justify-between">
                     <p className="text-xs leading-[18px] font-normal text-[#939393]">General Channel</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{generalChannel}</p>
+                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{generalChannelName}</p>
+                </div>
+                <div className="flex justify-between">
+                    <p className="text-xs leading-[18px] font-normal text-[#939393]">Submit Wallet</p>
+                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{submitWalletName}</p>
+                </div>
+                <div className="flex justify-between">
+                    <p className="text-xs leading-[18px] font-normal text-[#939393]">Vesting Channel</p>
+                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{vestingChannelName}</p>
+                </div>
+                <div className="flex justify-between">
+                    <p className="text-xs leading-[18px] font-normal text-[#939393]">reminderChannel</p>
+                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{reminderChannelName}</p>
+                </div>
+                <div className="flex justify-between">
+                    <p className="text-xs leading-[18px] font-normal text-[#939393]">Winners Channel</p>
+                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{winnersChannelName}</p>
                 </div>
             </div>
-            <div className="grid grid-cols-2">
-                <div className="flex justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={() => setEditServerModalOpen(true)}>
-                    <p className="text-sm font-normal text-[#FFFFFF]">Edit Server</p>
+            <div className="grid grid-cols-2 gap-2 w-full">
+                <div className="flex w-full justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={() => setEditServerModalOpen(true)}>
+                    <p className="text-sm font-normal text-[#FFFFFF] sm:block hidden">Edit Server</p>
                     <Image
                         src={Edit}
                         width="16"
@@ -63,32 +145,36 @@ const ServerCard: React.FC<ServerCardProps> = ({ server, createdBy, paymentExpir
                         alt="edit"
                     />
                 </div>
-                <div className="flex justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={() => setRemoveEntrantModalOpen(true)}>
-                    <p className="text-sm font-normal text-[#FFFFFF]">Remove Server</p>
+                <div className="flex w-full justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 hover:border-cdark-100 border-cgrey-200 gap-2" onClick={() => setRemoveEntrantModalOpen(true)}>
+                    <p className="text-sm font-normal text-[#FFFFFF] sm:block hidden">Remove Server</p>
                     <Image
-                        src={Edit}
+                        src={Trash}
                         width="16"
                         height="16"
                         alt="edit"
                     />
                 </div>
             </div>
-            {editServerModalOpen && (
-                <div className="flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
-                    <EditServerModal
-                        server={server}
-                        marketChannel={marketChannel}
-                        generalChannel={generalChannel}
-                    />
-                </div>
-            )}
+            {
+                editServerModalOpen && (
+                    <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                        <EditServerModal
+                            rediskey={rediskey}
+                            server={name}
+                            marketChannel={marketChannel}
+                            generalChannel={generalChannel}
+                            submitWallet={submitWallet}
+                            vestingChannel={vestingChannel}
+                            reminderChannel={reminderChannel}
+                            winnersChannel={winnersChannel}
+                        />
+                    </div>
+                )
+            }
             {
                 removeEntrantModalOpen && (
-                    <div className="flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                    <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
                         <RemoveEntrantsModal
-                            serverID={server}
-                            marketID={marketChannel}
-                            removeUserID={userID}
                         />
                     </div>
                 )
@@ -98,11 +184,3 @@ const ServerCard: React.FC<ServerCardProps> = ({ server, createdBy, paymentExpir
 }
 
 export default ServerCard;
-
-interface ServerCardProps {
-    server: string;
-    createdBy: string;
-    paymentExpires: string;
-    marketChannel: string;
-    generalChannel: string;
-}

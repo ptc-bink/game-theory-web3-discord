@@ -77,13 +77,6 @@ const BigSidebar = () => {
         },
     ]
 
-    useEffect(() => {
-        console.log("selectedItem ====>", selectedItem);
-
-    }, [
-        selectedItem
-    ])
-
     return (
         <div className="flex flex-col">
             {adminSideBar.map((side: any, index: number) => (

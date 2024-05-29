@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { IServer } from "../utils/_type";
+import { IChannel, IServer } from "../utils/_type";
 
 interface ContextType {
   addServerModalOpen: boolean;
@@ -10,22 +10,20 @@ interface ContextType {
   username: string;
   userImage: string;
   isAdmin: boolean;
-  giveawayID: string;
+  selectedGiveawayID: string;
   isLoading: boolean;
-  marketChannelList: any[];
-  generalChannelList: any[];
-  serverList: IServer[];
   removeEntrantModalOpen: boolean;
+  removeApproval: boolean;
   addAllocationModalOpen: boolean;
   permittedUserModalOpen: boolean;
+  allChannelList: IChannel[];
+  setAllChannelList: (allChainList: IChannel[]) => void,
   setPermittedUserModalOpen: (permittedUserModalOpen: boolean) => void,
   setAddAllocationModalOpen: (addAllocationModalOpen: boolean) => void,
   setRemoveEntrantModalOpen: (removeEntrantModalOpen: boolean) => void;
-  setServerList: (serverList: IServer[]) => void;
-  setGeneralChannelList: (generalChannelList: any[]) => void;
-  setMarketChannelList: (marketChannelList: any[]) => void;
+  setRemoveApproval: (removeApproval: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
-  setGiveawayID: (giveawayID: string) => void;
+  setSelectedGiveawayID: (seletedGiveawayID: string) => void;
   setIsAdmin: (isAdmin: boolean) => void;
   setAddServerModalOpen: (addServerModalOpen: boolean) => void;
   setEditServerModalOpen: (editServerModalOpen: boolean) => void;
@@ -46,21 +44,19 @@ const initialValue: ContextType = {
   userImage: "",
   username: "",
   isAdmin: true,
-  giveawayID: "",
+  selectedGiveawayID: "",
   isLoading: false,
-  marketChannelList: [],
-  generalChannelList: [],
-  serverList: [],
   addAllocationModalOpen: false,
   permittedUserModalOpen: false,
+  removeApproval: false,
+  allChannelList: [],
+  setAllChannelList(allChannelList) { },
   setPermittedUserModalOpen(permittedUserModalOpen) { },
   setAddAllocationModalOpen(addAllocationModalOpen) { },
   setRemoveEntrantModalOpen(removeEntrantModalOpen) { },
-  setServerList(serverList) { },
-  setGeneralChannelList: (generalChannelList) => { },
-  setMarketChannelList: (marketChannelIdList) => { },
+  setRemoveApproval(rremoveApproval) { },
   setIsLoading: (isLoading) => { },
-  setGiveawayID: (giveawayID) => { },
+  setSelectedGiveawayID: (selectedGiveawayID) => { },
   setIsAdmin: (isAdmin) => { },
   setUserImage: (userImage) => { },
   setUsername: (username) => { },

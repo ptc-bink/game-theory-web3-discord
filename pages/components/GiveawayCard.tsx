@@ -13,11 +13,13 @@ import Cancel from "@/public/avatar/close-circle.svg"
 import { IGiveawayCardProps, IUserInfo } from "../utils/_type";
 import { UserInfo } from "../hooks/hook";
 import AppContext from "../providers/AppContext";
+import { useRouter } from "next/router";
 
-const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, username, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
+const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayID, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
 
-    const { setGiveawayID } = useContext(AppContext);
+    const { setSelectedGiveawayID, isAdmin } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
+    const router = useRouter();
 
     const detailItem = (index: number, item: IUserInfo) => {
 
@@ -25,7 +27,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
         const textColor = isWinner ? "#FFD105" : "#939393";
 
         return (
-            <div className="flex gap-1 hover:bg-cgrey-200">
+            <div key={index} className="flex gap-1 hover:bg-cgrey-200">
                 <Image
                     src={Cancel}
                     width="16"
@@ -41,15 +43,20 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
         setDetailOpen(!detailOpen);
     }
 
+    const handleEdit = async () => {
+        setSelectedGiveawayID(giveawayID);
+        router.push('/dashboard/edit-giveaway')
+    }
+
     return (
         <div className="flex flex-col p-6 gap-6 rounded-2xl border border-cgrey-200">
             <div className="flex items-center gap-4">
                 <div className="bg-[#202125] border border-[#292A2E] rounded-lg p-3">
-                    <img src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.webp`} alt="creator avatar" width={24} height={24} />
+                    <img src={`https://cdn.discordapp.com/avatars/137375133336731648/${avatar}.webp`} alt="creator avatar" width={24} height={24} />
                 </div>
                 <div className="flex flex-col gap-1">
-                    <p className="text-[#FFFFFF] text-base font-normal">{username}</p>
-                    <p className="text-[#939393] text-xs leading-[18px] font-normal">{id}</p>
+                    <p className="text-[#FFFFFF] text-base font-normal">{title}</p>
+                    <p className="text-[#939393] text-xs leading-[18px] font-normal">{giveawayID}</p>
                 </div>
             </div>
             <div className="grid md:grid-cols-2 grid-row-2 gap-3">
@@ -77,7 +84,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                             <p className="text-[#939393] text-xs leading-[18px] font-normal">Time remaining:</p>
                             <p className="text-[#FFFFFF] text-sm font-semibold">Ended</p>
                         </div>
-                        <Link href="/dashboard/harvest-winners" onClick={() => setGiveawayID(id)} className="flex text-[#FFFFFF] text-sm font-normal gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-[#141518] outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
+                        <Link href="/dashboard/harvest-winners" onClick={() => setSelectedGiveawayID(giveawayID)} className="flex text-[#FFFFFF] text-sm font-normal gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-[#141518] outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
                             Harvest Winners
                         </Link>
                     </div> :
@@ -114,7 +121,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
             < div className="flex justify-between gap-2" >
                 {
                     detailOpen ? (
-                        <button onClick={handleDetailOpen} className="flex gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-[#141518] outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
+                        <button aria-label="hide" onClick={handleDetailOpen} className="flex gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-[#141518] outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
                             <p className="text-[#FFFFFF] text-sm font-normal">Hide</p>
                             <Image
                                 src={ArrowUp}
@@ -124,7 +131,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                             />
                         </button>
                     ) : (
-                        <button onClick={handleDetailOpen} className="flex gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-[#141518] outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full">
+                        <button aria-label="details" onClick={handleDetailOpen} className="flex gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-[#141518] outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full">
                             <p className="text-[#FFFFFF] text-sm font-normal">Details</p>
                             <Image
                                 src={ArrowDown}
@@ -134,7 +141,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                             />
                         </button>
                     )}
-                <button onClick={ } className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-[#141518] outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
+                {isAdmin && <button aria-label="edit" onClick={() => handleEdit()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-[#141518] outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
                     <p className="text-[#FFFFFF] text-sm font-normal hidden md:block">Edit</p>
                     <Image
                         src={Edit}
@@ -142,7 +149,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ id, chain, avatar, usernam
                         height="16"
                         alt="edit"
                     />
-                </button>
+                </button>}
             </div >
         </div >
     )

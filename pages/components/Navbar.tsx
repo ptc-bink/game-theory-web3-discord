@@ -22,13 +22,9 @@ const Navbar = () => {
 
 
     useEffect(() => {
-
         if (path) {
-            // setTemp("temp")
             setTemp(firUppercase(path?.split("/")[1]));
         }
-        console.log("navbar : userimage ===>", userImage);
-
     }, [path])
 
     const handleProfileModalOpen = () => {

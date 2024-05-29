@@ -91,6 +91,199 @@ export const userList = [
   "916216351603953725", "4213769129321421353", "386238123932712490", "421376912932123853", "4213769129321421353", "386238123932712490", "421376912932123853", "386238123932712490", "421376912932123853", "4213769129321421353", "386238123932712490", "421376912932123853", "4213769129321421353", "386238123932712490", "421376912932123853", "386238123932712490", "421376912932123853", "4213769129321421353", "386238123932712490", "421376912932123853", "4213769129321421353", "386238123932712490", "421376912932123853", "386238123932712490", "421376912932123853"
 ]
 
+export const tempFilterApprovedServerList = [
+  {
+    id: "1187912294773039136",
+    name: "Game Theory",
+    admin: "435999864644435970",
+    redisKey: "gameTheory",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "1194710643928989877",
+    General_Channel_ID: "1194488184134967296",
+    Submit_Wallet_ID: "1194332119091126355",
+    Database: "gametheory",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Vesting_Channel_ID: "1206541360228864040",
+    Reminder_Channel_ID: "1234457579334144040",
+    Winners_Channel_ID: "1234457626461474908",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  }, {
+    id: "1187912294773039136",
+    name: "Test Server",
+    admin: "00000000000000000000",
+    redisKey: "testServer",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "00000000000000000000",
+    General_Channel_ID: "00000000000000000000",
+    Submit_Wallet_ID: "00000000000000000000",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Database: "testServer",
+    Vesting_Channel_ID: "00000000000000000000",
+    Reminder_Channel_ID: "00000000000000000000",
+    Winners_Channel_ID: "00000000000000000000",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  }, {
+    id: "1187912294773039136",
+    name: "Test Server",
+    admin: "00000000000000000000",
+    redisKey: "testServer",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "00000000000000000000",
+    General_Channel_ID: "00000000000000000000",
+    Submit_Wallet_ID: "00000000000000000000",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Database: "testServer",
+    Vesting_Channel_ID: "00000000000000000000",
+    Reminder_Channel_ID: "00000000000000000000",
+    Winners_Channel_ID: "00000000000000000000",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  }, {
+    id: "1187912294773039136",
+    name: "Test Server",
+    admin: "00000000000000000000",
+    redisKey: "testServer",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "00000000000000000000",
+    General_Channel_ID: "00000000000000000000",
+    Submit_Wallet_ID: "00000000000000000000",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Database: "testServer",
+    Vesting_Channel_ID: "00000000000000000000",
+    Reminder_Channel_ID: "00000000000000000000",
+    Winners_Channel_ID: "00000000000000000000",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  }, {
+    id: "1187912294773039136",
+    name: "Test Server",
+    admin: "00000000000000000000",
+    redisKey: "testServer",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "00000000000000000000",
+    General_Channel_ID: "00000000000000000000",
+    Submit_Wallet_ID: "00000000000000000000",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Database: "testServer",
+    Vesting_Channel_ID: "00000000000000000000",
+    Reminder_Channel_ID: "00000000000000000000",
+    Winners_Channel_ID: "00000000000000000000",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  }, {
+    id: "1187912294773039136",
+    name: "Test Server",
+    admin: "00000000000000000000",
+    redisKey: "testServer",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "00000000000000000000",
+    General_Channel_ID: "00000000000000000000",
+    Submit_Wallet_ID: "00000000000000000000",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Database: "testServer",
+    Vesting_Channel_ID: "00000000000000000000",
+    Reminder_Channel_ID: "00000000000000000000",
+    Winners_Channel_ID: "00000000000000000000",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  }, {
+    id: "1187912294773039136",
+    name: "Test Server",
+    admin: "00000000000000000000",
+    redisKey: "testServer",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "00000000000000000000",
+    General_Channel_ID: "00000000000000000000",
+    Submit_Wallet_ID: "00000000000000000000",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Database: "testServer",
+    Vesting_Channel_ID: "00000000000000000000",
+    Reminder_Channel_ID: "00000000000000000000",
+    Winners_Channel_ID: "00000000000000000000",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  }, {
+    id: "1187912294773039136",
+    name: "Test Server",
+    admin: "00000000000000000000",
+    redisKey: "testServer",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "00000000000000000000",
+    General_Channel_ID: "00000000000000000000",
+    Submit_Wallet_ID: "00000000000000000000",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Database: "testServer",
+    Vesting_Channel_ID: "00000000000000000000",
+    Reminder_Channel_ID: "00000000000000000000",
+    Winners_Channel_ID: "00000000000000000000",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  }, {
+    id: "1187912294773039136",
+    name: "Test Server",
+    admin: "00000000000000000000",
+    redisKey: "testServer",
+    paymentExpires: "32504682506",
+    Market_Channel_ID: "00000000000000000000",
+    General_Channel_ID: "00000000000000000000",
+    Submit_Wallet_ID: "00000000000000000000",
+    adminImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    serverImage: "https://cdn.discordapp.com/avatars/137375133336731648/e5d0d611ba5019571d113ed3f9accfc4.webp",
+    Database: "testServer",
+    Vesting_Channel_ID: "00000000000000000000",
+    Reminder_Channel_ID: "00000000000000000000",
+    Winners_Channel_ID: "00000000000000000000",
+    Supported_Wallets: {
+      ETH_HOT: "1",
+      ETH_COLD: "1",
+      BTC_HOT: "1",
+      SOL_HOT: "1"
+    }
+  },
+]
+
 export const jsonObjectList = [
   { id: "#2831209816238012321", allocation: 22, mintHoldDays: 22, secondaryBuyHoldDays: 28, secondaryBuyHours: 72, secondaryBuyAmount: 1, priceVoid: 0.00, isVoid: 0 },
   { id: "#2831209816238012321", allocation: 22, mintHoldDays: 22, secondaryBuyHoldDays: 28, secondaryBuyHours: 72, secondaryBuyAmount: 1, priceVoid: 0.00, isVoid: 0 },

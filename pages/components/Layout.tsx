@@ -12,12 +12,12 @@ import AppContext from '../providers/AppContext';
 import SmallSidebar from './SmallSidebar';
 import BigSidebar from './BigSidebar';
 import Navbar from './Navbar';
-import { adminCheck } from '../hooks/hook';
+import { adminCheck, getServers } from '../hooks/hook';
 
 
 const Layout = ({ children }: { children: ReactNode }) => {
 
-    const { setUserImage, setUsername, setUserID, setIsAdmin, username } = useContext(AppContext);
+    const { setUserImage, setUsername, setUserID } = useContext(AppContext);
     const router = useRouter();
     const path = usePathname();
 
@@ -25,14 +25,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
     const initAction = async () => {
         const session = await getSession();
-        // const tempIsAdmin = await adminCheck();
 
         setSession(session || undefined);
         setUsername(session?.user?.name || "");
         setUserImage(session?.user?.image || "");
         setUserID(session?.id || "");
-
-        // setIsAdmin(tempIsAdmin);
     }
 
     const sessionAction = async () => {

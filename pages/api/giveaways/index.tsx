@@ -1,19 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import qs from "qs"
 
-type ResponseData = {
-    message: string
-}
-
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ResponseData>
+    res: NextApiResponse
 ) {
     if (req.method == "POST") {
         try {
             const axios = require("axios");
+
             const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
-            } = await req.body();
+            } = req.body.data;
 
             let config = {
                 method: "post",
@@ -21,20 +18,16 @@ export default async function handler(
                 headers: { "Content-Type": "application/json" },
                 data: qs.stringify({
                     serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
-
                 }),
             }
 
-            console.log("here post giveaways");
-
+            console.log("config ========================>", config);
 
             const response = await axios.request(config);
-            console.log(response.data);
 
-            return res.json(response.data);
+            return res.status(200).json(response.data);
         } catch (error) {
-            console.error("Error creating user: ", error);
-            return res.json({ message: "Failed to create user" });
+            return res.status(500).json({ error: error });
         }
     } else if (req.method == "GET") {
         try {
@@ -45,14 +38,13 @@ export default async function handler(
                 url: `${process.env.baseURL_back}/test/giveaways`,
             }
 
-            console.log("here get giveaways");
+            console.log("=============================================================here get giveaways");
 
             const response = await axios.request(config);
 
-            return res.json(response.data);
+            return res.status(200).json(response.data);
         } catch (error) {
-            console.error("Error creating user: ", error);
-            return res.json({ message: "Failed to create user" });
+            return res.status(500).json({ error: error });
         }
     }
 }

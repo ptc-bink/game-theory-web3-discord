@@ -1,3 +1,4 @@
+"use client"
 
 import React, { useState } from "react";
 import Image from "next/image";
@@ -7,10 +8,10 @@ import ArrowUp from "@/public/avatar/arrow-up.svg"
 
 import { IDropdownProps } from "@/pages/utils/_type";
 
-const Dropdown: React.FC<IDropdownProps> = ({ dropdownList, placeholder, className, callback }) => {
+const Dropdown: React.FC<IDropdownProps> = ({ dropdownList, initValue, placeholder, className, callback }) => {
 
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    const [value, setValue] = useState<string>(placeholder);
+    const [value, setValue] = useState<string>(initValue ? initValue : placeholder);
 
     const handleDropdown = () => {
         setDropdownOpen(!dropdownOpen);

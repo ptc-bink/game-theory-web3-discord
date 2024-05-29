@@ -13,12 +13,13 @@ import Preview from "@/public/avatar/eye.svg"
 
 import AppContext from "@/pages/providers/AppContext";
 import BackBtn from "@/pages/components/BackBtn";
-import { getChainList, getGiveaways, getServerRoles, getServers, handleCreateGiveaway } from "@/pages/hooks/hook";
+import { getChainList, getGiveaways, getServerRoles, getServers, handleCreateGiveaway, handleEditGiveaway } from "@/pages/hooks/hook";
 import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/pages/utils/_type";
 import toast from "react-hot-toast";
 
-const CreateGiveaway: React.FC = () => {
+const EditGiveaway: React.FC = () => {
 
+    const { selectedGiveawayID } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [tempRestrictedRoles, setTempRestrictedRoles] = useState<IServerRole[]>([]);
@@ -28,13 +29,14 @@ const CreateGiveaway: React.FC = () => {
     const [giveawayDropdownList, setGiveawayDropdownList] = useState<IDropdownListProps[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [chainDropdownList, setChainDropdownList] = useState<IDropdownListProps[]>([]);
+    const [filterData, setFilterData] = useState<IGiveaway>();
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [chainList, setChainList] = useState<string[]>([]);
     const [expiresDate, setExpiresDate] = useState<any>();
-    const [chain, setChain] = useState<string>("");
+    const [chain, setChain] = useState<string>("Ethereum");
     const [quantity, setQuantity] = useState<number>(1);
-    const [type, setType] = useState<string>("");
+    const [type, setType] = useState<string>("Raffle");
     const [requiredAllRoles, setReqiuredAllRoles] = useState<boolean>(false);
     const [price, setPrice] = useState<number>();
     const [links, setLinks] = useState<string>("");
@@ -46,6 +48,18 @@ const CreateGiveaway: React.FC = () => {
     const initAction = async () => {
 
         const tempServerList: IServer[] = await getServers();
+        const tempGiveaways: IGiveaway[] = await getGiveaways();
+
+        if (selectedGiveawayID) {
+            if (tempGiveaways !== undefined) {
+                if (tempGiveaways.length > 0) {
+                    const tempFilterData: IGiveaway | undefined = tempGiveaways.find(item => item.messageID === selectedGiveawayID);
+                    if (tempFilterData) {
+                        setFilterData(tempFilterData);
+                    }
+                }
+            }
+        }
 
         if (tempServerList) {
             if (tempServerList.length > 0) {
@@ -106,26 +120,28 @@ const CreateGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        if (!serverValue || !expiresDate || !title || !description || !chain || !type || !quantity) {
-            return toast.error("Please input all values");
-        }
+        toast.error("Coming Soon")
 
-        const data = {
-            serverID: serverValue,
-            Expiry: expiresDate,
-            title: title,
-            description: description,
-            chain: chain,
-            type: type,
-            quantity: quantity,
-            price: price,
-            requiredRoles: requiredRoles.map(item => item.id),
-            restrictedRoles: restrictedRoles.map(item => item.id),
-            winningRole: winningRole,
-            requiredAllRoles: requiredAllRoles
-        }
+        // if (!serverValue || !expiresDate || !title || !description || !chain || !type || !quantity) {
+        //     return toast.error("Please input all values");
+        // }
 
-        await handleCreateGiveaway(data);
+        // const data = {
+        //     serverID: serverValue,
+        //     Expiry: expiresDate,
+        //     title: title,
+        //     description: description,
+        //     chain: chain,
+        //     type: type,
+        //     quantity: quantity,
+        //     price: price,
+        //     requiredRoles: requiredRoles.map(item => item.id),
+        //     restrictedRoles: restrictedRoles.map(item => item.id),
+        //     winningRole: winningRole,
+        //     requiredAllRoles: requiredAllRoles
+        // }
+
+        // await handleEditGiveaway(data);
     }
 
     const handleCreditCard = () => {
@@ -160,7 +176,7 @@ const CreateGiveaway: React.FC = () => {
                 <div className="flex gap-6 items-center justify-between">
                     <div className="flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-[#FFFFFF] text-2xl font-semibold">Create Giveaway</p>
+                        <p className="text-[#FFFFFF] text-2xl font-semibold">Edit Giveaway(coming soon)</p>
                     </div>
                     <div onClick={handleCreditCard} className="md:hidden block">
                         <Image
@@ -389,7 +405,7 @@ const CreateGiveaway: React.FC = () => {
     );
 }
 
-export default CreateGiveaway;
+export default EditGiveaway;
 
 interface DataOption {
     value: string;

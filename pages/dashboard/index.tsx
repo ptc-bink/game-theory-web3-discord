@@ -3,13 +3,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 import GiveawayCard from "@/pages/components/GiveawayCard";
 import Dropdown from "@/pages/components/forms/Dropdown";
 import SearchBtn from "@/pages/components/forms/SearchBtn";
-import { IBiddersGiveaway, IGiveaway, IServer, IDropdownListProps } from "../utils/_type";
-
-// import { giveawayList, dashboardDropdownList } from "@/pages/utils/_data";
+import { IGiveaway, IServer, IDropdownListProps } from "../utils/_type";
 
 import Refresh from "@/public/avatar/refresh.svg"
 import Add from "@/public/avatar/add.svg"
@@ -21,42 +20,61 @@ import AppContext from "../providers/AppContext";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin, serverList, setServerList } = useContext(AppContext);
+    const { isAdmin } = useContext(AppContext);
     const [serverValue, setServerValue] = useState<string>("");
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
-    const [searchInput, setSearchInput] = useState<string>();
+    const [filterData, setFilterData] = useState<IGiveaway[]>([]);
+    const [searchInput, setSearchInput] = useState<string>("");
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
 
     const initAction = async () => {
+
         const tempServerList: IServer[] = await getServers();
         const tempGiveaways: IGiveaway[] = await getGiveaways();
 
-        if (tempServerList.length > 0) {
-            const serverDropdownList: IDropdownListProps[] = serverList.map((item, index) => {
-                return { name: item.guild.name, id: item.guild.id }
-            })
-            setServerDropdownList(serverDropdownList);
-            setServerList(tempServerList);
+        if (tempServerList) {
+            if (tempServerList.length > 0) {
+                const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
+                    return { name: item.guild.name, id: item.guild.id }
+                })
+                setServerDropdownList(tempServerDropdownList);
+            } else {
+                return toast.error("No server to show")
+            }
         }
 
-        setGiveaways(tempGiveaways);
-
-    }
-
-    const chainValueAction = async () => {
-        const giveAways: any = await getGiveaways();
-
-        setGiveaways(giveAways);
-    }
-
-    const serachValueAction = async () => {
-        if (searchInput !== undefined) {
-            if (giveaways.length > 0) {
-                const tempGiveaways: IGiveaway[] = giveaways.filter(giveaway =>
-                    giveaway.creator.username.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                    giveaway.creator.id.toLowerCase().includes(searchInput?.toLowerCase())
-                )
+        if (tempGiveaways !== undefined) {
+            if (tempGiveaways.length > 0) {
                 setGiveaways(tempGiveaways);
+                setFilterData(tempGiveaways);
+            } else {
+                return toast.error("No giveaway to show");
+            }
+        } else {
+            return toast.error("Sever error");
+        }
+    }
+
+    const filterAction = async () => {
+
+        if (giveaways.length > 0) {
+
+            let tempFilterData: IGiveaway[] = [];
+
+            if (serverValue !== "") {
+                tempFilterData = giveaways.filter(giveaway =>
+                    giveaway.messageID.toLowerCase().includes(serverValue.toLowerCase())
+                )
+            }
+
+            if (searchInput !== "" && tempFilterData.length > 0) {
+                tempFilterData = giveaways.filter(giveaway =>
+                    giveaway.title.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                    giveaway.messageID.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                    giveaway.chain.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                    giveaway.type.toLowerCase().includes(searchInput?.toLowerCase())
+                )
+                setFilterData(tempFilterData);
             }
         }
     }
@@ -66,18 +84,14 @@ const Dashboard: React.FC<IDashboard> = () => {
     }, [])
 
     useEffect(() => {
-        chainValueAction();
-    }, [serverValue])
-
-    useEffect(() => {
-        serachValueAction();
-    }, [searchInput])
+        filterAction();
+    }, [searchInput, serverValue])
 
     return (
         <div className="flex flex-col gap-4 p-8 bg-cdark-100">
             <div className="flex flex-col">
                 <p className="text-[#FFFFFF] text-2xl font-semibold md:block hidden">Dashboard</p>
-                <div className="items-center w-full grid md:grid-cols-2 grid-rows-2 gap-4 pt-4 text-sm">
+                <div className="items-center w-full grid md:grid-cols-2 md:grid-rows-1 grid-cols-1 grid-rows-2 gap-4 pt-4 text-sm">
                     <div>
                         <Dropdown
                             dropdownList={serverDropdownList}
@@ -91,7 +105,6 @@ const Dashboard: React.FC<IDashboard> = () => {
                             <SearchBtn
                                 placeholder="Search giveaway"
                                 endContent="Refresh"
-                                // endContentImg={Refresh}
                                 callback={setSearchInput}
                             />
                         </div>
@@ -102,20 +115,21 @@ const Dashboard: React.FC<IDashboard> = () => {
                                 height="16"
                                 alt="add button"
                             />
-                            <p className="text-cdark-100 lg:block hidden">Create Giveaway</p>
+                            <p className="text-[#16171B] text-sm leading-5 font-medium lg:block hidden">Create Giveaway</p>
                         </Link>}
                     </div>
                 </div>
             </div>
             {
-                giveaways.length > 0 ?
+                filterData.length > 0 ?
                     <div className="flex flex-col gap-4">
-                        {giveaways?.map((item, index) => (
+                        {filterData?.map((item, index) => (
                             < GiveawayCard
-                                id={item.messageID}
+                                key={index}
+                                giveawayID={item.messageID}
                                 chain={item.chain}
                                 avatar={item.creator.avatar}
-                                username={item.creator.username}
+                                title={item.title}
                                 entrants={item.entrants}
                                 quantity={item.quantity}
                                 enterDate={item.chain}
@@ -126,7 +140,9 @@ const Dashboard: React.FC<IDashboard> = () => {
                             />
                         ))}
                     </div> :
-                    <div className="text-[#FFFFFF] text-2xl leading-8 font-medium text-center w-full">No Giveaway to Show</div>
+                    <div className="flex flex-col gap-4 px-3 py-4 min-h-[calc(100vh-280px)] justify-center items-center">
+                        <div className="text-[#FFFFFF] text-2xl leading-8 font-medium text-center w-full">No Giveaway to Show</div>
+                    </div>
             }
         </div>
     );
