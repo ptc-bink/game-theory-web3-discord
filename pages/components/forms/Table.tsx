@@ -106,19 +106,15 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                         <th>Price void</th>
                         <th className="text-center">Action</th>
                     </tr>
-                    {allocations?.map((item, index) => (
+                    {Array.isArray(allocations) && allocations?.map((item, index) => (
                         tableBody(index, item)
                     ))}
                 </table>
             </div>
             <div className="block lg:hidden w-full">
                 <div className="flex flex-col gap-4">
-                    {allocations.map((item, index) => (
+                    {Array.isArray(allocations) && allocations?.map((item, index) => (
                         <div key={index} className="flex flex-col gap-4  border border-cgrey-100 p-5">
-                            {/* <div className="grid gap-4">
-                                <p className="text-base font-semibold text-cwhite">{item.id}</p>
-                                <input type="checkbox" checked={isChecked} onChange={(e) => setIsChecked(!isChecked)} className="rounded-[4px]" />
-                            </div> */}
                             <div className="flex flex-col gap-1 w-full">
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Title</p>

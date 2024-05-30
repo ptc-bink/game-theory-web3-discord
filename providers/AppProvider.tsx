@@ -23,6 +23,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [allocationDeleted, setAllocationDeleted] = useState<boolean>(false);
   const [allocationEdited, setAllocationEdited] = useState<boolean>(false);
   const [giveawayCreated, setGiveawayCreated] = useState<boolean>(false);
+  const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
   const [giveawayEdited, setGiveawayEdited] = useState<boolean>(false);
 
   return (
@@ -47,6 +48,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         allocationEdited,
         giveawayCreated,
         giveawayEdited,
+        showCreditCard,
+        setShowCreditCard,
         setGiveawayCreated,
         setGiveawayEdited,
         setAllocationDeleted,

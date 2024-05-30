@@ -29,9 +29,9 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
         const initAction = async () => {
             const tempChannelList: IChannel[] = await getChainList(serverID);
 
-            if (tempChannelList) {
+            if (Array.isArray(tempChannelList)) {
                 if (tempChannelList.length > 0) {
-                    const tempChannelDropdownList: IDropdownListProps[] = tempChannelList.map((item) => (
+                    const tempChannelDropdownList: IDropdownListProps[] = tempChannelList?.map((item) => (
                         {
                             name: item.name,
                             id: item.id,

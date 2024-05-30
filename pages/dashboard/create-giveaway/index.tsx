@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 
 const CreateGiveaway: React.FC = () => {
 
-    const { setGiveawayCreated } = useContext(AppContext);
+    const { setShowCreditCard, setGiveawayCreated, showCreditCard } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [tempRestrictedRoles, setTempRestrictedRoles] = useState<IServerRole[]>([]);
@@ -42,13 +42,12 @@ const CreateGiveaway: React.FC = () => {
     const [links, setLinks] = useState<string>("");
     const [requirements, setRequirements] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
-    const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
     const router = useRouter();
 
     const mainAction = async (serverID: string) => {
         const tempChainList: string[] = await getChainList(serverID);
 
-        if (tempChainList) {
+        if (Array.isArray(tempChainList)) {
             if (tempChainList.length > 0) {
                 const tempChainDropdownList: IDropdownListProps[] = tempChainList?.map((item, index) => ({
                     name: item,
@@ -73,7 +72,7 @@ const CreateGiveaway: React.FC = () => {
 
         const tempServerList: IServer[] = await getServers();
 
-        if (tempServerList) {
+        if (Array.isArray(tempServerList)) {
             if (tempServerList.length > 0) {
 
                 await mainAction(tempServerList[0].guildID)
@@ -86,7 +85,7 @@ const CreateGiveaway: React.FC = () => {
 
             const tempGiveaways: IGiveaway[] = await getGiveaways();
 
-            if (tempGiveaways) {
+            if (Array.isArray(tempGiveaways)) {
                 if (tempGiveaways.length > 0) {
                     const tempGiveawayDropdownList: IDropdownListProps[] = tempGiveaways.map((item, index) => ({
                         name: item.type,
@@ -375,8 +374,8 @@ const CreateGiveaway: React.FC = () => {
                 </div>
             </div>
             {showCreditCard &&
-                <div className="md:hidden block">
-                    <div className="z-[60] flex fixed top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
+                <div className="md:hidden block z-[60]">
+                    <div className="flex fixed top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                         <PreviewCard
                             title={title}
                             description={description}

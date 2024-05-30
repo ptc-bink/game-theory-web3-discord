@@ -13,10 +13,9 @@ import { formatDate } from "../../utils/utils";
 
 const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, quantity, required, requirements, price }) => {
 
+    const { userImage, username, isAdmin, setShowCreditCard } = useContext(AppContext);
     const [date, setDate] = useState<string | null>(null);
-
     const router = useRouter();
-    const { userImage, username, isAdmin } = useContext(AppContext);
 
     useEffect(() => {
         const updateDate = () => {
@@ -29,21 +28,19 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
         return () => clearInterval(intervalId); // Cleanup interval on unmount
     }, []);
 
-
-
     const handlePreviewEnter = () => { }
 
     return (
-        <div className="w-full flex flex-col h-fit rounded-md gap-4 p-4 bg-[#1D1E22] border border-cgrey-200">
+        <div className="w-full flex flex-col h-fit rounded-md gap-4 m-5 p-4 bg-[#1D1E22] border border-cgrey-200">
             {/* <div className="md:hidden block"> */}
-            <div className="flex gap-2">
+            <div className="flex gap-2" onClick={() => setShowCreditCard(false)}>
                 <Image
                     src={Preview}
                     width="24"
                     height="24"
                     alt="preview"
                 />
-                <p className="text-cwhite text-base font-semibold">Preview</p>
+                <p className="text-cwhite text-base font-semibold hover:underline">Preview</p>
                 {/* </div> */}
             </div>
             <div className="flex flex-col gap-3 p-4 rounded-sm bg-cgrey-200 border-l-[3px] border-[#15F115]">
@@ -90,7 +87,7 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                     <div className="flex flex-col gap-1">
                         <label className="text-cwhite text-sm leading-[18px] font-semibold">Requirements</label>
                         {
-                            required.length > 0 ?
+                            (Array.isArray(required) && required.length > 0) ?
                                 <div className="flex gap-1">
                                     {required.map((item, index) =>
                                         <p key={index} className="text-sm font-medium text-cwhite w-fit rounded-sm px-1" style={{ backgroundColor: `${item.color}` }}>

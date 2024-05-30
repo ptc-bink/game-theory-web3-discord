@@ -21,6 +21,8 @@ interface ContextType {
   allChannelList: IChannel[];
   giveawayCreated: boolean;
   giveawayEdited: boolean;
+  showCreditCard: boolean;
+  setShowCreditCard: (showCreditCard: boolean) => void,
   setGiveawayCreated: (giveawayCreated: boolean) => void,
   setGiveawayEdited: (giveawayEdited: boolean) => void,
   setAllChannelList: (allChainList: IChannel[]) => void,
@@ -62,6 +64,8 @@ const initialValue: ContextType = {
   allocationEdited: false,
   giveawayCreated: false,
   giveawayEdited: false,
+  showCreditCard: false,
+  setShowCreditCard(showCreditCard) { },
   setGiveawayCreated(giveawayCreated) { },
   setGiveawayEdited(giveawayEdited) { },
   setAllocationDeleted(allocationDeleted) { },

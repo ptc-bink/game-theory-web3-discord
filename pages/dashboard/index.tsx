@@ -29,7 +29,7 @@ const Dashboard: React.FC<IDashboard> = () => {
         const tempServerList: IServer[] = await getServers();
         const tempGiveaways: IGiveaway[] = await getGiveaways();
 
-        if (tempServerList) {
+        if (Array.isArray(tempServerList)) {
             if (tempServerList.length > 0) {
                 const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
                     return { name: item.guild.name, id: item.guild.id }
