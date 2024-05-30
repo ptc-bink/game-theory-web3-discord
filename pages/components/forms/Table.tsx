@@ -114,7 +114,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
             <div className="block lg:hidden w-full">
                 <div className="flex flex-col gap-4">
                     {allocations.map((item, index) => (
-                        <div className="flex flex-col gap-4  border border-cgrey-100 p-5">
+                        <div key={index} className="flex flex-col gap-4  border border-cgrey-100 p-5">
                             {/* <div className="grid gap-4">
                                 <p className="text-base font-semibold text-cwhite">{item.id}</p>
                                 <input type="checkbox" checked={isChecked} onChange={(e) => setIsChecked(!isChecked)} className="rounded-[4px]" />

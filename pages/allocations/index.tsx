@@ -37,7 +37,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
         }
     }
 
-    const searchInputAction = async () => {
+    const searchInputAction = () => {
         if (searchInput !== undefined) {
             if (allocations.length > 0) {
                 const tempAllocations: IAllocation[] = allocations.filter(allocation =>

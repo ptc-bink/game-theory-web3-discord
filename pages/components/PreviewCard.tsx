@@ -92,8 +92,8 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                         {
                             required.length > 0 ?
                                 <div className="flex gap-1">
-                                    {required.map(item =>
-                                        <p className="text-sm font-medium text-cwhite w-fit rounded-sm px-1" style={{ backgroundColor: `${item.color}` }}>
+                                    {required.map((item, index) =>
+                                        <p key={index} className="text-sm font-medium text-cwhite w-fit rounded-sm px-1" style={{ backgroundColor: `${item.color}` }}>
                                             {item.name}
                                         </p>
                                     )}

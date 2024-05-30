@@ -9,17 +9,14 @@ import SearchBtn from "../components/forms/SearchBtn";
 import AddServerModal from "../components/forms/AddServerModal";
 
 import Add from "@/public/avatar/add.svg"
-import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import Driver from "@/public/avatar/driver.svg"
-import Refresh from "@/public/avatar/refresh.svg"
 
-import AppContext from "../../providers/AppContext";
-import { IAdminProps, IServer, IDropdownListProps, IAdministrationTrustedServers, IChannel } from "../../utils/_type";
-import { administrationChannellist, getAdministrationTrustedServers, getServers } from "../../hook";
+import AppContext from "@/providers/AppContext";
+import { IAdminProps, IServer, IDropdownListProps, IAdministrationTrustedServers, IChannel } from "@/utils/_type";
+import { administrationChannellist, getAdministrationTrustedServers, getServers } from "@/hook";
 import { useRouter } from "next/router";
 import BackBtn from "../components/BackBtn";
 import toast from "react-hot-toast";
-import { tempFilterApprovedServerList } from "../../utils/_data";
 
 const Admin: React.FC<IAdminProps> = () => {
 
@@ -84,9 +81,7 @@ const Admin: React.FC<IAdminProps> = () => {
         }
     }
 
-    const searchInputAction = async () => {
-        console.log("approvedServerList ====>", approvedServerList);
-        console.log("searchInput ====>", searchInput);
+    const searchInputAction = () => {
 
         if (searchInput !== undefined) {
             if (approvedServerList.length > 0) {

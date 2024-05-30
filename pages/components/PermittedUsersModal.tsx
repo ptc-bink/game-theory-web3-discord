@@ -79,7 +79,7 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
                 </div>
                 <div className="flex flex-col px-1 py-[10px] gap-[6px] rounded-lg bg-cdark-50 border overflow-y-auto  border-cgrey-200 max-h-[235px]">
                     {PermittedUsers.map((item, index) => (
-                        <div className={`text-sm cursor-pointer leading-[18px] font-medium hover:text-cwhite hover:bg-cgrey-100 text-cgrey-900 ${flags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetUser(item.id, index)}>{item.id}</div>
+                        <div key={index} className={`text-sm cursor-pointer leading-[18px] font-medium hover:text-cwhite hover:bg-cgrey-100 text-cgrey-900 ${flags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetUser(item.id, index)}>{item.id}</div>
                     ))}
                 </div>
             </div>
