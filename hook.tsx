@@ -16,7 +16,7 @@ export const test = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 };
 
@@ -33,7 +33,7 @@ export const User = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -50,7 +50,7 @@ export const getHarvestWinners = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -71,7 +71,7 @@ export const getUserDetails = async (userID: string, serverID: string) => {
             return "undefined";
         }
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -86,7 +86,7 @@ export const getAdminof = async () => {
             return "undefined";
         }
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -103,7 +103,7 @@ export const UserInfo = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -126,7 +126,7 @@ export const getPermittedusers = async (serverID: string) => {
         return result.data;
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -148,7 +148,7 @@ export const putPermittedusers = async (data: any) => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -165,7 +165,7 @@ export const getGiveaways = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -191,7 +191,7 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
     } catch (error: any) {
         console.log("error ===>", error);
 
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -220,7 +220,7 @@ export const handleEditGiveaway = async (data: ICreateGiveaway) => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -241,7 +241,7 @@ export const Logout = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -257,7 +257,7 @@ export const getServers = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -281,7 +281,7 @@ export const enterGiveaway = async (serverID: string, giveAwayID: string, userID
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -297,7 +297,7 @@ export const getAllocation = async (serverID: string, id?: string) => {
 
         return result
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -313,7 +313,7 @@ export const getVestingReports = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -335,7 +335,7 @@ export const addAllocation = async (data: any) => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -352,7 +352,7 @@ export const getAdministrationTrustedServers = async (serverID: string) => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -374,7 +374,7 @@ export const PutAdministrationTrustedServers = async (data: IAdministrationTrust
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -391,7 +391,7 @@ export const getActiveServers = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -408,7 +408,7 @@ export const administrationChannellist = async (serverID: string) => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -423,7 +423,7 @@ export const getChainList = async (serverID: string) => {
             return "undefined";
         }
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -440,7 +440,7 @@ export const getServerRoles = async (serverID: string) => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -457,7 +457,7 @@ export const adminCheck = async () => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -478,7 +478,7 @@ export const removeEntry = async ({ marketID, serverID, removeUserID }: { market
         toast.success("removed success")
     } catch (error: any) {
         console.log(error);
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -501,7 +501,7 @@ export const addServer = async (data: IAddserverInfo) => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
@@ -524,7 +524,7 @@ export const editServer = async (data: IEditserverInfo) => {
         return result
 
     } catch (error: any) {
-        toast.error(error.message)
+        toast.error("Failed your request")
     }
 }
 
