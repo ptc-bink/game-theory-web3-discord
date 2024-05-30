@@ -27,75 +27,7 @@ const Admin: React.FC<IAdminProps> = () => {
     const [approvedServerList, setApprovedServerList] = useState<IAdministrationTrustedServers[]>([]);
     const [filterApprovedServerList, setFilterApprovedServerList] = useState<IAdministrationTrustedServers[]>([]);
     const [channelDropdownList, setChannelDropdownList] = useState<IDropdownListProps[]>();
-
     const router = useRouter();
-
-    const initAction = async () => {
-        const tempServerList: IServer[] = await getServers();
-
-        if (tempServerList) {
-            if (tempServerList.length > 0) {
-                const tempData = await getAdministrationTrustedServers(tempServerList[0].guildID);
-
-                const tempTrustedServers: IAdministrationTrustedServers[] = Object.keys(tempData).map((key) => {
-                    return {
-                        id: key,
-                        data: tempData[key]
-                    }
-                })
-
-                setApprovedServerList(tempTrustedServers);
-                setFilterApprovedServerList(tempTrustedServers);
-
-                const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
-                    return {
-                        name: item.guild.name,
-                        id: item.guild.id
-                    }
-                })
-
-                if (tempServerDropdownList.length > 0) {
-                    setServerDropdownList(tempServerDropdownList);
-                }
-
-                let tempAllChannelList: IChannel[] = [];
-
-                for (let i = 0; i < tempServerList.length; i++) {
-                    const tempChannelList: IChannel[] = await administrationChannellist(tempServerList[i].guildID);
-
-                    if (tempChannelList) {
-                        if (tempChannelList.length > 0) {
-                            console.log("tempChannelList ====>", tempChannelList);
-                            tempAllChannelList = tempAllChannelList.concat(tempChannelList);
-                        }
-                    }
-                }
-
-                setAllChannelList(tempAllChannelList);
-
-            } else {
-                return toast.error('No Server to Show')
-            }
-        } else {
-            return toast.error('No server to show')
-        }
-    }
-
-    const searchInputAction = () => {
-
-        if (searchInput !== undefined) {
-            if (approvedServerList.length > 0) {
-                const tempFilterApprovedServerList = approvedServerList.filter(item =>
-                    item.data.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.data.admin.toLowerCase().includes(searchInput.toLowerCase())
-                )
-                setFilterApprovedServerList(tempFilterApprovedServerList);
-
-                console.log("tempFilterApprovedServerList ====>", tempFilterApprovedServerList);
-                console.log("searchInput ====>", searchInput);
-            }
-        }
-    }
 
     const handleAddBtn = async () => {
         if (server) {
@@ -107,6 +39,21 @@ const Admin: React.FC<IAdminProps> = () => {
     }
 
     useEffect(() => {
+        const searchInputAction = () => {
+
+            if (searchInput !== undefined) {
+                if (approvedServerList.length > 0) {
+                    const tempFilterApprovedServerList = approvedServerList.filter(item =>
+                        item.data.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                        item.data.admin.toLowerCase().includes(searchInput.toLowerCase())
+                    )
+                    setFilterApprovedServerList(tempFilterApprovedServerList);
+
+                    console.log("tempFilterApprovedServerList ====>", tempFilterApprovedServerList);
+                    console.log("searchInput ====>", searchInput);
+                }
+            }
+        };
         searchInputAction();
     }, [searchInput, server])
 
@@ -114,6 +61,56 @@ const Admin: React.FC<IAdminProps> = () => {
         if (!isAdmin) {
             router.back();
             console.log("you should be admin");
+        }
+        const initAction = async () => {
+            const tempServerList: IServer[] = await getServers();
+
+            if (tempServerList) {
+                if (tempServerList.length > 0) {
+                    const tempData = await getAdministrationTrustedServers(tempServerList[0].guildID);
+
+                    const tempTrustedServers: IAdministrationTrustedServers[] = Object.keys(tempData).map((key) => {
+                        return {
+                            id: key,
+                            data: tempData[key]
+                        }
+                    })
+
+                    setApprovedServerList(tempTrustedServers);
+                    setFilterApprovedServerList(tempTrustedServers);
+
+                    const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
+                        return {
+                            name: item.guild.name,
+                            id: item.guild.id
+                        }
+                    })
+
+                    if (tempServerDropdownList.length > 0) {
+                        setServerDropdownList(tempServerDropdownList);
+                    }
+
+                    let tempAllChannelList: IChannel[] = [];
+
+                    for (let i = 0; i < tempServerList.length; i++) {
+                        const tempChannelList: IChannel[] = await administrationChannellist(tempServerList[i].guildID);
+
+                        if (tempChannelList) {
+                            if (tempChannelList.length > 0) {
+                                console.log("tempChannelList ====>", tempChannelList);
+                                tempAllChannelList = tempAllChannelList.concat(tempChannelList);
+                            }
+                        }
+                    }
+
+                    setAllChannelList(tempAllChannelList);
+
+                } else {
+                    return toast.error('No Server to Show')
+                }
+            } else {
+                return toast.error('No server to show')
+            }
         }
         initAction();
     }, [])

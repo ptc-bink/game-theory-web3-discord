@@ -36,24 +36,22 @@ const Allocation: React.FC<IAllocationProps> = () => {
             }
         }
     }
-
-    const searchInputAction = () => {
-        if (searchInput !== undefined) {
-            if (allocations.length > 0) {
-                const tempAllocations: IAllocation[] = allocations.filter(allocation =>
-                    allocation.title.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                    allocation.id.toLowerCase().includes(searchInput?.toLowerCase())
-                )
-                setFilterAllocations(tempAllocations);
-            }
-        }
-    }
-
     useEffect(() => {
         initAction();
     }, [])
 
     useEffect(() => {
+        const searchInputAction = () => {
+            if (searchInput !== undefined) {
+                if (allocations.length > 0) {
+                    const tempAllocations: IAllocation[] = allocations.filter(allocation =>
+                        allocation.title.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                        allocation.id.toLowerCase().includes(searchInput?.toLowerCase())
+                    )
+                    setFilterAllocations(tempAllocations);
+                }
+            }
+        }
         searchInputAction();
     }, [searchInput])
 

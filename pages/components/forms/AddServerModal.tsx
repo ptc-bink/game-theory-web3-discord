@@ -25,24 +25,23 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
     const [date, setDate] = useState<string>("");
     const [redisKey, setRediskey] = useState<string>("");
 
-    const initAction = async () => {
-        const tempChannelList: IChannel[] = await getChainList(serverID);
+    useEffect(() => {
+        const initAction = async () => {
+            const tempChannelList: IChannel[] = await getChainList(serverID);
 
-        if (tempChannelList) {
-            if (tempChannelList.length > 0) {
-                const tempChannelDropdownList: IDropdownListProps[] = tempChannelList.map((item) => (
-                    {
-                        name: item.name,
-                        id: item.id,
-                    }
-                ))
+            if (tempChannelList) {
+                if (tempChannelList.length > 0) {
+                    const tempChannelDropdownList: IDropdownListProps[] = tempChannelList.map((item) => (
+                        {
+                            name: item.name,
+                            id: item.id,
+                        }
+                    ))
 
-                setChannelDropdownList(tempChannelDropdownList);
+                    setChannelDropdownList(tempChannelDropdownList);
+                }
             }
         }
-    }
-
-    useEffect(() => {
         initAction()
     }, [])
 
