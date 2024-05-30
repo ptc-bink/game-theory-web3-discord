@@ -38,8 +38,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         if (session) {
             router.push(`/dashboard`);
         } else
-            toast.error("Please log in")
-        router.push('/');
+            router.push('/');
     }
 
     useEffect(() => {

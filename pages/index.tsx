@@ -11,7 +11,7 @@ export default function Page() {
 
   return (
     <div className="flex absolute z-[60] top-0 left-0 w-screen h-screen bg-cdark-50 backdrop-blur-sm justify-center items-center">
-      <div className="bg-cdark-100 h-screen flex justify-center items-center">
+      <div className="h-screen flex justify-center items-center">
         <div className="grid gap-8 bg-center sm:bg-cdark-200 bg-cdark-50 h-[348px] w-[393px] rounded-2xl border p-[50px] border-transparent sm:border-cdark-200">
           <div className="grid gap-4 w-full">
             <div className="flex justify-center">

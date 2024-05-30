@@ -171,12 +171,6 @@ export const getGiveaways = async () => {
 
 export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
 
-    const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles } = data;
-
-    if (!serverID || !Expiry || !title || !description || !chain || !type || !quantity || !price) {
-        return toast.error("Plz input all values");
-    }
-
     try {
         const res = await fetch(`/api/giveaways/`, {
             method: "POST",

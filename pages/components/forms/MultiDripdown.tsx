@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 import ArrowDown from "@/public/avatar/arrow-down.svg"
+import Cancel from "@/public/avatar/close-circle.svg"
 import ArrowUp from "@/public/avatar/arrow-up.svg"
 
 import { IMultiDropdownProps, IServerRole } from "@/utils/_type";
@@ -16,6 +17,11 @@ const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholde
         setDropdownOpen(!dropdownOpen);
     }
 
+    const handleCancelBtn = () => {
+        callback("");
+        setValue(placeholder);
+    }
+
     const handleSetValue = (item: IServerRole) => {
         callback(item);
         setValue(item.name);
@@ -26,6 +32,16 @@ const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholde
         <div className="w-full relative">
             <div className={`flex items-center w-full cursor-pointer border border-cgrey-200 px-4 py-[10px] rounded-lg justify-between ${className}`} onClick={handleDropdown}>
                 <p className="text-sm font-normal text-cwhite">{value}</p>
+                {value !== placeholder &&
+                    <div className="cursor-pointer " onClick={handleCancelBtn}>
+                        <Image
+                            src={Cancel}
+                            width="16"
+                            height="16"
+                            alt="th cancel"
+                        />
+                    </div>
+                }
                 {dropdownOpen ? <Image
                     src={ArrowUp}
                     width="16"

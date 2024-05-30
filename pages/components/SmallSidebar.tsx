@@ -33,7 +33,7 @@ const SmallSidebar = () => {
             image: <Dashboard
                 fill={selectedItem}
             />,
-            isActive: false,
+            userIn: true,
         },
         {
             label: "Projects",
@@ -41,7 +41,7 @@ const SmallSidebar = () => {
             image: <Projects
                 fill={selectedItem}
             />,
-            isActive: false
+            userIn: true
         },
         {
             label: "Allocations",
@@ -49,7 +49,7 @@ const SmallSidebar = () => {
             image: <Allocation
                 fill={selectedItem}
             />,
-            isActive: false
+            userIn: true
         },
         {
             label: "Admin",
@@ -57,7 +57,7 @@ const SmallSidebar = () => {
             image: <Admin
                 fill={selectedItem}
             />,
-            isActive: false
+            userIn: false
         },
         {
             label: "Vesting",
@@ -65,7 +65,7 @@ const SmallSidebar = () => {
             image: <Allocation
                 fill={selectedItem}
             />,
-            isActive: false
+            userIn: false
         },
         {
             label: "Bot",
@@ -73,20 +73,15 @@ const SmallSidebar = () => {
             image: <Bot
                 fill={selectedItem}
             />,
-            isActive: false
+            userIn: true
         },
     ]
 
-    useEffect(() => {
-        console.log("selectedItem ====>", selectedItem);
-
-    }, [
-        selectedItem
-    ])
+    const sideBar = isAdmin ? adminSideBar : adminSideBar.filter(item => item.userIn == true)
 
     return (
         <div className="flex justify-between overflow-auto bg-cgrey-100">
-            {adminSideBar.map((side: any, index: number) => (
+            {sideBar.map((side: any, index: number) => (
                 <Link key={index} href={side.link}>
                     <div className={`flex flex-col p-6 items-center justify-center cursor-pointer  hover:bg-cdark-100 ${path.includes(side.link) ? "border-t border-t-cwhite bg-cdark-100" : ""}`} onClick={() => { setSelectedItem(side.label) }}>
                         {side.image}

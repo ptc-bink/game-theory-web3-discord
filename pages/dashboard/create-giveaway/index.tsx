@@ -134,12 +134,15 @@ const CreateGiveaway: React.FC = () => {
 
         const res = await handleCreateGiveaway(data);
 
-        if (res) {
-            setGiveawayCreated(true);
-            router.back();
-        } else {
-            return toast.error("Error")
-        }
+        console.log("res ===================>", res);
+
+
+        // if (res) {
+        //     setGiveawayCreated(true);
+        //     router.back();
+        // } else {
+        //     return toast.error("Server Error")
+        // }
     }
 
     const handleCreditCard = () => {
