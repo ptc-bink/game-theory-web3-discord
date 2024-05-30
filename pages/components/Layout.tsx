@@ -6,15 +6,12 @@ import { usePathname } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from "next/router";
 import { Session } from 'next-auth';
-import { Spinner, spinner } from '@nextui-org/react';
+import toast from 'react-hot-toast';
 
 import AppContext from '../../providers/AppContext';
-
 import SmallSidebar from './SmallSidebar';
 import BigSidebar from './BigSidebar';
 import Navbar from './Navbar';
-import { adminCheck, getServers } from '@/hook';
-
 
 const Layout = ({ children }: { children: ReactNode }) => {
 
@@ -37,12 +34,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
     }
 
     const sessionAction = async () => {
-        console.log("layout : session ====> ", session);
 
         if (session) {
             router.push(`/dashboard`);
         } else
-            router.push('/');
+            toast.error("Please log in")
+        router.push('/');
     }
 
     useEffect(() => {

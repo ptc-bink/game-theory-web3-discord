@@ -27,7 +27,8 @@ export const authOptions = {
     async sign({ }) {
       return true
     }
-  }
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 }
 
 export default NextAuth(authOptions);
