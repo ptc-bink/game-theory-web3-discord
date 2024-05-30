@@ -11,14 +11,16 @@ import MultiDropdown from "@/pages/components/forms/MultiDripdown";
 import PreviewCard from "@/pages/components/PreviewCard";
 import Preview from "@/public/avatar/eye.svg"
 
-import AppContext from "@/pages/providers/AppContext";
+import AppContext from "@/providers/AppContext";
 import BackBtn from "@/pages/components/BackBtn";
-import { getChainList, getGiveaways, getServerRoles, getServers, handleCreateGiveaway } from "@/pages/hooks/hook";
-import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/pages/utils/_type";
+import { getChainList, getGiveaways, getServerRoles, getServers, handleCreateGiveaway } from "@/hook";
+import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/utils/_type";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 const CreateGiveaway: React.FC = () => {
 
+    const { setGiveawayCreated } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [tempRestrictedRoles, setTempRestrictedRoles] = useState<IServerRole[]>([]);
@@ -41,7 +43,31 @@ const CreateGiveaway: React.FC = () => {
     const [requirements, setRequirements] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
     const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
+    const router = useRouter();
 
+    const mainAction = async (serverID: string) => {
+        const tempChainList: string[] = await getChainList(serverID);
+
+        if (tempChainList) {
+            if (tempChainList.length > 0) {
+                const tempChainDropdownList: IDropdownListProps[] = tempChainList?.map((item, index) => ({
+                    name: item,
+                    id: item,
+                }))
+                setChainDropdownList(tempChainDropdownList);
+            }
+        }
+
+        const tempSeverRoles: IServerRole[] = await getServerRoles(serverID);
+
+        if (tempSeverRoles) {
+            if (tempSeverRoles.length > 0) {
+                setServerRoles(tempSeverRoles);
+                setTempRequiredRoles(tempSeverRoles);
+                setTempRestrictedRoles(tempSeverRoles)
+            }
+        }
+    }
 
     const initAction = async () => {
 
@@ -50,26 +76,8 @@ const CreateGiveaway: React.FC = () => {
         if (tempServerList) {
             if (tempServerList.length > 0) {
 
-                const tempChainList: [] = await getChainList(tempServerList[0].guildID);
+                await mainAction(tempServerList[0].guildID)
 
-                if (tempChainList) {
-                    if (tempChainList.length > 0) {
-                        const tempChainDropdownList: IDropdownListProps[] = tempChainList.map((item, index) => ({
-                            name: item,
-                            id: item,
-                        }))
-                        setChainDropdownList(tempChainDropdownList);
-                    }
-                }
-
-                const tempSeverRoles: IServerRole[] = await getServerRoles(tempServerList[0].guildID);
-                if (tempSeverRoles) {
-                    if (tempSeverRoles.length > 0) {
-                        setServerRoles(tempSeverRoles);
-                        setTempRequiredRoles(tempSeverRoles);
-                        setTempRestrictedRoles(tempSeverRoles)
-                    }
-                }
                 const serverDropdownList: IDropdownListProps[] = tempServerList?.map((item, index) => {
                     return { name: item.guild.name, id: item.guild.id }
                 })
@@ -125,7 +133,14 @@ const CreateGiveaway: React.FC = () => {
             requiredAllRoles: requiredAllRoles
         }
 
-        await handleCreateGiveaway(data);
+        const res = await handleCreateGiveaway(data);
+
+        if (res) {
+            setGiveawayCreated(true);
+            router.back();
+        } else {
+            return toast.error("Error")
+        }
     }
 
     const handleCreditCard = () => {
@@ -144,6 +159,10 @@ const CreateGiveaway: React.FC = () => {
     }, [expiresDate]);
 
     useEffect(() => {
+        mainAction(serverValue)
+    }, [serverValue])
+
+    useEffect(() => {
         console.log("serverRoles ===>", serverRoles);
         console.log("requiredRoles ===>", requiredRoles);
 
@@ -155,12 +174,12 @@ const CreateGiveaway: React.FC = () => {
     }, [restrictedRoles, requiredRoles])
 
     return (
-        <div className="p-8 grid md:grid-cols-2 md:grid-rows-1 gap-8 bg-cdark-100 relative">
+        <div className="p-8 grid md:grid-cols-2 grid-cols-1 gap-8 bg-cdark-100 relative">
             <div className="flex flex-col gap-4">
                 <div className="flex gap-6 items-center justify-between">
                     <div className="flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-[#FFFFFF] text-2xl font-semibold">Create Giveaway</p>
+                        <p className="text-cwhite text-2xl font-semibold">Create Giveaway</p>
                     </div>
                     <div onClick={handleCreditCard} className="md:hidden block">
                         <Image
@@ -179,29 +198,29 @@ const CreateGiveaway: React.FC = () => {
                         callback={setServerValue}
                     />
                 </div>
-                <div className="flex flex-col gap-3 text-[#FFFFFF]">
+                <div className="flex flex-col gap-3 text-cwhite">
                     {/* Title */}
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Title*</p>
-                        <input type="text" placeholder="Title" onChange={(e) => setTitle(e.target.value)} value={title} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Title*</p>
+                        <input type="text" placeholder="Title" onChange={(e) => setTitle(e.target.value)} value={title} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     {/* Description */}
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Description*</p>
-                        <textarea placeholder="Description" onChange={(e) => setDescription(e.target.value)} value={description} className="text-[#FFFFFF] text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Description*</p>
+                        <textarea placeholder="Description" onChange={(e) => setDescription(e.target.value)} value={description} className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     {/* Expires */}
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Expires*</p>
+                        <p className="text-sm font-normal text-cwhite">Expires*</p>
                         {/* <div className="grid grid-cols-2 gap-3 w-full"> */}
-                        <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" suppressContentEditableWarning={true} />
-                        {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" /> */}
+                        <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true} />
+                        {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" /> */}
                         {/* </div> */}
                     </div>
                     {/* Chain & Quantity */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Chain*</p>
+                            <p className="text-sm font-normal text-cwhite">Chain*</p>
                             <Dropdown
                                 dropdownList={chainDropdownList}
                                 placeholder="Select chain"
@@ -210,14 +229,14 @@ const CreateGiveaway: React.FC = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Quantity*</p>
-                            <input type="number" placeholder="0" onChange={(e) => setQuantity(e.target.valueAsNumber)} value={quantity} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Quantity*</p>
+                            <input type="number" placeholder="0" onChange={(e) => setQuantity(e.target.valueAsNumber)} value={quantity} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
                     {/* Type & Winning role */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Type*</p>
+                            <p className="text-sm font-normal text-cwhite">Type*</p>
                             <Dropdown
                                 dropdownList={giveawayDropdownList}
                                 placeholder="Select giveaway type"
@@ -226,7 +245,7 @@ const CreateGiveaway: React.FC = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Winning Role*</p>
+                            <p className="text-sm font-normal text-cwhite">Winning Role*</p>
                             <MultiDropdown
                                 dropdownList={serverRoles}
                                 placeholder="Select winning role"
@@ -238,7 +257,7 @@ const CreateGiveaway: React.FC = () => {
                     {/* Restricted Roles & Required Roles */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Restricted Roles*</p>
+                            <p className="text-sm font-normal text-cwhite">Restricted Roles*</p>
                             <Select
                                 placeholder="Select Restricted Roles"
                                 selectionMode="multiple"
@@ -257,7 +276,7 @@ const CreateGiveaway: React.FC = () => {
                                 popoverProps={{
                                     classNames: {
                                         base: " rounded-none",
-                                        content: "p-0 border border-cgrey-200 text-[#FFFFFF] bg-cgrey-100 rounded-lg ",
+                                        content: "p-0 border border-cgrey-200 text-cwhite bg-cgrey-100 rounded-lg ",
                                     },
                                 }}
                                 size="lg"
@@ -283,7 +302,7 @@ const CreateGiveaway: React.FC = () => {
                             </Select>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Required Roles*</p>
+                            <p className="text-sm font-normal text-cwhite">Required Roles*</p>
                             <Select
                                 placeholder="Select Restricted Roles"
                                 selectionMode="multiple"
@@ -303,7 +322,7 @@ const CreateGiveaway: React.FC = () => {
                                 popoverProps={{
                                     classNames: {
                                         base: " rounded-none",
-                                        content: "p-0 border border-cgrey-200 text-[#FFFFFF] bg-cgrey-100 rounded-lg ",
+                                        content: "p-0 border border-cgrey-200 text-cwhite bg-cgrey-100 rounded-lg ",
                                     },
                                 }}
                                 size="lg"
@@ -336,39 +355,41 @@ const CreateGiveaway: React.FC = () => {
                     </div>
                     {/* Price */}
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Price*</p>
-                        <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border grey-200grey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Price*</p>
+                        <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" />
                     </div>
                     {/* Links & Requirements */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Links</p>
-                            <input type="url" placeholder="" value={links} onChange={(e) => setLinks(e.target.value)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Links</p>
+                            <input type="url" placeholder="" value={links} onChange={(e) => setLinks(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Requirements</p>
-                            <input type="text" placeholder="" value={requirements} onChange={(e) => setRequirements(e.target.value)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Requirements</p>
+                            <input type="text" placeholder="" value={requirements} onChange={(e) => setRequirements(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
                 </div>
                 <div className="flex w-full justify-end">
-                    <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-[#FFFFFF] hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-[#FFFFFF] text-sm leading-4 font-medium">submit</div>
+                    <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-cwhite hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-cwhite text-sm leading-4 font-medium">submit</div>
                 </div>
             </div>
             {showCreditCard &&
-                <div className="absolute">
-                    <PreviewCard
-                        title={title}
-                        description={description}
-                        expiry={expiresDate}
-                        winningRole={winningRole}
-                        chain={chain}
-                        type={type}
-                        quantity={quantity}
-                        required={requiredRoles}
-                        requirements={requirements}
-                        price={price}
-                    />
+                <div className="md:hidden block">
+                    <div className="z-[60] flex fixed top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
+                        <PreviewCard
+                            title={title}
+                            description={description}
+                            expiry={expiresDate}
+                            winningRole={winningRole}
+                            chain={chain}
+                            type={type}
+                            quantity={quantity}
+                            required={requiredRoles}
+                            requirements={requirements}
+                            price={price}
+                        />
+                    </div>
                 </div>
             }
             <div className="hidden md:block">

@@ -16,7 +16,7 @@ const Page: React.FC = () => {
                         alt="full robot"
                     />
                 </div>
-                <p className="text-[#FFFFFF] text-center text-2xl font-medium">Invite Gib To your Server</p>
+                <p className="text-cwhite text-center text-2xl font-medium">Invite Gib To your Server</p>
             </div>
             <DiscordBtn btnName="Invite bot" />
         </div>

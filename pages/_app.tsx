@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
-import UserProvider from "./providers/AppProvider";
+import UserProvider from "../providers/AppProvider";
 import Layout from "./components/Layout";
 import { NextUIProvider } from "@nextui-org/react";
 import { Toaster } from "react-hot-toast";

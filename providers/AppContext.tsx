@@ -16,11 +16,19 @@ interface ContextType {
   removeApproval: boolean;
   addAllocationModalOpen: boolean;
   permittedUserModalOpen: boolean;
+  allocationDeleted: boolean;
+  allocationEdited: boolean;
   allChannelList: IChannel[];
+  giveawayCreated: boolean;
+  giveawayEdited: boolean;
+  setGiveawayCreated: (giveawayCreated: boolean) => void,
+  setGiveawayEdited: (giveawayEdited: boolean) => void,
   setAllChannelList: (allChainList: IChannel[]) => void,
   setPermittedUserModalOpen: (permittedUserModalOpen: boolean) => void,
   setAddAllocationModalOpen: (addAllocationModalOpen: boolean) => void,
   setRemoveEntrantModalOpen: (removeEntrantModalOpen: boolean) => void;
+  setAllocationEdited: (allocationEdited: boolean) => void;
+  setAllocationDeleted: (allocationDeleted: boolean) => void;
   setRemoveApproval: (removeApproval: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
   setSelectedGiveawayID: (seletedGiveawayID: string) => void;
@@ -50,6 +58,14 @@ const initialValue: ContextType = {
   permittedUserModalOpen: false,
   removeApproval: false,
   allChannelList: [],
+  allocationDeleted: false,
+  allocationEdited: false,
+  giveawayCreated: false,
+  giveawayEdited: false,
+  setGiveawayCreated(giveawayCreated) { },
+  setGiveawayEdited(giveawayEdited) { },
+  setAllocationDeleted(allocationDeleted) { },
+  setAllocationEdited(allocationEdited) { },
   setAllChannelList(allChannelList) { },
   setPermittedUserModalOpen(permittedUserModalOpen) { },
   setAddAllocationModalOpen(addAllocationModalOpen) { },

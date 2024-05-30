@@ -20,6 +20,10 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [permittedUserModalOpen, setPermittedUserModalOpen] = useState<boolean>(false);
   const [removeApproval, setRemoveApproval] = useState<boolean>(false);
   const [allChannelList, setAllChannelList] = useState<IChannel[]>([]);
+  const [allocationDeleted, setAllocationDeleted] = useState<boolean>(false);
+  const [allocationEdited, setAllocationEdited] = useState<boolean>(false);
+  const [giveawayCreated, setGiveawayCreated] = useState<boolean>(false);
+  const [giveawayEdited, setGiveawayEdited] = useState<boolean>(false);
 
   return (
     <AppContext.Provider
@@ -39,6 +43,14 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         permittedUserModalOpen,
         removeApproval,
         allChannelList,
+        allocationDeleted,
+        allocationEdited,
+        giveawayCreated,
+        giveawayEdited,
+        setGiveawayCreated,
+        setGiveawayEdited,
+        setAllocationDeleted,
+        setAllocationEdited,
         setAllChannelList,
         setRemoveApproval,
         setPermittedUserModalOpen,

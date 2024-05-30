@@ -12,7 +12,7 @@ const DiscordBtn: React.FC<DiscordBtnProps> = ({ btnName }) => {
 
     return (
         <div onClick={() => handleClick} className="flex items-center hover:cursor-pointer bg-cblue-500 rounded-lg px-6 py-3 border border-cblue-500 border-opacity-[0.08]">
-            <p className=" text-[#FFFFFF] text-base font-semibold pr-2">
+            <p className=" text-cwhite text-base font-semibold pr-2">
                 {btnName}
             </p>
             <Image

@@ -4,14 +4,15 @@ import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
 
 import Cancel from "@/public/avatar/close.svg"
-import AppContext from "@/pages/providers/AppContext";
-import { IDropdownListProps, IServer } from "@/pages/utils/_type";
+import AppContext from "@/providers/AppContext";
+import { IDropdownListProps, IServer } from "@/utils/_type";
 import Dropdown from "./Dropdown";
-import { getUserDetails } from "@/pages/hooks/hook";
+import { getServers, getUserDetails } from "@/hook";
+import toast from "react-hot-toast";
 
 const ProfileModal: React.FC<ProfileModalProps> = () => {
 
-    const { setProfileModalOpen, username, userImage, userID, serverList, setServerID, setUserID } = useContext(AppContext);
+    const { setProfileModalOpen, setServerID, setUserID, username, userImage, userID } = useContext(AppContext);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [userProfile, setUserProfile] = useState<any>();
     const [serverValue, setServerValue] = useState<string>("");
@@ -28,25 +29,32 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
     }
 
     const initAction = async () => {
-        if (serverList.length > 0) {
-            const initServerValue: string = serverList[0].guildID;
 
-            const tempUserProfile = await getUserDetails(userID, initServerValue);
-            const tempServerDropdownList: IDropdownListProps[] = serverList?.map((item, index) => {
-                return { name: item.guild.name, id: item.guild.id }
-            })
+        const tempServerList: IServer[] = await getServers();
 
-            setServerDropdownList(tempServerDropdownList);
-            setServerValue(initServerValue)
-            setUserProfile(userProfile);
+        if (tempServerList) {
+            if (tempServerList.length > 0) {
+                const initServerValue: string = tempServerList[0].guildID;
+                const tempUserProfile = await getUserDetails(userID, initServerValue);
+                const tempServerDropdownList: IDropdownListProps[] = tempServerList?.map((item, index) => {
+                    return { name: item.guild.name, id: item.guild.id }
+                })
 
-            console.log("getUserProfile =====>", tempUserProfile);
-
+                setServerDropdownList(tempServerDropdownList);
+                setUserProfile(tempUserProfile);
+                setServerValue(initServerValue)
+                setUserProfile(userProfile);
+            } else {
+                return toast.error("No server to show");
+            }
+        } else {
+            return toast.error("Server error");
         }
     }
 
     const serverValueAction = async () => {
         const tempUserProfile = await getUserDetails(userID, serverValue);
+
         setUserProfile(tempUserProfile);
     }
 
@@ -61,7 +69,7 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
     return (
         <div className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
-                <p className="text-base text-[#FFFFFF] font-semibold">User Profile</p>
+                <p className="text-base text-cwhite font-semibold">User Profile</p>
                 <div onClick={() => setProfileModalOpen(false)} className="cursor-pointer">
                     <Image
                         src={Cancel}
@@ -78,17 +86,17 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">User Name</p>
-                            <input type="text" disabled placeholder="Input User ID" value={username} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
+                            <p className="text-sm font-normal text-cwhite">User Name</p>
+                            <input type="text" disabled placeholder="Input User ID" value={username} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">User ID</p>
-                            <input type="text" disabled placeholder="Input User ID" value={userID} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
+                            <p className="text-sm font-normal text-cwhite">User ID</p>
+                            <input type="text" disabled placeholder="Input User ID" value={userID} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
                         </div>
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <p className="text-sm font-normal text-[#FFFFFF]">Server ID</p>
+                    <p className="text-sm font-normal text-cwhite">Server ID</p>
                     <Dropdown
                         dropdownList={serverDropdownList}
                         placeholder="Select Server"
@@ -98,25 +106,25 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">ETH HOT*</p>
-                        <input type="text" placeholder="0" onChange={(e) => setEthCold(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" />
+                        <p className="text-sm font-normal text-cwhite">ETH HOT*</p>
+                        <input type="text" placeholder="0" onChange={(e) => setEthCold(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">ETH COLD*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setEthCold(e.target.value)} value={ethCold} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">ETH COLD*</p>
+                        <input type="number" placeholder="0" onChange={(e) => setEthCold(e.target.value)} value={ethCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div><div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">BTC*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setBtc(e.target.value)} value={btc} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">BTC*</p>
+                        <input type="number" placeholder="0" onChange={(e) => setBtc(e.target.value)} value={btc} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">SOL*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setSol(e.target.value)} value={sol} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">SOL*</p>
+                        <input type="number" placeholder="0" onChange={(e) => setSol(e.target.value)} value={sol} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
             </div>
-            <div className="bg-[#FFFFFF] p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-[#FFFFFF] border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={() => handleEdit()}>Edit User Profile</div>
+            <div className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={() => handleEdit()}>Edit User Profile</div>
         </div>
     )
 }

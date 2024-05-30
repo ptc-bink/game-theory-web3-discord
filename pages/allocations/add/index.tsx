@@ -6,7 +6,7 @@ import Image from "next/image";
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import { useRouter } from "next/router";
 import BackBtn from "@/pages/components/BackBtn";
-import { addAllocation } from "@/pages/hooks/hook";
+import { addAllocation } from "@/hook";
 
 const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
@@ -36,48 +36,48 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                 <div className="md:block hidden">
                     <div className="flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-[#FFFFFF] text-2xl font-semibold">Add</p>
+                        <p className="text-cwhite text-2xl font-semibold">Add</p>
                     </div>
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Allocation</p>
-                            <input type="number" onChange={(e) => setAllocation(e.target.valueAsNumber)} placeholder="Choose Allocation" value={allocation} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Allocation</p>
+                            <input type="number" onChange={(e) => setAllocation(e.target.valueAsNumber)} placeholder="Choose Allocation" value={allocation} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Mint hold days</p>
-                            <input type="number" onChange={(e) => setMintHoldDays(e.target.valueAsNumber)} placeholder="Choose Mint hold days" value={mintHoldDays} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Secondary buy hold days</p>
-                            <input type="number" onChange={(e) => setSecondaryBuyHoldDays(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold days" value={secondaryBuyHoldDays} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Secondary buy hours</p>
-                            <input type="number" placeholder="Choose Secondary buy hours" onChange={(e) => setSecondaryBuyHours(e.target.valueAsNumber)} value={secondaryBuyHours} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Mint hold days</p>
+                            <input type="number" onChange={(e) => setMintHoldDays(e.target.valueAsNumber)} placeholder="Choose Mint hold days" value={mintHoldDays} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Secondary buy amount</p>
-                            <input type="number" placeholder="Choose Secondary buy amount" onChange={(e) => setSecondaryBuyAmount(e.target.valueAsNumber)} value={secondaryBuyAmount} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Secondary buy hold days</p>
+                            <input type="number" onChange={(e) => setSecondaryBuyHoldDays(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold days" value={secondaryBuyHoldDays} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Price void</p>
-                            <input type="number" step={0.00001} min={0.00001} onChange={(e) => setPriceVoid(e.target.valueAsNumber)} placeholder="Choose Price void" value={priceVoid} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Secondary buy hours</p>
+                            <input type="number" placeholder="Choose Secondary buy hours" onChange={(e) => setSecondaryBuyHours(e.target.valueAsNumber)} value={secondaryBuyHours} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-cwhite">Secondary buy amount</p>
+                            <input type="number" placeholder="Choose Secondary buy amount" onChange={(e) => setSecondaryBuyAmount(e.target.valueAsNumber)} value={secondaryBuyAmount} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-cwhite">Price void</p>
+                            <input type="number" step={0.00001} min={0.00001} onChange={(e) => setPriceVoid(e.target.valueAsNumber)} placeholder="Choose Price void" value={priceVoid} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
                     <div className="grid gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Is void</p>
-                            <input type="number" value={isVoid} onChange={(e) => setIsVoid(e.target.valueAsNumber)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Is void</p>
+                            <input type="number" value={isVoid} onChange={(e) => setIsVoid(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
                 </div>
-                <button aria-label="submit" className="flex self-end outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-4 py-3 w-fit rounded-md text-[#16171B]" onClick={handleSubmit}>Submit</button>
+                <button aria-label="submit" className="flex self-end outline-none bg-cwhite border border-[#EEEEEE] px-4 py-3 w-fit rounded-md text-cdark-100" onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     );

@@ -5,9 +5,9 @@ import Image from "next/image";
 import Dropdown from "./Dropdown";
 
 import Cancel from "@/public/avatar/close.svg"
-import AppContext from "@/pages/providers/AppContext";
-import { IChannel, IDropdownListProps, IEditServerModalProps } from "@/pages/utils/_type";
-import { administrationChannellist } from "@/pages/hooks/hook";
+import AppContext from "@/providers/AppContext";
+import { IChannel, IDropdownListProps, IEditServerModalProps } from "@/utils/_type";
+import { administrationChannellist } from "@/hook";
 
 const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel }) => {
 
@@ -74,7 +74,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, ma
     return (
         <div className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
-                <p className="text-base text-[#FFFFFF] font-semibold">Edit Server</p>
+                <p className="text-base text-cwhite font-semibold">Edit Server</p>
                 <div onClick={closeModal} className="cursor-pointer">
                     <Image
                         src={Cancel}
@@ -86,45 +86,45 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, ma
             </div>
             <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-2">
-                    <p className="text-sm font-normal text-[#FFFFFF]">Redis Key</p>
-                    <input type="text" disabled placeholder="Input redis key" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" value={rediskey} />
+                    <p className="text-sm font-normal text-cwhite">Redis Key</p>
+                    <input type="text" disabled placeholder="Input redis key" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" value={rediskey} />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Market Channel ID</p>
+                        <p className="text-sm font-normal text-cwhite">Market Channel ID</p>
                         <Dropdown dropdownList={chainDropdownList} initValue={marketChannelName} placeholder="Select market ID" callback={setMarketChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">General Channel ID</p>
+                        <p className="text-sm font-normal text-cwhite">General Channel ID</p>
                         <Dropdown dropdownList={chainDropdownList} initValue={generalChannelName} placeholder="Select general ID" callback={setGeneralChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Submit Wallet ID</p>
+                        <p className="text-sm font-normal text-cwhite">Submit Wallet ID</p>
                         <Dropdown dropdownList={chainDropdownList} initValue={submitWalletName} placeholder="Select wallet ID" callback={setSubmitWalletId} className="hover:bg-cdark-200 bg-cdark-100" />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Vesting Channel ID</p>
+                        <p className="text-sm font-normal text-cwhite">Vesting Channel ID</p>
                         <Dropdown dropdownList={chainDropdownList} initValue={vestingChannelName} placeholder="Select vesting ID" callback={setVestingChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Reminder Channel ID</p>
+                        <p className="text-sm font-normal text-cwhite">Reminder Channel ID</p>
                         <Dropdown dropdownList={chainDropdownList} initValue={reminderChannelName} placeholder="Select reminder ID" callback={setReminderChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Winners Channel ID</p>
+                        <p className="text-sm font-normal text-cwhite">Winners Channel ID</p>
                         <Dropdown dropdownList={chainDropdownList} initValue={winnersChannelName} placeholder="Select winners ID" callback={setWinnersChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <p className="text-sm font-normal text-[#FFFFFF]">Date</p>
-                    <input type="date" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-[#141518] border border-[#292A2E] text-[#FFFFFF]" onChange={(e) => setDate(e.target.value)} />
+                    <p className="text-sm font-normal text-cwhite">Date</p>
+                    <input type="date" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) => setDate(e.target.value)} />
                 </div>
             </div>
-            <div className="bg-[#FFFFFF] p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-[#FFFFFF] border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={() => handleSaveChange()}>Save Changes</div>
+            <div className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={() => handleSaveChange()}>Save Changes</div>
         </div>
     )
 }

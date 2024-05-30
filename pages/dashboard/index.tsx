@@ -5,30 +5,27 @@ import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
+import Add from "@/public/avatar/add.svg"
+
 import GiveawayCard from "@/pages/components/GiveawayCard";
 import Dropdown from "@/pages/components/forms/Dropdown";
 import SearchBtn from "@/pages/components/forms/SearchBtn";
-import { IGiveaway, IServer, IDropdownListProps } from "../utils/_type";
+import AppContext from "@/providers/AppContext";
 
-import Refresh from "@/public/avatar/refresh.svg"
-import Add from "@/public/avatar/add.svg"
-
-// import { giveAways } from "../utils/_data";
-
-import { getGiveaways, getServers } from "../hooks/hook";
-import AppContext from "../providers/AppContext";
+import { IGiveaway, IServer, IDropdownListProps } from "@/utils/_type";
+import { getGiveaways, getServers } from "@/hook";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin } = useContext(AppContext);
-    const [serverValue, setServerValue] = useState<string>("");
+    const { isAdmin, giveawayCreated, giveawayEdited, setGiveawayEdited, setGiveawayCreated, setIsLoading } = useContext(AppContext);
+    const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
     const [filterData, setFilterData] = useState<IGiveaway[]>([]);
+    const [serverValue, setServerValue] = useState<string>("");
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
 
     const initAction = async () => {
-
         const tempServerList: IServer[] = await getServers();
         const tempGiveaways: IGiveaway[] = await getGiveaways();
 
@@ -46,6 +43,7 @@ const Dashboard: React.FC<IDashboard> = () => {
         if (tempGiveaways !== undefined) {
             if (tempGiveaways.length > 0) {
                 setGiveaways(tempGiveaways);
+                setMiddleGiveaways(tempGiveaways);
                 setFilterData(tempGiveaways);
             } else {
                 return toast.error("No giveaway to show");
@@ -56,26 +54,26 @@ const Dashboard: React.FC<IDashboard> = () => {
     }
 
     const filterAction = async () => {
+        let tempFilterData: IGiveaway[] = [];
 
         if (giveaways.length > 0) {
+            tempFilterData = giveaways.filter(giveaway =>
+                giveaway.messageID.toLowerCase().includes(serverValue.toLowerCase())
+            )
 
-            let tempFilterData: IGiveaway[] = [];
+            setMiddleGiveaways(tempFilterData);
+            setFilterData(tempFilterData);
+        }
 
-            if (serverValue !== "") {
-                tempFilterData = giveaways.filter(giveaway =>
-                    giveaway.messageID.toLowerCase().includes(serverValue.toLowerCase())
-                )
-            }
+        if (searchInput !== "" && middleGiveaways.length > 0) {
+            let tempFilterData: IGiveaway[] = middleGiveaways.filter(giveaway =>
+                giveaway.title.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                giveaway.messageID.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                giveaway.chain.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                giveaway.type.toLowerCase().includes(searchInput?.toLowerCase())
+            )
 
-            if (searchInput !== "" && tempFilterData.length > 0) {
-                tempFilterData = giveaways.filter(giveaway =>
-                    giveaway.title.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                    giveaway.messageID.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                    giveaway.chain.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                    giveaway.type.toLowerCase().includes(searchInput?.toLowerCase())
-                )
-                setFilterData(tempFilterData);
-            }
+            setFilterData(tempFilterData);
         }
     }
 
@@ -87,10 +85,18 @@ const Dashboard: React.FC<IDashboard> = () => {
         filterAction();
     }, [searchInput, serverValue])
 
+    useEffect(() => {
+        if (giveawayCreated || giveawayEdited) {
+            initAction();
+            setGiveawayCreated(false);
+            setGiveawayEdited(false);
+        }
+    }, [giveawayCreated, giveawayEdited])
+
     return (
         <div className="flex flex-col gap-4 p-8 bg-cdark-100">
             <div className="flex flex-col">
-                <p className="text-[#FFFFFF] text-2xl font-semibold md:block hidden">Dashboard</p>
+                <p className="text-cwhite text-2xl font-semibold md:block hidden">Dashboard</p>
                 <div className="items-center w-full grid md:grid-cols-2 md:grid-rows-1 grid-cols-1 grid-rows-2 gap-4 pt-4 text-sm">
                     <div>
                         <Dropdown
@@ -108,14 +114,14 @@ const Dashboard: React.FC<IDashboard> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        {isAdmin && <Link href="/dashboard/create-giveaway" className="ml-2 flex justify-between bg-[#FFFFFF] w-fit items-center rounded-lg outline-none border border-[#EEEEEE] px-[10px] py-3">
+                        {isAdmin && <Link href="/dashboard/create-giveaway" className="ml-2 flex justify-between bg-cwhite w-fit items-center rounded-lg outline-none border border-[#EEEEEE] px-[10px] py-3">
                             <Image
                                 src={Add}
                                 width="16"
                                 height="16"
                                 alt="add button"
                             />
-                            <p className="text-[#16171B] text-sm leading-5 font-medium lg:block hidden">Create Giveaway</p>
+                            <p className="text-cdark-100 text-sm leading-5 font-medium lg:block hidden">Create Giveaway</p>
                         </Link>}
                     </div>
                 </div>
@@ -141,7 +147,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                         ))}
                     </div> :
                     <div className="flex flex-col gap-4 px-3 py-4 min-h-[calc(100vh-280px)] justify-center items-center">
-                        <div className="text-[#FFFFFF] text-2xl leading-8 font-medium text-center w-full">No Giveaway to Show</div>
+                        <div className="text-cwhite text-2xl leading-8 font-medium text-center w-full">No Giveaway to Show</div>
                     </div>
             }
         </div>

@@ -3,21 +3,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import JsonView from "react18-json-view";
+import toast from "react-hot-toast";
 import 'react18-json-view/src/style.css'
 
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
-import Search from "@/public/avatar/search-normal.svg"
-import Add from "@/public/avatar/add.svg"
 import UserAdd from "@/public/avatar/user-add.svg"
 
+import PermittedUsersModal from "@/pages/components/PermittedUsersModal";
 import SearchBtn from "@/pages/components/forms/SearchBtn";
 import Dropdown from "@/pages/components/forms/Dropdown";
+import AppContext from "@/providers/AppContext";
 
-import { getPermittedusers, getServers, getVestingReports } from "../hooks/hook";
-import AppContext from "../providers/AppContext";
-import PermittedUsersModal from "../components/PermittedUsersModal";
-import { IDropdownListProps, IPermittedUser, IServer } from "../utils/_type";
-import toast from "react-hot-toast";
+import { getPermittedusers, getServers } from "@/hook";
+import { IDropdownListProps, IPermittedUser, IServer } from "@/utils/_type";
 
 const VESTING: React.FC<IVESTING> = () => {
 
@@ -27,7 +25,7 @@ const VESTING: React.FC<IVESTING> = () => {
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [winningRole, setWinningRole] = useState<string>("");
     const [searchValue, setSearchValue] = useState<string>("");
-    const [server, setServer] = useState<string>("");
+    const [serverValue, setServerValue] = useState<string>("");
 
     const initAction = async () => {
         const tempServerList: IServer[] = await getServers();
@@ -53,13 +51,10 @@ const VESTING: React.FC<IVESTING> = () => {
     }
 
     const serverAction = async () => {
-        const tempPermittedUsers: IPermittedUser[] = permittedUsers.filter(permittedUser =>
-            permittedUser.added_by.toLowerCase().includes(server)
-        )
-        setFilterPermittedUsers(tempPermittedUsers);
+
     }
 
-    const searchValueAction = async () => {
+    const filterAction = async () => {
         if (searchValue !== undefined) {
             if (permittedUsers.length > 0) {
                 const tempPermittedUsers: IPermittedUser[] = permittedUsers.filter(permittedUser =>
@@ -69,47 +64,58 @@ const VESTING: React.FC<IVESTING> = () => {
                 setFilterPermittedUsers(tempPermittedUsers);
             }
         }
+
+        if (serverValue !== "") {
+            const tempPermittedUsers: IPermittedUser[] = filterPermittedUsers.filter(filterPermittedUser =>
+                filterPermittedUser.added_by.toLowerCase().includes(serverValue)
+            )
+
+            setFilterPermittedUsers(tempPermittedUsers);
+        }
     }
 
     const handlePermiitedBtn = async () => {
-        if (server == "") {
+        if (serverValue == "") {
             return toast.error("Please select server")
         }
+
         setPermittedUserModalOpen(true)
     }
 
     useEffect(() => {
-        serverAction();
-    }, [server])
+
+        filterAction();
+
+    }, [searchValue, serverValue])
 
     useEffect(() => {
-        searchValueAction();
-    }, [searchValue])
 
-    useEffect(() => {
         initAction();
+
     }, [])
 
     return (
         <div className="flex flex-col p-8 gap-4">
             <div className="flex flex-col gap-4">
-                <div className="flex gap-6 items-center">
-                    <div className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
-                        <Image
-                            src={ArrowLeft}
-                            width="24"
-                            height="24"
-                            alt="arrow left"
-                        />
+                <div className="md:block hidden">
+                    <div className="flex gap-6 items-center">
+                        <div className="bg-cdark-200 border cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
+                            <Image
+                                src={ArrowLeft}
+                                width="24"
+                                height="24"
+                                alt="arrow left"
+                            />
+                        </div>
+                        <p className="text-cwhite text-2xl font-semibold">Vesting Reports</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-2xl font-semibold">Vesting Reports</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex md:flex-row flex-col gap-4">
                     <Dropdown
                         dropdownList={serverDropdownList}
-                        placeholder="select"
+                        placeholder="Select server"
                         className="hover:bg-cdark-100 bg-cdark-200"
-                        callback={setServer}
+                        callback={setServerValue}
                     />
                     <div className="flex w-full text-sm font-normal">
                         <div className="flex flex-grow">
@@ -119,20 +125,20 @@ const VESTING: React.FC<IVESTING> = () => {
                                 callback={setSearchValue}
                             />
                         </div>
-                        <div onClick={handlePermiitedBtn} className="ml-2 cursor-pointer hover:bg-cgrey-900 flex gap-2 justify-between w-fit items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3">
+                        <div onClick={handlePermiitedBtn} className="ml-2 cursor-pointer hover:bg-cgrey-900 flex gap-2 justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-3">
                             <Image
                                 src={UserAdd}
                                 width="16"
                                 height="16"
                                 alt="user avatar"
                             />
-                            <p className="text-[#16171B] text-sm leading-5 font-medium sm:block hidden">Permitted Users</p>
+                            <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Permitted Users</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="rounded-2xl border border-[#292A2E] bg-[#141518] px-2 py-3 text-[#FFFFFF] text-base font-normal overflow-scroll h-[calc(100vh-280px)]">
-                <JsonView className="text-[#FFFFFF]" src={filterPermittedUsers} theme="winter-is-coming" collapsed={false} />
+            <div className="rounded-2xl border border-cgrey-200 bg-cdark-50 px-2 py-3 text-cwhite text-base font-normal overflow-scroll h-[calc(100vh-280px)]">
+                <JsonView className="text-cwhite" src={filterPermittedUsers} theme="winter-is-coming" collapsed={false} />
             </div>
             {permittedUserModalOpen && <PermittedUsersModal />}
         </div>

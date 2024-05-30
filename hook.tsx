@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 
-import { ICreateGiveaway, IAdministrationTrustedServers, IAddserverInfo, IEditserverInfo } from "../utils/_type";
+import { ICreateGiveaway, IAdministrationTrustedServers, IAddserverInfo, IEditserverInfo } from "./utils/_type";
 
 
 export const test = async () => {
@@ -8,8 +8,8 @@ export const test = async () => {
         const res = await fetch(`/api/administration`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -25,8 +25,8 @@ export const User = async () => {
         const res = await fetch(`/api/user`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -42,8 +42,8 @@ export const getHarvestWinners = async () => {
         const res = await fetch(`/api/harvest`)
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -95,8 +95,8 @@ export const UserInfo = async () => {
         const res = await fetch("/api/userinfo");
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -118,8 +118,8 @@ export const getPermittedusers = async (serverID: string) => {
         })
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -140,8 +140,8 @@ export const putPermittedusers = async (data: any) => {
             })
         })
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -157,8 +157,8 @@ export const getGiveaways = async () => {
         const res = await fetch(`/api/giveaways/`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -187,14 +187,16 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
         });
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+            // 
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
         return result
 
     } catch (error: any) {
+        console.log("error ===>", error);
+
         toast.error(error.message)
     }
 }
@@ -208,21 +210,20 @@ export const handleEditGiveaway = async (data: ICreateGiveaway) => {
     }
 
     try {
-        // const res = await fetch(`/api/giveaways/`, {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify({
-        //         data
-        //     }),
-        // });
+        const res = await fetch(`/api/giveaways/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data
+            }),
+        });
 
-        // if (!res.ok) {
-        //     const errorData = await res.json();
-        //     throw new Error(errorData.error);
-        // }
-        // const result = await res.json();
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        const result = await res.json();
 
-        // return result
+        return result
 
     } catch (error: any) {
         toast.error(error.message)
@@ -239,8 +240,7 @@ export const Logout = async () => {
         const res = await fetch(`/api/logout`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -256,8 +256,7 @@ export const getServers = async () => {
         const res = await fetch(`/api/servers`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -281,8 +280,7 @@ export const enterGiveaway = async (serverID: string, giveAwayID: string, userID
         })
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -298,8 +296,7 @@ export const getAllocation = async (serverID: string, id?: string) => {
         const res = await fetch(`/api/allocation?serverID=${serverID}`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+            throw new Error(res.statusText);
         }
 
         const result = await res.json();
@@ -315,8 +312,7 @@ export const getVestingReports = async () => {
         const res = await fetch(`api/vesting-reports`)
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -336,9 +332,9 @@ export const addAllocation = async (data: any) => {
                 data
             })
         })
+
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -354,8 +350,8 @@ export const getAdministrationTrustedServers = async (serverID: string) => {
         const res = await fetch(`/api/administration/trusted-servers?serverID=${serverID}`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -376,8 +372,8 @@ export const PutAdministrationTrustedServers = async (data: IAdministrationTrust
             }),
         });
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -393,8 +389,8 @@ export const getActiveServers = async () => {
         const res = await fetch(`/api/active-servers`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -410,8 +406,8 @@ export const administrationChannellist = async (serverID: string) => {
         const res = await fetch(`/api/administration/channellist?serverID=${serverID}`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -442,8 +438,8 @@ export const getServerRoles = async (serverID: string) => {
         const res = await fetch(`/api/serverRoles/${serverID}`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -459,8 +455,8 @@ export const adminCheck = async () => {
         const res = await fetch(`/api/administration`);
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -503,8 +499,8 @@ export const addServer = async (data: IAddserverInfo) => {
         })
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 
@@ -526,8 +522,8 @@ export const editServer = async (data: IEditserverInfo) => {
         })
 
         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error);
+
+            throw new Error(res.statusText);
         }
         const result = await res.json();
 

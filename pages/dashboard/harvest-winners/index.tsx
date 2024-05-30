@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 
 import BackBtn from "@/pages/components/BackBtn";
-import { getHarvestWinners, getServers } from "@/pages/hooks/hook";
-// import { jsonFileDownload } from "@/pages/hooks/download";
+import { getHarvestWinners, getServers } from "@/hook";
+// import { jsonFileDownload } from "@/download";
 
 const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
@@ -63,16 +63,16 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                 <div className="md:block hidden">
                     <div className="flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-[#FFFFFF] text-2xl font-semibold">Harvest Winners</p>
+                        <p className="text-cwhite text-2xl font-semibold">Harvest Winners</p>
                     </div>
                 </div>
-                <div className="flex gap-2 text-[#FFFFFF]">
-                    <button aria-label="csv" className="outline-none bg-[#5865F2] border border-[#5865F2] px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleCsvBtn}>CSV</button>
-                    <button aria-label="json" className="outline-none bg-[#5865F2] border border-[#5865F2] px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleJsonBtn}>JSON</button>
-                    <button aria-label="human" className="outline-none bg-[#5865F2] border border-[#5865F2] px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleHumanReadableBtn}>Human Readable</button>
+                <div className="flex gap-2 text-cwhite">
+                    <button aria-label="csv" className="outline-none bg-cblue-500 border border-cblue-500 px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleCsvBtn}>CSV</button>
+                    <button aria-label="json" className="outline-none bg-cblue-500 border border-cblue-500 px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleJsonBtn}>JSON</button>
+                    <button aria-label="human" className="outline-none bg-cblue-500 border border-cblue-500 px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleHumanReadableBtn}>Human Readable</button>
                 </div>
             </div>
-            <div className="overflow-scroll rounded-2xl border border-cgrey-200 bg-[#141518] text-[#FFFFFF] py-3 pr-2 pl-4 text-base font-normal h-[calc(100vh-220px)]">
+            <div className="overflow-scroll rounded-2xl border border-cgrey-200 bg-cdark-50 text-cwhite py-3 pr-2 pl-4 text-base font-normal h-[calc(100vh-220px)]">
                 {formattedData}
             </div>
         </div>

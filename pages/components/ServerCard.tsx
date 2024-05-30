@@ -8,11 +8,11 @@ import Driver from "@/public/avatar/driver.svg"
 import Edit from "@/public/avatar/edit.svg"
 import Trash from "@/public/avatar/trash.svg"
 
-import AppContext from "../providers/AppContext";
+import AppContext from "../../providers/AppContext";
 import EditServerModal from "./forms/EditServerModal";
 import RemoveEntrantsModal from "./forms/RemoveEntrantsModal";
-import { IChannel, IServerCardProps } from "../utils/_type";
-import { removeEntry } from "../hooks/hook";
+import { IChannel, IServerCardProps } from "../../utils/_type";
+import { removeEntry } from "../../hook";
 
 const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg, adminImg, createdBy, paymentExpires, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel }) => {
 
@@ -74,9 +74,9 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
     }, [removeApproval])
 
     return (
-        <div className="w-full flex flex-col rounded gap-4 hover:border-2 hover:border-[#FFFFFF] p-4 border border-cgrey-200">
+        <div className="w-full flex flex-col rounded gap-4 hover:border-2 hover:border-cwhite p-4 border border-cgrey-200">
             <div className="flex gap-4 rounded">
-                <div className="flex justify-center items-center p-3 border border-[#292A2E] bg-[#202125] rounded-lg">
+                <div className="flex justify-center items-center p-3 border border-cgrey-200 bg-cdark-200 rounded-lg">
                     {
                         serverImg ?
                             <img src={serverImg} width={24} height={24} alt="server image" />
@@ -89,7 +89,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
                     }
                 </div>
                 <div className="flex flex-col gap-1">
-                    <p className="text-base font-semibold text-[#FFFFFF]">{name}</p>
+                    <p className="text-base font-semibold text-cwhite">{name}</p>
                     <div className="flex gap-2">
                         {
                             adminImg ?
@@ -101,43 +101,43 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
                                     alt="server mark"
                                 />
                         }
-                        <p className="text-[#939393] text-xs leading-[18px] font-normal">Created by {createdBy}</p>
+                        <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Created by {createdBy}</p>
                     </div>
                 </div>
             </div>
             <div className="flex flex-col gap-1">
                 <div className="flex justify-between">
-                    <p className="text-xs leading-[18px] font-normal text-[#939393]">Payment Expires</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{paymentExpires ? paymentExpires / (60 * 60 * 24) : "-"}</p>
+                    <p className="text-xs leading-[18px] font-normal text-cgrey-900">Payment Expires</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{paymentExpires ? paymentExpires / (60 * 60 * 24) : "-"}</p>
                 </div>
                 <div className="flex justify-between">
-                    <p className="text-xs leading-[18px] font-normal text-[#939393]">Market Channel</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{marketChannelName}</p>
+                    <p className="text-xs leading-[18px] font-normal text-cgrey-900">Market Channel</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{marketChannelName}</p>
                 </div>
                 <div className="flex justify-between">
-                    <p className="text-xs leading-[18px] font-normal text-[#939393]">General Channel</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{generalChannelName}</p>
+                    <p className="text-xs leading-[18px] font-normal text-cgrey-900">General Channel</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{generalChannelName}</p>
                 </div>
                 <div className="flex justify-between">
-                    <p className="text-xs leading-[18px] font-normal text-[#939393]">Submit Wallet</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{submitWalletName}</p>
+                    <p className="text-xs leading-[18px] font-normal text-cgrey-900">Submit Wallet</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{submitWalletName}</p>
                 </div>
                 <div className="flex justify-between">
-                    <p className="text-xs leading-[18px] font-normal text-[#939393]">Vesting Channel</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{vestingChannelName}</p>
+                    <p className="text-xs leading-[18px] font-normal text-cgrey-900">Vesting Channel</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{vestingChannelName}</p>
                 </div>
                 <div className="flex justify-between">
-                    <p className="text-xs leading-[18px] font-normal text-[#939393]">reminderChannel</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{reminderChannelName}</p>
+                    <p className="text-xs leading-[18px] font-normal text-cgrey-900">reminderChannel</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{reminderChannelName}</p>
                 </div>
                 <div className="flex justify-between">
-                    <p className="text-xs leading-[18px] font-normal text-[#939393]">Winners Channel</p>
-                    <p className="text-xs leading-[18px] font-semibold text-[#FFFFFF]">{winnersChannelName}</p>
+                    <p className="text-xs leading-[18px] font-normal text-cgrey-900">Winners Channel</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{winnersChannelName}</p>
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-2 w-full">
                 <div className="flex w-full justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={() => setEditServerModalOpen(true)}>
-                    <p className="text-sm font-normal text-[#FFFFFF] sm:block hidden">Edit Server</p>
+                    <p className="text-sm font-normal text-cwhite sm:block hidden">Edit Server</p>
                     <Image
                         src={Edit}
                         width="16"
@@ -146,7 +146,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
                     />
                 </div>
                 <div className="flex w-full justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 hover:border-cdark-100 border-cgrey-200 gap-2" onClick={() => setRemoveEntrantModalOpen(true)}>
-                    <p className="text-sm font-normal text-[#FFFFFF] sm:block hidden">Remove Server</p>
+                    <p className="text-sm font-normal text-cwhite sm:block hidden">Remove Server</p>
                     <Image
                         src={Trash}
                         width="16"
@@ -157,7 +157,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
             </div>
             {
                 editServerModalOpen && (
-                    <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                    <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                         <EditServerModal
                             rediskey={rediskey}
                             server={name}
@@ -173,7 +173,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
             }
             {
                 removeEntrantModalOpen && (
-                    <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                    <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                         <RemoveEntrantsModal
                         />
                     </div>

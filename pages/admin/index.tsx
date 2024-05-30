@@ -13,13 +13,13 @@ import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import Driver from "@/public/avatar/driver.svg"
 import Refresh from "@/public/avatar/refresh.svg"
 
-import AppContext from "../providers/AppContext";
-import { IAdminProps, IServer, IDropdownListProps, IAdministrationTrustedServers, IChannel } from "../utils/_type";
-import { administrationChannellist, getAdministrationTrustedServers, getServers } from "../hooks/hook";
+import AppContext from "../../providers/AppContext";
+import { IAdminProps, IServer, IDropdownListProps, IAdministrationTrustedServers, IChannel } from "../../utils/_type";
+import { administrationChannellist, getAdministrationTrustedServers, getServers } from "../../hook";
 import { useRouter } from "next/router";
 import BackBtn from "../components/BackBtn";
 import toast from "react-hot-toast";
-import { tempFilterApprovedServerList } from "../utils/_data";
+import { tempFilterApprovedServerList } from "../../utils/_data";
 
 const Admin: React.FC<IAdminProps> = () => {
 
@@ -129,7 +129,7 @@ const Admin: React.FC<IAdminProps> = () => {
                 <div className="hidden md:block">
                     <div className=" flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-[#FFFFFF] text-2xl font-semibold">Approved Servers</p>
+                        <p className="text-cwhite text-2xl font-semibold">Approved Servers</p>
                     </div>
                 </div>
                 <div className="items-center w-full grid md:grid-cols-2 grid-cols-1 gap-4 pt-4 text-sm realtive">
@@ -147,18 +147,18 @@ const Admin: React.FC<IAdminProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        <button aria-label="add server" onClick={handleAddBtn} className="ml-2 flex justify-between w-fit items-center rounded-lg outline-none bg-[#FFFFFF] border border-[#EEEEEE] px-[10px] py-3">
+                        <button aria-label="add server" onClick={handleAddBtn} className="ml-2 flex justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-3">
                             <Image
                                 src={Add}
                                 width="16"
                                 height="16"
                                 alt="add button"
                             />
-                            <p className="text-[#16171B] text-sm leading-5 font-medium lg:block hidden">Add Server</p>
+                            <p className="text-cdark-100 text-sm leading-5 font-medium lg:block hidden">Add Server</p>
                         </button>
                     </div>
                     {addServerModalOpen && (
-                        <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                        <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                             <AddServerModal />
                         </div>
                     )}
@@ -191,13 +191,13 @@ const Admin: React.FC<IAdminProps> = () => {
                     alt="no server to show"
                 />
                 <div className="z-[60] flex flex-col w-full text-center justify-center gap-2">
-                    <p className="text-2xl font-medium text-[#FFFFFF]">No Server To Show</p>
-                    <p className="text-base leading-[18px] font-normal text-[#939393]">Your trusted server will show here</p>
+                    <p className="text-2xl font-medium text-cwhite">No Server To Show</p>
+                    <p className="text-base leading-[18px] font-normal text-cgrey-900">Your trusted server will show here</p>
                 </div>
             </div>
             }
             {addServerModalOpen && (
-                <div className="z-[60] flex fixed top-0 left-0 w-screen h-screen bg-[#141518]/30 backdrop-blur-sm justify-center items-center">
+                <div className="z-[60] flex fixed top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                     <AddServerModal />
                 </div>
             )}

@@ -2,7 +2,8 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 import { Select, SelectItem, Chip } from "@nextui-org/react";
 
@@ -11,15 +12,14 @@ import MultiDropdown from "@/pages/components/forms/MultiDripdown";
 import PreviewCard from "@/pages/components/PreviewCard";
 import Preview from "@/public/avatar/eye.svg"
 
-import AppContext from "@/pages/providers/AppContext";
+import AppContext from "@/providers/AppContext";
 import BackBtn from "@/pages/components/BackBtn";
-import { getChainList, getGiveaways, getServerRoles, getServers, handleCreateGiveaway, handleEditGiveaway } from "@/pages/hooks/hook";
-import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/pages/utils/_type";
-import toast from "react-hot-toast";
+import { getChainList, getGiveaways, getServerRoles, getServers, handleEditGiveaway } from "@/hook";
+import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/utils/_type";
 
 const EditGiveaway: React.FC = () => {
 
-    const { selectedGiveawayID } = useContext(AppContext);
+    const { selectedGiveawayID, setGiveawayEdited } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [tempRestrictedRoles, setTempRestrictedRoles] = useState<IServerRole[]>([]);
@@ -43,6 +43,7 @@ const EditGiveaway: React.FC = () => {
     const [requirements, setRequirements] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
     const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
+    const router = useRouter();
 
 
     const initAction = async () => {
@@ -120,7 +121,9 @@ const EditGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        toast.error("Coming Soon")
+        toast.error("Coming Soon");
+        router.back();
+        return setGiveawayEdited(true);
 
         // if (!serverValue || !expiresDate || !title || !description || !chain || !type || !quantity) {
         //     return toast.error("Please input all values");
@@ -142,6 +145,7 @@ const EditGiveaway: React.FC = () => {
         // }
 
         // await handleEditGiveaway(data);
+
     }
 
     const handleCreditCard = () => {
@@ -176,7 +180,7 @@ const EditGiveaway: React.FC = () => {
                 <div className="flex gap-6 items-center justify-between">
                     <div className="flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-[#FFFFFF] text-2xl font-semibold">Edit Giveaway(coming soon)</p>
+                        <p className="text-cwhite text-2xl font-semibold">Edit Giveaway(coming soon)</p>
                     </div>
                     <div onClick={handleCreditCard} className="md:hidden block">
                         <Image
@@ -195,29 +199,29 @@ const EditGiveaway: React.FC = () => {
                         callback={setServerValue}
                     />
                 </div>
-                <div className="flex flex-col gap-3 text-[#FFFFFF]">
+                <div className="flex flex-col gap-3 text-cwhite">
                     {/* Title */}
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Title*</p>
-                        <input type="text" placeholder="Title" onChange={(e) => setTitle(e.target.value)} value={title} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Title*</p>
+                        <input type="text" placeholder="Title" onChange={(e) => setTitle(e.target.value)} value={title} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     {/* Description */}
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Description*</p>
-                        <textarea placeholder="Description" onChange={(e) => setDescription(e.target.value)} value={description} className="text-[#FFFFFF] text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Description*</p>
+                        <textarea placeholder="Description" onChange={(e) => setDescription(e.target.value)} value={description} className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     {/* Expires */}
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Expires*</p>
+                        <p className="text-sm font-normal text-cwhite">Expires*</p>
                         {/* <div className="grid grid-cols-2 gap-3 w-full"> */}
-                        <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" suppressContentEditableWarning={true} />
-                        {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#FFFFFF] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" /> */}
+                        <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true} />
+                        {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" /> */}
                         {/* </div> */}
                     </div>
                     {/* Chain & Quantity */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Chain*</p>
+                            <p className="text-sm font-normal text-cwhite">Chain*</p>
                             <Dropdown
                                 dropdownList={chainDropdownList}
                                 placeholder="Select chain"
@@ -226,14 +230,14 @@ const EditGiveaway: React.FC = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Quantity*</p>
-                            <input type="number" placeholder="0" onChange={(e) => setQuantity(e.target.valueAsNumber)} value={quantity} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Quantity*</p>
+                            <input type="number" placeholder="0" onChange={(e) => setQuantity(e.target.valueAsNumber)} value={quantity} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
                     {/* Type & Winning role */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Type*</p>
+                            <p className="text-sm font-normal text-cwhite">Type*</p>
                             <Dropdown
                                 dropdownList={giveawayDropdownList}
                                 placeholder="Select giveaway type"
@@ -242,7 +246,7 @@ const EditGiveaway: React.FC = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Winning Role*</p>
+                            <p className="text-sm font-normal text-cwhite">Winning Role*</p>
                             <MultiDropdown
                                 dropdownList={serverRoles}
                                 placeholder="Select winning role"
@@ -254,7 +258,7 @@ const EditGiveaway: React.FC = () => {
                     {/* Restricted Roles & Required Roles */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Restricted Roles*</p>
+                            <p className="text-sm font-normal text-cwhite">Restricted Roles*</p>
                             <Select
                                 placeholder="Select Restricted Roles"
                                 selectionMode="multiple"
@@ -273,7 +277,7 @@ const EditGiveaway: React.FC = () => {
                                 popoverProps={{
                                     classNames: {
                                         base: " rounded-none",
-                                        content: "p-0 border border-cgrey-200 text-[#FFFFFF] bg-cgrey-100 rounded-lg ",
+                                        content: "p-0 border border-cgrey-200 text-cwhite bg-cgrey-100 rounded-lg ",
                                     },
                                 }}
                                 size="lg"
@@ -299,7 +303,7 @@ const EditGiveaway: React.FC = () => {
                             </Select>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Required Roles*</p>
+                            <p className="text-sm font-normal text-cwhite">Required Roles*</p>
                             <Select
                                 placeholder="Select Restricted Roles"
                                 selectionMode="multiple"
@@ -319,7 +323,7 @@ const EditGiveaway: React.FC = () => {
                                 popoverProps={{
                                     classNames: {
                                         base: " rounded-none",
-                                        content: "p-0 border border-cgrey-200 text-[#FFFFFF] bg-cgrey-100 rounded-lg ",
+                                        content: "p-0 border border-cgrey-200 text-cwhite bg-cgrey-100 rounded-lg ",
                                     },
                                 }}
                                 size="lg"
@@ -352,23 +356,23 @@ const EditGiveaway: React.FC = () => {
                     </div>
                     {/* Price */}
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-[#FFFFFF]">Price*</p>
-                        <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border grey-200grey-200 bg-[#141518] rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Price*</p>
+                        <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" />
                     </div>
                     {/* Links & Requirements */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Links</p>
-                            <input type="url" placeholder="" value={links} onChange={(e) => setLinks(e.target.value)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Links</p>
+                            <input type="url" placeholder="" value={links} onChange={(e) => setLinks(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-[#FFFFFF]">Requirements</p>
-                            <input type="text" placeholder="" value={requirements} onChange={(e) => setRequirements(e.target.value)} className="text-[#FFFFFF] text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-[#939393] px-3 py-[10px] border border-cgrey-200 bg-[#141518] rounded-md" />
+                            <p className="text-sm font-normal text-cwhite">Requirements</p>
+                            <input type="text" placeholder="" value={requirements} onChange={(e) => setRequirements(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
                 </div>
                 <div className="flex w-full justify-end">
-                    <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-[#FFFFFF] hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-[#FFFFFF] text-sm leading-4 font-medium">submit</div>
+                    <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-cwhite hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-cwhite text-sm leading-4 font-medium">submit</div>
                 </div>
             </div>
             {showCreditCard &&

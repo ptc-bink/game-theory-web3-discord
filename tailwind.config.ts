@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-const {nextui} = require("@nextui-org/react")
+const { nextui } = require("@nextui-org/react")
 
 module.exports = {
   content: [
@@ -18,6 +18,8 @@ module.exports = {
       },
     },
     colors: {
+      "cwhite": "#FFFFFF",
+      "cdark-50": "#141518",
       "cdark-100": "#16171B",
       "cdark-200": "#202125",
       "cgrey-100": "#1D1E22",
