@@ -42,7 +42,7 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                     </div>
                     : <div className="flex gap-1 flex-wrap">
                         {data.map((item, index) =>
-                            <div className="flex gap-1 items-center justify-center">
+                            <div key={index} className="flex gap-1 items-center justify-center">
                                 <p key={index} className="text-sm font-bold whitespace-nowrap text-cwhite rounded w-fit h-fit px-2" style={{ backgroundColor: `${item.color}` }}>
                                     {item.name}
                                 </p>
