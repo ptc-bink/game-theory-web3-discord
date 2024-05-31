@@ -15,9 +15,6 @@ export default async function handler(
             let config = {
                 method: "post",
                 url: `${process.env.baseURL_back}/create-giveaway`,
-                headers: {
-                    'Cookie': 'connect.sid=s%3APfpnc3B1jI-Q68c0nD58HxtzYOOE8tXK.4rvRPdivIqIXaRfaNQM6AlRwS8J6Kb9dnV5BzeNGw9I'
-                },
                 data: qs.stringify({
                     serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
                 }),

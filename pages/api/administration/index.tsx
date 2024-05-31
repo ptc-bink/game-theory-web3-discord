@@ -13,9 +13,6 @@ export default async function handler(
             let config = {
                 method: "PUT",
                 url: `${process.env.baseURL_back}/administration`,
-                headers: {
-                    'Cookie': 'connect.sid=s%3APfpnc3B1jI-Q68c0nD58HxtzYOOE8tXK.4rvRPdivIqIXaRfaNQM6AlRwS8J6Kb9dnV5BzeNGw9I'
-                },
                 data: qs.stringify({
                     id, redisKey, name, paymentExpires, General_Channel_ID, Market_Channel_ID, Submit_Wallet_ID, Database, Vesting_Channel_ID, Reminder_Channel_ID, Winners_Channel_ID, Supported_Wallets
                 }),
@@ -35,9 +32,6 @@ export default async function handler(
             let config = {
                 method: "GET",
                 url: `${process.env.baseURL_back}/administration`,
-                headers: {
-                    'Cookie': 'connect.sid=s%3APfpnc3B1jI-Q68c0nD58HxtzYOOE8tXK.4rvRPdivIqIXaRfaNQM6AlRwS8J6Kb9dnV5BzeNGw9I'
-                }
             }
 
             const response = await axios.request(config);

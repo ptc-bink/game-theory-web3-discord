@@ -15,9 +15,6 @@ export default async function handler(
             let config = {
                 method: "put",
                 url: `${process.env.baseURL_back}/administration-trusted-servers`,
-                headers: {
-                    'Cookie': 'connect.sid=s%3APfpnc3B1jI-Q68c0nD58HxtzYOOE8tXK.4rvRPdivIqIXaRfaNQM6AlRwS8J6Kb9dnV5BzeNGw9I'
-                }
             }
 
             const response = await axios.request(config);
@@ -35,9 +32,6 @@ export default async function handler(
             let config = {
                 method: "get",
                 url: `${process.env.baseURL_back}/administration-trusted-servers?serverId=${serverID}`,
-                headers: {
-                    'Cookie': 'connect.sid=s%3APfpnc3B1jI-Q68c0nD58HxtzYOOE8tXK.4rvRPdivIqIXaRfaNQM6AlRwS8J6Kb9dnV5BzeNGw9I'
-                }
             }
 
             const response = await axios.request(config);
