@@ -30,14 +30,21 @@ const Table: React.FC<ITable> = ({ allocations }) => {
         setAllocationEdited(true);
     }
 
-    const handleCopyBtn = async () => {
-        toast.success("Copied success")
+    const handleCopyBtn = async (index: number) => {
+        try {
+            await navigator.clipboard.writeText(JSON.stringify(allocations[index]))
+
+            toast.success("Copied success")
+        } catch (error) {
+            toast.error("Copied failed")
+        }
     }
 
-    const handleDelBtn = async () => {
-        toast.success("Deleted Success")
-
+    const handleDelBtn = async (index: number) => {
         setAllocationDeleted(true);
+
+        toast.error("Coming Soon");
+        ``
     }
 
     const btnGroup = (index: number) => {
@@ -51,7 +58,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                         alt="edit"
                     />
                 </button>
-                <button className="rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={handleCopyBtn}>
+                <button className="rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleCopyBtn(index)}>
                     <Image
                         src={Copy}
                         width={16}
@@ -59,7 +66,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                         alt="copy"
                     />
                 </button>
-                <button aria-label="trash" className="rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={handleDelBtn}>
+                <button aria-label="trash" className="rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleDelBtn(index)}>
                     <Image
                         src={Trash}
                         width={16}
@@ -161,7 +168,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                         />
                                     </button>
                                 </div>
-                                <button className="rounded-lg border border-cgrey-200 outline-none px-[10px] cursor-pointer py-3" onClick={handleCopyBtn}>
+                                <button className="rounded-lg border border-cgrey-200 outline-none px-[10px] cursor-pointer py-3" onClick={() => handleCopyBtn(index)}>
                                     <Image
                                         src={Copy}
                                         width={16}
@@ -169,7 +176,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                         alt="copy"
                                     />
                                 </button>
-                                <button aria-label="trash" className="rounded-lg border border-cgrey-200 outline-none px-[10px] cursor-pointer py-3" onClick={handleDelBtn}>
+                                <button aria-label="trash" className="rounded-lg border border-cgrey-200 outline-none px-[10px] cursor-pointer py-3" onClick={() => handleDelBtn(index)}>
                                     <Image
                                         src={Trash}
                                         width={16}

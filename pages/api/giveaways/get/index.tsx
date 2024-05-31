@@ -1,28 +1,28 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import qs from "qs"
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    if (req.method == "GET") {
+    if (req.method == "POST") {
         try {
             const axios = require("axios");
-            const { serverID } = req.query;
+
+            const { serverId } = req.body
 
             let config = {
                 method: "get",
-                url: `${process.env.baseURL_back}/administration-channellist?serverID=${serverID}`,
-                headers: {
-                    'Cookie': 'connect.sid=s%3APfpnc3B1jI-Q68c0nD58HxtzYOOE8tXK.4rvRPdivIqIXaRfaNQM6AlRwS8J6Kb9dnV5BzeNGw9I'
-                }
+                url: `${process.env.baseURL_back}/giveaways?serverId=${serverId}`,
             }
 
             const response = await axios.request(config);
-            console.log(response.data);
+
+            console.log("=====================================================", response);
+
 
             return res.status(200).json(response.data);
         } catch (error) {
-            console.error("Error creating user: ", error);
             return res.status(500).json({ error: error });
         }
     }

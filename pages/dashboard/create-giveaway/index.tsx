@@ -2,8 +2,6 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-
-
 import { Select, SelectItem, Chip } from "@nextui-org/react";
 
 import Dropdown from "@/pages/components/forms/Dropdown";
@@ -17,6 +15,8 @@ import { getChainList, getGiveaways, getServerRoles, getServers, handleCreateGiv
 import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/utils/_type";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+
+import { tempServerList } from "@/utils/_data";
 
 const CreateGiveaway: React.FC = () => {
 
@@ -34,6 +34,8 @@ const CreateGiveaway: React.FC = () => {
     const [description, setDescription] = useState<string>("");
     const [chainList, setChainList] = useState<string[]>([]);
     const [expiresDate, setExpiresDate] = useState<any>();
+    const [expiresHour, setExpiresHour] = useState<any>();
+    const [expires, setExpires] = useState<any>();
     const [chain, setChain] = useState<string>("");
     const [quantity, setQuantity] = useState<number>(1);
     const [type, setType] = useState<string>("");
@@ -70,7 +72,7 @@ const CreateGiveaway: React.FC = () => {
 
     const initAction = async () => {
 
-        const tempServerList: IServer[] = await getServers();
+        // const tempServerList: IServer[] = await getServers();
 
         if (Array.isArray(tempServerList)) {
             if (tempServerList.length > 0) {
@@ -81,17 +83,17 @@ const CreateGiveaway: React.FC = () => {
                     return { name: item.guild.name, id: item.guild.id }
                 })
                 setServerDropdownList(serverDropdownList);
-            }
 
-            const tempGiveaways: IGiveaway[] = await getGiveaways();
+                const tempGiveaways: IGiveaway[] = await getGiveaways(tempServerList[0].guildID);
 
-            if (Array.isArray(tempGiveaways)) {
-                if (tempGiveaways.length > 0) {
-                    const tempGiveawayDropdownList: IDropdownListProps[] = tempGiveaways.map((item, index) => ({
-                        name: item.type,
-                        id: item.messageID,
-                    }))
-                    setGiveawayDropdownList(tempGiveawayDropdownList);
+                if (Array.isArray(tempGiveaways)) {
+                    if (tempGiveaways.length > 0) {
+                        const tempGiveawayDropdownList: IDropdownListProps[] = tempGiveaways.map((item, index) => ({
+                            name: item.type,
+                            id: item.messageID,
+                        }))
+                        setGiveawayDropdownList(tempGiveawayDropdownList);
+                    }
                 }
             }
         }
@@ -113,13 +115,13 @@ const CreateGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        if (!serverValue || !expiresDate || !title || !description || !chain || !type || !quantity) {
-            return toast.error("Please input all values");
-        }
+        // if (!serverValue || !expires || !title || !description || !chain || !type || !quantity) {
+        //     return toast.error("Please input all values");
+        // }
 
         const data = {
             serverID: serverValue,
-            Expiry: expiresDate,
+            Expiry: expires,
             title: title,
             description: description,
             chain: chain,
@@ -134,15 +136,10 @@ const CreateGiveaway: React.FC = () => {
 
         const res = await handleCreateGiveaway(data);
 
-        console.log("res ===================>", res);
-
-
-        // if (res) {
-        //     setGiveawayCreated(true);
-        //     router.back();
-        // } else {
-        //     return toast.error("Server Error")
-        // }
+        if (res) {
+            setGiveawayCreated(true);
+            router.back();
+        }
     }
 
     const handleCreditCard = () => {
@@ -156,18 +153,26 @@ const CreateGiveaway: React.FC = () => {
     useEffect(() => {
         // Initialize the date to current datetime if not already set
         if (!expiresDate) {
-            setExpiresDate(new Date().toISOString().slice(0, 16)); // ISO format for datetime-local
+            setExpiresDate(new Date().toISOString().slice(0, 10)); // ISO format for datetime-local
         }
-    }, [expiresDate]);
+
+        if (!expiresHour) {
+            setExpiresHour(new Date().toISOString().slice(11, 16));
+        }
+
+        console.log("expiresDate ==>", expiresDate);
+        console.log("expiresDate ==>", typeof (expiresDate));
+        console.log("expiresHour ==>", expiresHour);
+
+
+        setExpires(expiresDate + "  " + expiresHour)
+    }, [expiresDate, expiresHour]);
 
     useEffect(() => {
         mainAction(serverValue)
     }, [serverValue])
 
     useEffect(() => {
-        console.log("serverRoles ===>", serverRoles);
-        console.log("requiredRoles ===>", requiredRoles);
-
         const tRequiredRoles = serverRoles.filter(item => !restrictedRoles.includes(item));
         const tRestrictedRoles = serverRoles.filter(item => !requiredRoles.includes(item));
 
@@ -181,7 +186,7 @@ const CreateGiveaway: React.FC = () => {
                 <div className="flex gap-6 items-center justify-between">
                     <div className="flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-cwhite text-2xl font-semibold">Create Giveaway</p>
+                        <p className="text-cwhite text-2xl font-semibold md:block hidden">Create Giveaway</p>
                     </div>
                     <div onClick={handleCreditCard} className="md:hidden block">
                         <Image
@@ -214,10 +219,10 @@ const CreateGiveaway: React.FC = () => {
                     {/* Expires */}
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Expires*</p>
-                        {/* <div className="grid grid-cols-2 gap-3 w-full"> */}
-                        <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true} />
-                        {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" /> */}
-                        {/* </div> */}
+                        <div className="grid grid-cols-2 gap-3 w-full">
+                            <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true} />
+                            <input type="time" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        </div>
                     </div>
                     {/* Chain & Quantity */}
                     <div className="grid grid-cols-2 gap-3">
@@ -241,7 +246,7 @@ const CreateGiveaway: React.FC = () => {
                             <p className="text-sm font-normal text-cwhite">Type*</p>
                             <Dropdown
                                 dropdownList={giveawayDropdownList}
-                                placeholder="Select giveaway type"
+                                placeholder="Select giveaway"
                                 className="hover:bg-cdark-200 bg-cdark-100"
                                 callback={setType}
                             />
@@ -261,7 +266,7 @@ const CreateGiveaway: React.FC = () => {
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Restricted Roles*</p>
                             <Select
-                                placeholder="Select Restricted Roles"
+                                placeholder="Select ..."
                                 selectionMode="multiple"
                                 className="rounded-lg"
                                 classNames={{
@@ -306,7 +311,7 @@ const CreateGiveaway: React.FC = () => {
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Required Roles*</p>
                             <Select
-                                placeholder="Select Restricted Roles"
+                                placeholder="Select ..."
                                 selectionMode="multiple"
                                 className="rounded-lg "
                                 classNames={{
@@ -351,8 +356,8 @@ const CreateGiveaway: React.FC = () => {
                         </div>
                     </div>
                     {/* Required all roles */}
-                    <div className="flex gap-2 hover:cursor-pointer w-fit" onClick={(e) => setReqiuredAllRoles(!requiredAllRoles)} >
-                        <input type="checkbox" onChange={() => requiredAllRoles} className="rounded-[4px]" />
+                    <div className="flex gap-2 hover:cursor-pointer w-fit" >
+                        <input type="checkbox" onChange={() => setReqiuredAllRoles(!requiredAllRoles)} className="rounded-[4px]" />
                         <p className="text-sm font-normal">Required all roles</p>
                     </div>
                     {/* Price */}
@@ -363,11 +368,11 @@ const CreateGiveaway: React.FC = () => {
                     {/* Links & Requirements */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-cwhite">Links</p>
+                            <p className="text-sm font-normal text-cwhite">Links*</p>
                             <input type="url" placeholder="" value={links} onChange={(e) => setLinks(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-cwhite">Requirements</p>
+                            <p className="text-sm font-normal text-cwhite">Requirements*</p>
                             <input type="text" placeholder="" value={requirements} onChange={(e) => setRequirements(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
@@ -377,18 +382,21 @@ const CreateGiveaway: React.FC = () => {
                 </div>
             </div>
             {showCreditCard &&
-                <div className="md:hidden block z-[60]">
-                    <div className="flex fixed top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
+                <div className="md:hidden block z-[60] max-h-[calc(100vh-280px)]">
+                    <div className="flex fixed overflow-scroll top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                         <PreviewCard
                             title={title}
                             description={description}
-                            expiry={expiresDate}
+                            expiry={expires}
                             winningRole={winningRole}
                             chain={chain}
                             type={type}
+                            requiredAllRoles={requiredAllRoles}
                             quantity={quantity}
                             required={requiredRoles}
+                            restricted={restrictedRoles}
                             requirements={requirements}
+                            links={links}
                             price={price}
                         />
                     </div>
@@ -398,11 +406,14 @@ const CreateGiveaway: React.FC = () => {
                 <PreviewCard
                     title={title}
                     description={description}
-                    expiry={expiresDate}
+                    expiry={expires}
                     winningRole={winningRole}
                     chain={chain}
                     type={type}
+                    requiredAllRoles={requiredAllRoles}
+                    links={links}
                     quantity={quantity}
+                    restricted={restrictedRoles}
                     required={requiredRoles}
                     requirements={requirements}
                     price={price}

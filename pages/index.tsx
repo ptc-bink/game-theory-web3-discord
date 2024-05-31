@@ -1,13 +1,41 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import axios from "axios";
 
 import Logo from "./components/Logo";
 
 import DiscordSVG from "@/public/avatar/discord.svg"
+import { baseURL_back } from "@/utils/_config";
+import { getUser } from "@/hook";
 
 export default function Page() {
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`${baseURL_back}/user`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        console.log('Response headers:', response.headers);
+        console.log('Cookies:', document.cookie);
+        console.log('Response:', response); // Log the entire response here
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleLogin = async () => {
+    // signIn('discord')
+    console.log("=====================-0-----------------", document.cookie);
+
+    window.location.href = `${baseURL_back}/auth/discord`
+  }
 
   return (
     <div className="flex absolute z-[60] top-0 left-0 w-screen h-screen bg-cdark-50 backdrop-blur-sm justify-center items-center">
@@ -30,7 +58,7 @@ export default function Page() {
             </div>
           </div>
           <div className="flex justify-center">
-            <button aria-label="discord" onClick={() => signIn('discord')} className="flex items-center hover:cursor-pointer hover:bg-[#5815F2] bg-cblue-500 rounded-lg px-6 py-3 border border-cblue-500 border-opacity-[0.08]">
+            <button aria-label="discord" onClick={handleLogin} className="flex items-center hover:cursor-pointer hover:bg-[#5815F2] bg-cblue-500 rounded-lg px-6 py-3 border border-cblue-500 border-opacity-[0.08]">
               <p className=" text-cwhite text-base font-semibold pr-2">
                 Login with Discord
               </p>

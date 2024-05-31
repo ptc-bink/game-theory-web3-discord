@@ -1,7 +1,9 @@
 "use client"
 
 import React, { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import ServerCard from "../components/ServerCard";
 import Dropdown from "../components/forms/Dropdown"
@@ -14,9 +16,9 @@ import Driver from "@/public/avatar/driver.svg"
 import AppContext from "@/providers/AppContext";
 import { IAdminProps, IServer, IDropdownListProps, IAdministrationTrustedServers, IChannel } from "@/utils/_type";
 import { administrationChannellist, getAdministrationTrustedServers, getServers } from "@/hook";
-import { useRouter } from "next/router";
 import BackBtn from "../components/BackBtn";
-import toast from "react-hot-toast";
+
+import { tempServerList } from "@/utils/_data";
 
 const Admin: React.FC<IAdminProps> = () => {
 
@@ -38,79 +40,99 @@ const Admin: React.FC<IAdminProps> = () => {
         setAddServerModalOpen(true);
     }
 
-    useEffect(() => {
-        const searchInputAction = () => {
+    const mainAction = async (serverID: string) => {
 
-            if (searchInput !== undefined) {
-                if (approvedServerList.length > 0) {
-                    const tempFilterApprovedServerList = approvedServerList.filter(item =>
-                        item.data.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                        item.data.admin.toLowerCase().includes(searchInput.toLowerCase())
-                    )
-                    setFilterApprovedServerList(tempFilterApprovedServerList);
+        console.log("serverID =====>", serverID);
 
-                    console.log("tempFilterApprovedServerList ====>", tempFilterApprovedServerList);
-                    console.log("searchInput ====>", searchInput);
-                }
+
+        const tempData = await getAdministrationTrustedServers(serverID);
+
+        console.log("tempData ================>", tempData);
+
+
+        if (tempData) {
+            if (tempData !== null) {
+                const tempTrustedServers: IAdministrationTrustedServers[] = Object.keys(tempData).map((key) => {
+                    return {
+                        id: key,
+                        data: tempData[key]
+                    }
+                })
+
+                console.log("tempTrustedServers ===>", tempTrustedServers);
+
+                setApprovedServerList(tempTrustedServers);
+                setFilterApprovedServerList(tempTrustedServers);
             }
-        };
+        }
+    }
+
+    const initAction = async () => {
+        // const tempServerList: IServer[] = await getServers();
+
+        if (tempServerList) {
+            if (tempServerList.length > 0) {
+
+                const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
+                    return {
+                        name: item.guild.name,
+                        id: item.guild.id
+                    }
+                })
+
+                if (tempServerDropdownList.length > 0) {
+                    setServerDropdownList(tempServerDropdownList);
+                }
+
+                let tempAllChannelList: IChannel[] = [];
+
+                for (let i = 0; i < tempServerList.length; i++) {
+                    const tempChannelList: IChannel[] = await administrationChannellist(tempServerList[i].guildID);
+
+                    if (tempChannelList) {
+                        if (tempChannelList.length > 0) {
+                            console.log("tempChannelList ====>", tempChannelList);
+                            tempAllChannelList = tempAllChannelList.concat(tempChannelList);
+                        }
+                    }
+                }
+
+                setAllChannelList(tempAllChannelList);
+
+                await mainAction(tempServerList[0].guildID);
+
+            } else {
+                return toast.error('No Server to Show')
+            }
+        } else {
+            return toast.error('No server to show')
+        }
+    }
+
+    const searchInputAction = () => {
+
+        if (searchInput !== undefined) {
+            if (approvedServerList.length > 0) {
+                const tempFilterApprovedServerList = approvedServerList.filter(item =>
+                    item.data.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+                    item.data.admin.toLowerCase().includes(searchInput.toLowerCase())
+                )
+                setFilterApprovedServerList(tempFilterApprovedServerList);
+
+                console.log("tempFilterApprovedServerList ====>", tempFilterApprovedServerList);
+                console.log("searchInput ====>", searchInput);
+            }
+        }
+    };
+
+    useEffect(() => {
         searchInputAction();
     }, [searchInput, server])
 
     useEffect(() => {
         if (!isAdmin) {
+            toast.error("You should be admin");
             router.back();
-            console.log("you should be admin");
-        }
-        const initAction = async () => {
-            const tempServerList: IServer[] = await getServers();
-
-            if (tempServerList) {
-                if (tempServerList.length > 0) {
-                    const tempData = await getAdministrationTrustedServers(tempServerList[0].guildID);
-
-                    const tempTrustedServers: IAdministrationTrustedServers[] = Object.keys(tempData).map((key) => {
-                        return {
-                            id: key,
-                            data: tempData[key]
-                        }
-                    })
-
-                    setApprovedServerList(tempTrustedServers);
-                    setFilterApprovedServerList(tempTrustedServers);
-
-                    const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
-                        return {
-                            name: item.guild.name,
-                            id: item.guild.id
-                        }
-                    })
-
-                    if (tempServerDropdownList.length > 0) {
-                        setServerDropdownList(tempServerDropdownList);
-                    }
-
-                    let tempAllChannelList: IChannel[] = [];
-
-                    for (let i = 0; i < tempServerList.length; i++) {
-                        const tempChannelList: IChannel[] = await administrationChannellist(tempServerList[i].guildID);
-
-                        if (tempChannelList) {
-                            if (tempChannelList.length > 0) {
-                                console.log("tempChannelList ====>", tempChannelList);
-                                tempAllChannelList = tempAllChannelList.concat(tempChannelList);
-                            }
-                        }
-                    }
-
-                    setAllChannelList(tempAllChannelList);
-
-                } else {
-                    return toast.error('No Server to Show')
-                }
-            } else {
-                return toast.error('No server to show')
-            }
         }
         initAction();
     }, [])
@@ -156,7 +178,7 @@ const Admin: React.FC<IAdminProps> = () => {
                     )}
                 </div>
             </div>
-            {filterApprovedServerList.length > 0 ? <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
+            {/* {filterApprovedServerList.length > 0 ? <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
                 {filterApprovedServerList.map((item, index) => (
                     <ServerCard
                         key={index}
@@ -192,7 +214,7 @@ const Admin: React.FC<IAdminProps> = () => {
                 <div className="z-[60] flex fixed top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                     <AddServerModal />
                 </div>
-            )}
+            )} */}
 
         </div>
     );

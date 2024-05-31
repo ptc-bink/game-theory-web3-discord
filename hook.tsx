@@ -152,9 +152,15 @@ export const putPermittedusers = async (data: any) => {
     }
 }
 
-export const getGiveaways = async () => {
+export const getGiveaways = async (serverId: string) => {
     try {
-        const res = await fetch(`/api/giveaways/`);
+        const res = await fetch(`/api/giveaways/get`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                serverId
+            })
+        });
 
         if (!res.ok) {
 
@@ -170,9 +176,10 @@ export const getGiveaways = async () => {
 }
 
 export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
+    console.log(data);
 
     try {
-        const res = await fetch(`/api/giveaways/`, {
+        const res = await fetch(`/api/giveaways/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -184,9 +191,10 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
             // 
             throw new Error(res.statusText);
         }
-        const result = await res.json();
 
-        return result
+        if (res.status === 200) {
+            return true;
+        }
 
     } catch (error: any) {
         console.log("error ===>", error);
@@ -336,6 +344,26 @@ export const addAllocation = async (data: any) => {
 
     } catch (error: any) {
         toast.error("Failed your request")
+    }
+}
+
+export const getUser = async () => {
+    try {
+        const res = await fetch(`api/user`, {
+
+        });
+
+        console.log("=======================================", res);
+
+        if (!res.ok) {
+
+            throw new Error(res.statusText);
+        }
+        const result = await res.json();
+
+        return result
+    } catch (error) {
+        console.error('Error fetching user data:', error)
     }
 }
 

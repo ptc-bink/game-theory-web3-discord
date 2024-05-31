@@ -5,17 +5,19 @@ import qs from "qs"
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // get allocation
     if (req.method === 'GET') {
-
-        const { serverID } = req.query;
-
-        if (!serverID) {
-            return res.status(400).json({ error: 'serverID is required' });
-        }
-
         try {
+            const { serverID } = req.query;
+
+            if (!serverID) {
+                return res.status(400).json({ error: 'serverID is required' });
+            }
+
             let config = {
                 method: "get",
                 url: `${process.env.baseURL_back}/allocations?serverID=${serverID}`,
+                headers: {
+                    'Cookie': 'connect.sid=s%3APfpnc3B1jI-Q68c0nD58HxtzYOOE8tXK.4rvRPdivIqIXaRfaNQM6AlRwS8J6Kb9dnV5BzeNGw9I'
+                }
             }
 
             const response = await axios.request(config);
@@ -29,19 +31,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     else if (req.method == "POST") {
         try {
             const axios = require("axios");
-            const { data } = await req.body;
+            const { data } = req.body;
 
             let config = {
                 method: "post",
-                url: `${process.env.baseURL_back}/test/allocation`,
-                headers: { "Content-Type": "application/json" },
+                url: `${process.env.baseURL_back}/allocation`,
+                headers: {
+                    'Cookie': 'connect.sid=s%3APfpnc3B1jI-Q68c0nD58HxtzYOOE8tXK.4rvRPdivIqIXaRfaNQM6AlRwS8J6Kb9dnV5BzeNGw9I'
+                },
                 data: qs.stringify({
                     data
                 }),
             }
 
             const response = await axios.request(config);
-            console.log(response.data);
 
             return res.status(200).json(response.data);
         } catch (error) {

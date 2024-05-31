@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import axios from "axios";
 
 export default async function handler(
     req: NextApiRequest,
@@ -6,12 +7,11 @@ export default async function handler(
 ) {
     if (req.method == "POST") {
         try {
-            const axios = require("axios");
             const { serverID, userID, giveawayID } = await req.body();
 
             let config = {
                 method: "get",
-                url: `${process.env.baseURL_back}/test/enter-giveaway?serverId=${serverID}&giveawayId=${giveawayID}&userID=${userID}`,
+                url: `${process.env.baseURL_back}/enter-giveaway?serverId=${serverID}&giveawayId=${giveawayID}&userID=${userID}`,
             }
 
             const response = await axios.request(config);

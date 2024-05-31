@@ -6,12 +6,12 @@ import Image from "next/image";
 import Preview from "@/public/avatar/eye.svg"
 import User from "@/public/avatar/user.svg"
 
-import { IPreviewCardProps } from "../../utils/_type";
+import { IPreviewCardProps, IServerRole } from "../../utils/_type";
 import { useRouter } from "next/router";
 import AppContext from "../../providers/AppContext";
 import { formatDate } from "../../utils/utils";
 
-const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, quantity, required, requirements, price }) => {
+const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, winningRole, chain, type, requiredAllRoles, quantity, restricted, links, required, requirements, price }) => {
 
     const { userImage, username, isAdmin, setShowCreditCard } = useContext(AppContext);
     const [date, setDate] = useState<string | null>(null);
@@ -28,11 +28,36 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
         return () => clearInterval(intervalId); // Cleanup interval on unmount
     }, []);
 
+
+
+    const multiView = (data: IServerRole[]) => {
+        return (
+            (Array.isArray(data) && data.length > 0)
+                ? data.length == 1
+                    ? <div className="flex gap-1">
+                        <p className="text-sm font-medium text-cwhite w-fit h-fit rounded px-1" style={{ backgroundColor: `${data[0].color}` }}>
+                            {data[0].name}
+                        </p>
+                        <p className="text-[#000000] text-sm">ONLY</p>
+                    </div>
+                    : <div className="flex gap-1 flex-wrap">
+                        {data.map((item, index) =>
+                            <div className="flex gap-1 items-center justify-center">
+                                <p key={index} className="text-sm font-bold whitespace-nowrap text-cwhite rounded w-fit h-fit px-2" style={{ backgroundColor: `${item.color}` }}>
+                                    {item.name}
+                                </p>
+                                <p className="text-[#000000] font-medium text-xs">{requiredAllRoles ? "AND" : "OR"}</p>
+                            </div>
+                        )}
+                    </div>
+                : <p className="text-sm font-medium text-cwhite">-</p>
+        )
+    }
+
     const handlePreviewEnter = () => { }
 
     return (
         <div className="w-full flex flex-col h-fit rounded-md gap-4 m-5 p-4 bg-[#1D1E22] border border-cgrey-200">
-            {/* <div className="md:hidden block"> */}
             <div className="flex gap-2" onClick={() => setShowCreditCard(false)}>
                 <Image
                     src={Preview}
@@ -41,7 +66,6 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                     alt="preview"
                 />
                 <p className="text-cwhite text-base font-semibold hover:underline">Preview</p>
-                {/* </div> */}
             </div>
             <div className="flex flex-col gap-3 p-4 rounded-sm bg-cgrey-200 border-l-[3px] border-[#15F115]">
                 <div className="flex justify-between">
@@ -84,27 +108,29 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                             }
                         </div>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <label className="text-cwhite text-sm leading-[18px] font-semibold">Requirements</label>
-                        {
-                            (Array.isArray(required) && required.length > 0) ?
-                                <div className="flex gap-1">
-                                    {required.map((item, index) =>
-                                        <p key={index} className="text-sm font-medium text-cwhite w-fit rounded-sm px-1" style={{ backgroundColor: `${item.color}` }}>
-                                            {item.name}
-                                        </p>
-                                    )}
-                                </div> :
-                                <p className="text-sm font-medium text-cwhite">-</p>
-                        }
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className="flex flex-col gap-1">
+                            <label className="text-cwhite text-sm leading-[18px] font-semibold">Restricted</label>
+                            {multiView(restricted)}
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label className="text-cwhite text-sm leading-[18px] font-semibold">Required</label>
+                            {multiView(required)}
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1">
+                            <label className="text-cwhite text-sm leading-[18px] font-semibold">Requirements</label>
+                            <p className="text-cwhite text-sm leading-[18px] font-medium">{requirements ? requirements : "-"}</p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label className="text-cwhite text-sm leading-[18px] font-semibold">Price:</label>
+                            <p className="text-cwhite text-sm leading-[18px] font-medium">{price ? price : "Free"}</p>
+                        </div>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <label className="text-cwhite text-sm leading-[18px] font-semibold">Entrants</label>
-                        <p className="text-cwhite text-sm leading-[18px] font-medium">-</p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <label className="text-cwhite text-sm leading-[18px] font-semibold">Price:</label>
-                        <p className="text-cwhite text-sm leading-[18px] font-medium">{price ? price : "Free"}</p>
+                        <label className="text-cwhite text-sm leading-[18px] font-semibold">Links</label>
+                        <p className="text-cwhite text-sm leading-[18px] font-medium">{links ? links : "-"}</p>
                     </div>
                 </div>
                 <div className="border border-[#393A3D]"></div>

@@ -7,10 +7,10 @@ import Image from "next/image";
 
 import User from "@/public/avatar/user.svg"
 
-import AppContext from "../../providers/AppContext";
+import AppContext from "@/providers/AppContext";
 import ProfileModal from "./forms/ProfileModal";
 import { signOut } from "next-auth/react";
-import { firUppercase } from "../../utils/utils";
+import { firUppercase } from "@/utils/utils";
 
 
 const Navbar = () => {
@@ -20,7 +20,6 @@ const Navbar = () => {
     const [temp, setTemp] = useState<string>();
     const path = usePathname();
 
-
     useEffect(() => {
         if (path) {
             setTemp(firUppercase(path?.split("/")[1]));
@@ -29,6 +28,12 @@ const Navbar = () => {
 
     const handleProfileModalOpen = () => {
         setProfileModalOpen(true);
+        setProfileDropdownOpen(false);
+    }
+
+    const handleLogoutBtn = () => {
+        setProfileDropdownOpen(false);
+        signOut();
     }
 
     return (
@@ -61,7 +66,7 @@ const Navbar = () => {
                 </div>
                 {profileDropdownOpen && (
                     <div className="flex flex-col right-0 absolute border border-cgrey-200 rounded-lg bg-[#1D1E22] top-[50px] w-[150px] items-end">
-                        <div className="px-3 py-[6px] w-full hover:cursor-pointer hover:bg-cdark-50 text-cwhite border border-cgrey-200 text-base leading-6 font-" onClick={() => signOut()}>Log out</div>
+                        <div className="px-3 py-[6px] w-full hover:cursor-pointer hover:bg-cdark-50 text-cwhite border border-cgrey-200 text-base leading-6 font-" onClick={handleLogoutBtn}>Log out</div>
                         <div className="px-3 py-[6px] w-full hover:cursor-pointer hover:bg-cdark-50 text-cwhite border border-cgrey-200 text-base leading-6 font-" onClick={handleProfileModalOpen}>User Details</div>
                     </div>
                 )}

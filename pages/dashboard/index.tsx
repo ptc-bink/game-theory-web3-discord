@@ -14,6 +14,8 @@ import AppContext from "@/providers/AppContext";
 
 import { IGiveaway, IServer, IDropdownListProps } from "@/utils/_type";
 import { getGiveaways, getServers } from "@/hook";
+import { getSession } from "next-auth/react";
+import { baseURL_back } from "@/utils/_config";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
@@ -26,8 +28,11 @@ const Dashboard: React.FC<IDashboard> = () => {
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
 
     const initAction = async () => {
+
+        console.log("=================cookie:", document.cookie);
+
         const tempServerList: IServer[] = await getServers();
-        const tempGiveaways: IGiveaway[] = await getGiveaways();
+        const tempGiveaways: IGiveaway[] = await getGiveaways("1219682506475831446");
 
         if (Array.isArray(tempServerList)) {
             if (tempServerList.length > 0) {
@@ -52,6 +57,28 @@ const Dashboard: React.FC<IDashboard> = () => {
             return toast.error("Sever error");
         }
     }
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+
+            console.log("fetch user data");
+
+            try {
+                const response = await fetch(`${baseURL_back}/user`, {
+                    method: 'GET',
+                    credentials: "include"
+                    // credentials: 'include'
+                });
+                console.log('Response headers:', response.headers);
+                console.log('Cookies:', document.cookie);
+                console.log('Response:', response); // Log the entire response here
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const filterAction = async () => {
         let tempFilterData: IGiveaway[] = [];

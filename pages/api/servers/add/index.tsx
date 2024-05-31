@@ -14,7 +14,7 @@ export default async function handler(
 
             let config = {
                 method: "post",
-                url: `${process.env.baseURL_back}/test/create-giveaway`,
+                url: `${process.env.baseURL_back}/create-giveaway`,
                 headers: { "Content-Type": "application/json" },
                 data: qs.stringify({
                     data

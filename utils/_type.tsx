@@ -187,7 +187,7 @@ export interface IGiveaway {
     SQLID: number,
     finalEntrantsNumber: number,
     entrantsNumber: number,
-    winners: string[],
+    winners?: string[],
     ended_reason: string
 }
 
@@ -257,7 +257,7 @@ export interface IGiveawayCardProps {
         username: string,
         avatar: string
     }[];
-    winners: string[];
+    winners?: string[];
 }
 
 export interface IPreviewCardProps {
@@ -268,8 +268,11 @@ export interface IPreviewCardProps {
     winningRole?: IServerRole,
     chain: string,
     quantity: number,
+    links: string,
+    restricted: IServerRole[],
     required: IServerRole[],
     requirements: string,
+    requiredAllRoles: boolean,
     price?: number
 }
 

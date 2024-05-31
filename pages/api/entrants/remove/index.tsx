@@ -11,7 +11,7 @@ export default async function handler(
 
             let config = {
                 method: "POST",
-                url: `${process.env.baseURL_back}/test/removeentry/:${marketID}/:${serverID}/:${removeUserID}`,
+                url: `${process.env.baseURL_back}/removeentry/:${marketID}/:${serverID}/:${removeUserID}`,
                 headers: { "Content-Type": "application/json" },
             }
 

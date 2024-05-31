@@ -2,9 +2,6 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-
 import { Select, SelectItem, Chip } from "@nextui-org/react";
 
 import Dropdown from "@/pages/components/forms/Dropdown";
@@ -14,12 +11,16 @@ import Preview from "@/public/avatar/eye.svg"
 
 import AppContext from "@/providers/AppContext";
 import BackBtn from "@/pages/components/BackBtn";
-import { getChainList, getGiveaways, getServerRoles, getServers, handleEditGiveaway } from "@/hook";
+import { getChainList, getGiveaways, getServerRoles, getServers, handleEditGiveAway } from "@/hook";
 import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/utils/_type";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
-const EditGiveaway: React.FC = () => {
+import { tempServerList } from "@/utils/_data";
 
-    const { selectedGiveawayID, setGiveawayEdited } = useContext(AppContext);
+const EditGiveAway: React.FC = () => {
+
+    const { setShowCreditCard, setGiveawayCreated, showCreditCard } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [tempRestrictedRoles, setTempRestrictedRoles] = useState<IServerRole[]>([]);
@@ -29,77 +30,70 @@ const EditGiveaway: React.FC = () => {
     const [giveawayDropdownList, setGiveawayDropdownList] = useState<IDropdownListProps[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [chainDropdownList, setChainDropdownList] = useState<IDropdownListProps[]>([]);
-    const [filterData, setFilterData] = useState<IGiveaway>();
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [chainList, setChainList] = useState<string[]>([]);
     const [expiresDate, setExpiresDate] = useState<any>();
-    const [chain, setChain] = useState<string>("Ethereum");
+    const [expiresHour, setExpiresHour] = useState<any>();
+    const [expires, setExpires] = useState<any>();
+    const [chain, setChain] = useState<string>("");
     const [quantity, setQuantity] = useState<number>(1);
-    const [type, setType] = useState<string>("Raffle");
+    const [type, setType] = useState<string>("");
     const [requiredAllRoles, setReqiuredAllRoles] = useState<boolean>(false);
     const [price, setPrice] = useState<number>();
     const [links, setLinks] = useState<string>("");
     const [requirements, setRequirements] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
-    const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
     const router = useRouter();
 
+    const mainAction = async (serverID: string) => {
+        const tempChainList: string[] = await getChainList(serverID);
 
-    const initAction = async () => {
-
-        const tempServerList: IServer[] = await getServers();
-        const tempGiveaways: IGiveaway[] = await getGiveaways();
-
-        if (selectedGiveawayID) {
-            if (tempGiveaways !== undefined) {
-                if (tempGiveaways.length > 0) {
-                    const tempFilterData: IGiveaway | undefined = tempGiveaways.find(item => item.messageID === selectedGiveawayID);
-                    if (tempFilterData) {
-                        setFilterData(tempFilterData);
-                    }
-                }
+        if (Array.isArray(tempChainList)) {
+            if (tempChainList.length > 0) {
+                const tempChainDropdownList: IDropdownListProps[] = tempChainList?.map((item, index) => ({
+                    name: item,
+                    id: item,
+                }))
+                setChainDropdownList(tempChainDropdownList);
             }
         }
 
-        if (tempServerList) {
+        const tempSeverRoles: IServerRole[] = await getServerRoles(serverID);
+
+        if (tempSeverRoles) {
+            if (tempSeverRoles.length > 0) {
+                setServerRoles(tempSeverRoles);
+                setTempRequiredRoles(tempSeverRoles);
+                setTempRestrictedRoles(tempSeverRoles)
+            }
+        }
+    }
+
+    const initAction = async () => {
+
+        // const tempServerList: IServer[] = await getServers();
+
+        if (Array.isArray(tempServerList)) {
             if (tempServerList.length > 0) {
 
-                const tempChainList: [] = await getChainList(tempServerList[0].guildID);
+                await mainAction(tempServerList[0].guildID)
 
-                if (tempChainList) {
-                    if (tempChainList.length > 0) {
-                        const tempChainDropdownList: IDropdownListProps[] = tempChainList.map((item, index) => ({
-                            name: item,
-                            id: item,
-                        }))
-                        setChainDropdownList(tempChainDropdownList);
-                    }
-                }
-
-                const tempSeverRoles: IServerRole[] = await getServerRoles(tempServerList[0].guildID);
-                if (tempSeverRoles) {
-                    if (tempSeverRoles.length > 0) {
-                        setServerRoles(tempSeverRoles);
-                        setTempRequiredRoles(tempSeverRoles);
-                        setTempRestrictedRoles(tempSeverRoles)
-                    }
-                }
                 const serverDropdownList: IDropdownListProps[] = tempServerList?.map((item, index) => {
                     return { name: item.guild.name, id: item.guild.id }
                 })
                 setServerDropdownList(serverDropdownList);
-            }
 
-            const tempGiveaways: IGiveaway[] = await getGiveaways();
+                const tempGiveaways: IGiveaway[] = await getGiveaways(tempServerList[0].guildID);
 
-            if (tempGiveaways) {
-                if (tempGiveaways.length > 0) {
-                    const tempGiveawayDropdownList: IDropdownListProps[] = tempGiveaways.map((item, index) => ({
-                        name: item.type,
-                        id: item.messageID,
-                    }))
-                    setGiveawayDropdownList(tempGiveawayDropdownList);
+                if (Array.isArray(tempGiveaways)) {
+                    if (tempGiveaways.length > 0) {
+                        const tempGiveawayDropdownList: IDropdownListProps[] = tempGiveaways.map((item, index) => ({
+                            name: item.type,
+                            id: item.messageID,
+                        }))
+                        setGiveawayDropdownList(tempGiveawayDropdownList);
+                    }
                 }
             }
         }
@@ -121,17 +115,15 @@ const EditGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        toast.error("Coming Soon");
-        router.back();
-        return setGiveawayEdited(true);
+        toast.error("Coming Soon")
 
-        // if (!serverValue || !expiresDate || !title || !description || !chain || !type || !quantity) {
+        // if (!serverValue || !expires || !title || !description || !chain || !type || !quantity) {
         //     return toast.error("Please input all values");
         // }
 
         // const data = {
         //     serverID: serverValue,
-        //     Expiry: expiresDate,
+        //     Expiry: expires,
         //     title: title,
         //     description: description,
         //     chain: chain,
@@ -144,8 +136,12 @@ const EditGiveaway: React.FC = () => {
         //     requiredAllRoles: requiredAllRoles
         // }
 
-        // await handleEditGiveaway(data);
+        // const res = await handleEditGiveAway(data);
 
+        // if (res) {
+        //     setGiveawayCreated(true);
+        //     router.back();
+        // }
     }
 
     const handleCreditCard = () => {
@@ -159,14 +155,21 @@ const EditGiveaway: React.FC = () => {
     useEffect(() => {
         // Initialize the date to current datetime if not already set
         if (!expiresDate) {
-            setExpiresDate(new Date().toISOString().slice(0, 16)); // ISO format for datetime-local
+            setExpiresDate(new Date().toISOString().slice(0, 10)); // ISO format for datetime-local
         }
-    }, [expiresDate]);
+
+        if (!expiresHour) {
+            setExpiresHour(new Date().toISOString().slice(11, 16));
+        }
+
+        setExpires(expiresDate + expiresDate)
+    }, [expiresDate, expiresHour]);
 
     useEffect(() => {
-        console.log("serverRoles ===>", serverRoles);
-        console.log("requiredRoles ===>", requiredRoles);
+        mainAction(serverValue)
+    }, [serverValue])
 
+    useEffect(() => {
         const tRequiredRoles = serverRoles.filter(item => !restrictedRoles.includes(item));
         const tRestrictedRoles = serverRoles.filter(item => !requiredRoles.includes(item));
 
@@ -175,12 +178,12 @@ const EditGiveaway: React.FC = () => {
     }, [restrictedRoles, requiredRoles])
 
     return (
-        <div className="p-8 grid md:grid-cols-2 md:grid-rows-1 gap-8 bg-cdark-100 relative">
+        <div className="p-8 grid md:grid-cols-2 grid-cols-1 gap-8 bg-cdark-100 relative">
             <div className="flex flex-col gap-4">
                 <div className="flex gap-6 items-center justify-between">
                     <div className="flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-cwhite text-2xl font-semibold">Edit Giveaway(coming soon)</p>
+                        <p className="text-cwhite text-2xl font-semibold md:block hidden">Create Giveaway</p>
                     </div>
                     <div onClick={handleCreditCard} className="md:hidden block">
                         <Image
@@ -213,10 +216,10 @@ const EditGiveaway: React.FC = () => {
                     {/* Expires */}
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Expires*</p>
-                        {/* <div className="grid grid-cols-2 gap-3 w-full"> */}
-                        <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true} />
-                        {/* <input type="time" placeholder="" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" /> */}
-                        {/* </div> */}
+                        <div className="grid grid-cols-2 gap-3 w-full">
+                            <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true} />
+                            <input type="time" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        </div>
                     </div>
                     {/* Chain & Quantity */}
                     <div className="grid grid-cols-2 gap-3">
@@ -240,7 +243,7 @@ const EditGiveaway: React.FC = () => {
                             <p className="text-sm font-normal text-cwhite">Type*</p>
                             <Dropdown
                                 dropdownList={giveawayDropdownList}
-                                placeholder="Select giveaway type"
+                                placeholder="Select giveaway"
                                 className="hover:bg-cdark-200 bg-cdark-100"
                                 callback={setType}
                             />
@@ -260,7 +263,7 @@ const EditGiveaway: React.FC = () => {
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Restricted Roles*</p>
                             <Select
-                                placeholder="Select Restricted Roles"
+                                placeholder="Select ..."
                                 selectionMode="multiple"
                                 className="rounded-lg"
                                 classNames={{
@@ -305,7 +308,7 @@ const EditGiveaway: React.FC = () => {
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Required Roles*</p>
                             <Select
-                                placeholder="Select Restricted Roles"
+                                placeholder="Select ..."
                                 selectionMode="multiple"
                                 className="rounded-lg "
                                 classNames={{
@@ -350,8 +353,8 @@ const EditGiveaway: React.FC = () => {
                         </div>
                     </div>
                     {/* Required all roles */}
-                    <div className="flex gap-2 hover:cursor-pointer w-fit" onClick={(e) => setReqiuredAllRoles(!requiredAllRoles)} >
-                        <input type="checkbox" onChange={() => requiredAllRoles} className="rounded-[4px]" />
+                    <div className="flex gap-2 hover:cursor-pointer w-fit" >
+                        <input type="checkbox" onChange={() => setReqiuredAllRoles(!requiredAllRoles)} className="rounded-[4px]" />
                         <p className="text-sm font-normal">Required all roles</p>
                     </div>
                     {/* Price */}
@@ -362,11 +365,11 @@ const EditGiveaway: React.FC = () => {
                     {/* Links & Requirements */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-cwhite">Links</p>
+                            <p className="text-sm font-normal text-cwhite">Links*</p>
                             <input type="url" placeholder="" value={links} onChange={(e) => setLinks(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-cwhite">Requirements</p>
+                            <p className="text-sm font-normal text-cwhite">Requirements*</p>
                             <input type="text" placeholder="" value={requirements} onChange={(e) => setRequirements(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
@@ -376,30 +379,38 @@ const EditGiveaway: React.FC = () => {
                 </div>
             </div>
             {showCreditCard &&
-                <div className="absolute">
-                    <PreviewCard
-                        title={title}
-                        description={description}
-                        expiry={expiresDate}
-                        winningRole={winningRole}
-                        chain={chain}
-                        type={type}
-                        quantity={quantity}
-                        required={requiredRoles}
-                        requirements={requirements}
-                        price={price}
-                    />
+                <div className="md:hidden block z-[60] max-h-[calc(100vh-280px)]">
+                    <div className="flex fixed overflow-scroll top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
+                        <PreviewCard
+                            title={title}
+                            description={description}
+                            expiry={expires}
+                            winningRole={winningRole}
+                            chain={chain}
+                            type={type}
+                            requiredAllRoles={requiredAllRoles}
+                            quantity={quantity}
+                            required={requiredRoles}
+                            restricted={restrictedRoles}
+                            requirements={requirements}
+                            links={links}
+                            price={price}
+                        />
+                    </div>
                 </div>
             }
             <div className="hidden md:block">
                 <PreviewCard
                     title={title}
                     description={description}
-                    expiry={expiresDate}
+                    expiry={expires}
                     winningRole={winningRole}
                     chain={chain}
                     type={type}
+                    requiredAllRoles={requiredAllRoles}
+                    links={links}
                     quantity={quantity}
+                    restricted={restrictedRoles}
                     required={requiredRoles}
                     requirements={requirements}
                     price={price}
@@ -409,7 +420,7 @@ const EditGiveaway: React.FC = () => {
     );
 }
 
-export default EditGiveaway;
+export default EditGiveAway;
 
 interface DataOption {
     value: string;

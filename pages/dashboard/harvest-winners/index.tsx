@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 
 import BackBtn from "@/pages/components/BackBtn";
 import { getHarvestWinners, getServers } from "@/hook";
+import JsonView from "react18-json-view";
+
 // import { jsonFileDownload } from "@/download";
 
 const HarvestWinners: React.FC<IHarvestWinners> = () => {
@@ -72,8 +74,8 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                     <button aria-label="human" className="outline-none bg-cblue-500 border border-cblue-500 px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleHumanReadableBtn}>Human Readable</button>
                 </div>
             </div>
-            <div className="overflow-scroll rounded-2xl border border-cgrey-200 bg-cdark-50 text-cwhite py-3 pr-2 pl-4 text-base font-normal h-[calc(100vh-220px)]">
-                {formattedData}
+            <div className="rounded-2xl border border-cgrey-200 bg-cdark-50 px-2 py-3 text-cwhite text-base font-normal overflow-scroll h-[calc(100vh-280px)]">
+                <JsonView className="text-cwhite" src={HarvestWinners} theme="winter-is-coming" collapsed={false} />
             </div>
         </div>
     );

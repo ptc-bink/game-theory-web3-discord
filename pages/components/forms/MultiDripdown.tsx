@@ -32,27 +32,29 @@ const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholde
         <div className="w-full relative">
             <div className={`flex items-center w-full cursor-pointer border border-cgrey-200 px-4 py-[10px] rounded-lg justify-between ${className}`} onClick={handleDropdown}>
                 <p className="text-sm font-normal text-cwhite">{value}</p>
-                {value !== placeholder &&
-                    <div className="cursor-pointer " onClick={handleCancelBtn}>
-                        <Image
-                            src={Cancel}
-                            width="16"
-                            height="16"
-                            alt="th cancel"
-                        />
-                    </div>
-                }
-                {dropdownOpen ? <Image
-                    src={ArrowUp}
-                    width="16"
-                    height="16"
-                    alt="Arrow down"
-                /> : <Image
-                    src={ArrowDown}
-                    width="16"
-                    height="16"
-                    alt="Arrow down"
-                />}
+                <div className="flex gap-2 justify-between">
+                    {value !== placeholder &&
+                        <div className="cursor-pointer " onClick={handleCancelBtn}>
+                            <Image
+                                src={Cancel}
+                                width="16"
+                                height="16"
+                                alt="th cancel"
+                            />
+                        </div>
+                    }
+                    {dropdownOpen ? <Image
+                        src={ArrowUp}
+                        width="16"
+                        height="16"
+                        alt="Arrow down"
+                    /> : <Image
+                        src={ArrowDown}
+                        width="16"
+                        height="16"
+                        alt="Arrow down"
+                    />}
+                </div>
             </div>
             {dropdownOpen && <div className="absolute w-full cursor-pointer text-cwhite flex flex-col mt-1 rounded-lg z-10">
                 {dropdownList?.map((item, index) => (

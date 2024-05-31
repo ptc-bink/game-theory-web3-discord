@@ -12,20 +12,16 @@ import AppContext from '../../providers/AppContext';
 import SmallSidebar from './SmallSidebar';
 import BigSidebar from './BigSidebar';
 import Navbar from './Navbar';
+import { adminCheck } from '@/hook';
 
 const Layout = ({ children }: { children: ReactNode }) => {
 
-    const { setUserImage, setUsername, setUserID, isLoading } = useContext(AppContext);
+    const { setUserImage, setUsername, setUserID, setIsAdmin, isLoading } = useContext(AppContext);
     const router = useRouter();
-    const path = usePathname();
 
     const [session, setSession] = useState<Session>();
 
     const initAction = async () => {
-        const session = await getSession();
-
-        console.log("session ============>", session);
-
 
         setSession(session || undefined);
         setUsername(session?.user?.name || "");
@@ -33,30 +29,16 @@ const Layout = ({ children }: { children: ReactNode }) => {
         setUserID(session?.id || "");
     }
 
-    const sessionAction = async () => {
-
-        if (session) {
-            router.push(`/dashboard`);
-        } else
-            router.push('/');
-    }
-
     useEffect(() => {
         initAction()
     }, [])
 
-    useEffect(() => {
-        sessionAction()
-    }, [session])
-
     return (
         <div>
             <div className="bg-cgrey-100 min-h-screen relative">
-                {session &&
-                    <div className="sticky top-0 z-50">
-                        <Navbar />
-                    </div>
-                }
+                <div className="sticky top-0 z-50">
+                    <Navbar />
+                </div>
                 <div className="flex">
                     <div className="md:block hidden bg-[#1D1E22]">
                         <BigSidebar />

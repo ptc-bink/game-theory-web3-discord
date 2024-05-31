@@ -12,7 +12,7 @@ export default async function handler(
 
             let config = {
                 method: "get",
-                url: `${process.env.baseURL_back}/test/harvest`,
+                url: `${process.env.baseURL_back}/harvest`,
                 headers: { "Content-Type": "application/json" },
                 data: qs.stringify({ giveawayID })
             }

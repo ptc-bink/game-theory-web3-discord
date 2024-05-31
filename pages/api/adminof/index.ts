@@ -10,7 +10,7 @@ export default async function handler(
 
             let config = {
                 method: "get",
-                url: `${process.env.baseURL_back}/test/auth/user/adminof`,
+                url: `${process.env.baseURL_back}/auth/user/adminof`,
             }
 
             const response = await axios.request(config);

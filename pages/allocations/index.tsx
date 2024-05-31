@@ -14,6 +14,8 @@ import { IAllocation, IServer } from "@/utils/_type";
 import AppContext from "@/providers/AppContext";
 import BackBtn from "../components/BackBtn";
 
+import { tempServerList } from "@/utils/_data";
+
 const Allocation: React.FC<IAllocationProps> = () => {
 
     const { allocationDeleted, allocationEdited, setAllocationDeleted, setAllocationEdited } = useContext(AppContext)
@@ -23,7 +25,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
 
     const initAction = async () => {
 
-        const tempServerList = await getServers();
+        // const tempServerList = await getServers();
 
         if (tempServerList) {
             if (tempServerList.length > 0) {
@@ -46,7 +48,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
                 if (allocations.length > 0) {
                     const tempAllocations: IAllocation[] = allocations.filter(allocation =>
                         allocation.title.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                        allocation.id.toLowerCase().includes(searchInput?.toLowerCase())
+                        allocation.id.includes(searchInput?.toLowerCase())
                     )
                     setFilterAllocations(tempAllocations);
                 }

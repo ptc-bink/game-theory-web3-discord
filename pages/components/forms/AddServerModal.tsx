@@ -4,8 +4,6 @@ import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
 import Dropdown from "./Dropdown";
 
-import { marketChannelIdList, generalChannelIdList } from "@/utils/_data";
-
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
 import { addServer, getChainList } from "@/hook";

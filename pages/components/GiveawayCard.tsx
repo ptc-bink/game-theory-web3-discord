@@ -23,7 +23,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayID, chain, avatar,
 
     const detailItem = (index: number, item: IUserInfo) => {
 
-        const isWinner = winners.includes(item.id);
+        const isWinner = winners?.includes(item.id);
 
         return (
             <div key={index} className="flex gap-1 hover:bg-cgrey-200 w-fit cursor-pointer">

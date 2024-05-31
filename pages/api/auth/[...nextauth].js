@@ -11,24 +11,24 @@ export const authOptions = {
       authorization: { params: { scope: scopes.join(' ') } },
     }),
   ],
-  callbacks: {
-    async jwt({ token, account }) {
-      if (account?.provider === 'discord') {
-        token.sub = account.providerAccountId;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token.sub) {
-        session.id = token.sub;
-      }
-      return session;
-    },
-    async sign({ }) {
-      return true
-    }
-  },
-  secret: process.env.NEXTAUTH_SECRET,
+  // callbacks: {
+  //   async jwt({ token, account }) {
+  //     if (account?.provider === 'discord') {
+  //       token.sub = account.providerAccountId;
+  //     }
+  //     return token;
+  //   },
+  //   async session({ session, token }) {
+  //     if (token.sub) {
+  //       session.id = token.sub;
+  //     }
+  //     return session;
+  //   },
+  //   async sign({ }) {
+  //     return true
+  //   }
+  // },
+  // secret: process.env.NEXTAUTH_SECRET,
 }
 
 export default NextAuth(authOptions);

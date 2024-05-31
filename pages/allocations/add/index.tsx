@@ -1,12 +1,11 @@
 "use client"
 
 import React, { useState } from "react";
-import Image from "next/image";
 
-import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import { useRouter } from "next/router";
 import BackBtn from "@/pages/components/BackBtn";
 import { addAllocation } from "@/hook";
+import toast from "react-hot-toast";
 
 const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
@@ -17,16 +16,19 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
     const [secondaryBuyAmount, setSecondaryBuyAmount] = useState<number>(1);
     const [priceVoid, setPriceVoid] = useState<number>(0.00);
     const [isVoid, setIsVoid] = useState<number>(2);
+    const router = useRouter();
 
     const handleSubmit = async () => {
 
         if (!allocation || !mintHoldDays || !secondaryBuyHoldDays || !secondaryBuyHours || !secondaryBuyAmount || !priceVoid || !isVoid) {
-            return console.log("plz input all value");
+            return toast.error("Please input all value");
         }
 
         const data: any = { allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHours, secondaryBuyAmount, priceVoid, isVoid };
 
-        await addAllocation(data);
+        toast.error("Coming Soon");
+        router.back();
+        // await addAllocation(data);
     }
 
 

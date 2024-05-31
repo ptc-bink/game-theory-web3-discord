@@ -10,7 +10,7 @@ export default async function handler(
 
             let config = {
                 method: "get",
-                url: `${process.env.baseURL_back}/test/active-servers`,
+                url: `${process.env.baseURL_back}/active-servers`,
             }
 
             const response = await axios.request(config);

@@ -16,7 +16,7 @@ export default async function handler(
 
             let config = {
                 method: "GET",
-                url: `${process.env.baseURL_back}/test/get-user-details?serverID=${serverID}&userID=${userID}`,
+                url: `${process.env.baseURL_back}/get-user-details?serverID=${serverID}&userID=${userID}`,
             }
 
             const response = await axios.request(config);

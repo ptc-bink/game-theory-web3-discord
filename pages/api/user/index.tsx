@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import Credentials from "next-auth/providers/credentials";
 
 
 export default async function handler(
@@ -11,10 +12,14 @@ export default async function handler(
 
             let config = {
                 method: "get",
-                url: `${process.env.baseURL_back}/test/user`,
+                url: `${process.env.baseURL_back}/user`,
             }
 
             const response = await axios.request(config);
+
+            console.log("========================================================>", response);
+
+
             console.log(response.data);
 
             return res.status(200).json(response.data);

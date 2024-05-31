@@ -12,7 +12,7 @@ export default async function handler(
 
             let config = {
                 method: "put",
-                url: `${process.env.baseURL_back}/test/update-permitted-users`,
+                url: `${process.env.baseURL_back}/update-permitted-users`,
                 headers: { "Content-Type": "application/json" },
                 data: qs.stringify({ data, serverID, userID })
             }
