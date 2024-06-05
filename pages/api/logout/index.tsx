@@ -11,6 +11,7 @@ export default async function handler(
             let config = {
                 method: "get",
                 url: `${process.env.baseURL_back}/logout`,
+                withCredentials: true,
             }
 
             const response = await axios.request(config);

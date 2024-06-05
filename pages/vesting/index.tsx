@@ -21,6 +21,7 @@ const VESTING: React.FC<IVESTING> = () => {
 
     const { permittedUserModalOpen, setPermittedUserModalOpen } = useContext(AppContext);
     const [permittedUsers, setPermittedUsers] = useState<IPermittedUser[]>([]);
+    const [filterMiddlePermittedUsers, setFilterMiddlePermittedUsers] = useState<IPermittedUser[]>([]);
     const [filterPermittedUsers, setFilterPermittedUsers] = useState<IPermittedUser[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [winningRole, setWinningRole] = useState<string>("");
@@ -42,6 +43,7 @@ const VESTING: React.FC<IVESTING> = () => {
 
                 if (tempPermittedUsers && tempPermittedUsers.length > 0) {
                     setPermittedUsers(tempPermittedUsers);
+                    setFilterMiddlePermittedUsers(tempPermittedUsers);
                     setFilterPermittedUsers(tempPermittedUsers);
                 } else {
                     toast.error("No permitted user to show")
@@ -50,27 +52,28 @@ const VESTING: React.FC<IVESTING> = () => {
         }
     }
 
-    const serverAction = async () => {
-
-    }
-
     const filterAction = async () => {
-        if (searchValue !== undefined) {
+
+        let tempPermittedUsers: IPermittedUser[] = [];
+
+        if (searchValue !== "") {
             if (permittedUsers.length > 0) {
-                const tempPermittedUsers: IPermittedUser[] = permittedUsers.filter(permittedUser =>
+                tempPermittedUsers = permittedUsers.filter(permittedUser =>
                     permittedUser.added_by.toLowerCase().includes(searchValue?.toLowerCase()) ||
                     permittedUser.id.toLowerCase().includes(searchValue?.toLowerCase())
                 )
+                setFilterMiddlePermittedUsers(tempPermittedUsers)
                 setFilterPermittedUsers(tempPermittedUsers);
             }
         }
 
         if (serverValue !== "") {
-            const tempPermittedUsers: IPermittedUser[] = filterPermittedUsers.filter(filterPermittedUser =>
-                filterPermittedUser.added_by.toLowerCase().includes(serverValue)
-            )
-
-            setFilterPermittedUsers(tempPermittedUsers);
+            if (filterMiddlePermittedUsers.length > 0) {
+                tempPermittedUsers = filterMiddlePermittedUsers.filter(filterMiddlePermittedUser =>
+                    filterMiddlePermittedUser.added_by.toLowerCase().includes(serverValue)
+                )
+                setFilterPermittedUsers(tempPermittedUsers);
+            }
         }
     }
 
@@ -110,29 +113,29 @@ const VESTING: React.FC<IVESTING> = () => {
                         <p className="text-cwhite text-2xl font-semibold">Vesting Reports</p>
                     </div>
                 </div>
-                <div className="flex md:flex-row flex-col gap-4">
+                <div className="flex lg:flex-row flex-col gap-4 items-center">
                     <Dropdown
                         dropdownList={serverDropdownList}
                         placeholder="Select server"
                         className="hover:bg-cdark-100 bg-cdark-200"
                         callback={setServerValue}
                     />
-                    <div className="flex w-full text-sm font-normal">
-                        <div className="flex flex-grow">
+                    <div className="flex w-full text-sm font-normal gap-2 items-center">
+                        <div className="flex flex-grow ">
                             <SearchBtn
                                 placeholder="Search servers"
                                 endContent="Refresh"
                                 callback={setSearchValue}
                             />
                         </div>
-                        <div onClick={handlePermiitedBtn} className="ml-2 cursor-pointer hover:bg-cgrey-900 flex gap-2 justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-3">
+                        <div onClick={handlePermiitedBtn} className=" cursor-pointer hover:bg-cgrey-900 hover:border-cdark-100 flex gap-2 justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
                             <Image
                                 src={UserAdd}
                                 width="16"
                                 height="16"
                                 alt="user avatar"
                             />
-                            <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Permitted Users</p>
+                            <p className="text-cdark-100 text-sm leading-5 font-medium text-center sm:block hidden">Permitted Users</p>
                         </div>
                     </div>
                 </div>

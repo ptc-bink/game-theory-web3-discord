@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import { config_cookie } from "@/utils/_config";
 
 export default async function handler(
     req: NextApiRequest,
@@ -12,6 +13,9 @@ export default async function handler(
             let config = {
                 method: "get",
                 url: `${process.env.baseURL_back}/enter-giveaway?serverId=${serverID}&giveawayId=${giveawayID}&userID=${userID}`,
+                headers: {
+                    Cookie: config_cookie
+                }
             }
 
             const response = await axios.request(config);

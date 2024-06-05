@@ -1,4 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import axios from "axios";
+
+import { config_cookie } from "@/utils/_config";
 import { headers } from "next/headers";
 
 export default async function handler(
@@ -7,14 +10,29 @@ export default async function handler(
 ) {
     if (req.method == "GET") {
         try {
-            const axios = require("axios");
+            console.log("=======================here : get server list");
 
-            let config = {
+
+            // let config = {
+            //     method: "get",
+            //     url: `${process.env.baseURL_back}/auth/user/adminOf`,
+            //     headers: {
+            //         Credential: "include"
+            //         // Cookie: config_cookie
+            //     }
+            // }
+
+            const response = await axios.request({
                 method: "get",
-                url: `${process.env.baseURL_back}/servers`,
-            }
+                url: `${process.env.baseURL_back}/auth/user/adminOf`,
+                // headers: {
+                //     Cookie: config_cookie
+                // }
+                withCredentials: true
+            });
 
-            const response = await axios.request(config);
+            console.log("=========================get servers =>", response.data);
+
 
             return res.json(response.data);
         } catch (error) {

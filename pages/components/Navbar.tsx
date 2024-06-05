@@ -4,13 +4,14 @@ import Logo from "./Logo";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import Router, { useRouter } from "next/router";
 
 import User from "@/public/avatar/user.svg"
 
 import AppContext from "@/providers/AppContext";
 import ProfileModal from "./forms/ProfileModal";
-import { signOut } from "next-auth/react";
 import { firUppercase } from "@/utils/utils";
+import { logout } from "@/hook";
 
 
 const Navbar = () => {
@@ -19,6 +20,7 @@ const Navbar = () => {
     const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
     const [temp, setTemp] = useState<string>();
     const path = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
         if (path) {
@@ -31,15 +33,16 @@ const Navbar = () => {
         setProfileDropdownOpen(false);
     }
 
-    const handleLogoutBtn = () => {
+    const handleLogoutBtn = async () => {
         setProfileDropdownOpen(false);
-        signOut();
+        await logout();
+        window.location.href = '/';
     }
 
     return (
         <div className="flex justify-between items-center px-8 py-4 w-full bg-cgrey-100">
             <div className="md:block hidden">
-                <div className="flex">
+                <div className="flex cursor-pointer" onClick={() => router.push("/")}>
                     <Logo />
                     <div className="flex items-center">
                         <p className="pl-4 text-2xl leading-8 font-semibold text-cwhite text-center items-center">

@@ -1,3 +1,4 @@
+import { config_cookie } from "@/utils/_config";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -12,7 +13,9 @@ export default async function handler(
             let config = {
                 method: "POST",
                 url: `${process.env.baseURL_back}/removeentry/:${marketID}/:${serverID}/:${removeUserID}`,
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    Cookie: config_cookie
+                }
             }
 
             const res = await axios.request(config);

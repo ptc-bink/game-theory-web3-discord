@@ -89,7 +89,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
                             height="16"
                             alt="add button"
                         />
-                        <p className="text-cdark-100 text-sm md:leading-5 leading-4 font-medium md:block hidden">Submit</p>
+                        <p className="text-cdark-100 text-sm md:leading-5 leading-4 font-medium sm:block hidden">Submit</p>
                     </Link>
                 </div>
             </div>

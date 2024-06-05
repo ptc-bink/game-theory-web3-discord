@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 
-import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import UserProvider from "../providers/AppProvider";
 import Layout from "./components/Layout";
@@ -9,15 +8,13 @@ import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <UserProvider>
-        <NextUIProvider>
-          <Layout>
-            <Toaster position="top-right" reverseOrder={false} />
-            <Component {...pageProps} />
-          </Layout>
-        </NextUIProvider>
-      </UserProvider>
-    </SessionProvider>
+    <UserProvider>
+      <NextUIProvider>
+        <Layout>
+          <Toaster position="top-right" reverseOrder={false} />
+          <Component {...pageProps} />
+        </Layout>
+      </NextUIProvider>
+    </UserProvider>
   );
 }

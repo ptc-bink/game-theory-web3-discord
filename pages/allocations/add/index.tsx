@@ -42,7 +42,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                     </div>
                 </div>
                 <div className="flex flex-col gap-3">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid sm:grid-cols-2 grid-cols-1 gap-3">
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Allocation</p>
                             <input type="number" onChange={(e) => setAllocation(e.target.valueAsNumber)} placeholder="Choose Allocation" value={allocation} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
@@ -52,7 +52,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                             <input type="number" onChange={(e) => setMintHoldDays(e.target.valueAsNumber)} placeholder="Choose Mint hold days" value={mintHoldDays} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid sm:grid-cols-2 grid-cols-1 gap-3">
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Secondary buy hold days</p>
                             <input type="number" onChange={(e) => setSecondaryBuyHoldDays(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold days" value={secondaryBuyHoldDays} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
@@ -62,7 +62,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                             <input type="number" placeholder="Choose Secondary buy hours" onChange={(e) => setSecondaryBuyHours(e.target.valueAsNumber)} value={secondaryBuyHours} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid sm:grid-cols-2 grid-cols-1 gap-3">
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Secondary buy amount</p>
                             <input type="number" placeholder="Choose Secondary buy amount" onChange={(e) => setSecondaryBuyAmount(e.target.valueAsNumber)} value={secondaryBuyAmount} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />

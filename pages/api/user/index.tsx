@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import Credentials from "next-auth/providers/credentials";
-
+import axios from "axios";
 
 export default async function handler(
     req: NextApiRequest,
@@ -8,13 +7,14 @@ export default async function handler(
 ) {
     if (req.method == "GET") {
         try {
-            const axios = require("axios");
 
             let config = {
                 method: "get",
                 url: `${process.env.baseURL_back}/user`,
+                withCredentials: true,
             }
 
+            // const response = await axios.request(config);
             const response = await axios.request(config);
 
             console.log("========================================================>", response);

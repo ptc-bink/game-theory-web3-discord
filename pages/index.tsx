@@ -14,17 +14,10 @@ export default function Page() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const response = await fetch(`${baseURL_back}/user`, {
-          method: 'GET',
-          credentials: 'include'
-        });
-        console.log('Response headers:', response.headers);
-        console.log('Cookies:', document.cookie);
-        console.log('Response:', response); // Log the entire response here
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+
+      const res = await getUser();
+
+      console.log('Response:', res); // Log the entire response here
     };
 
     fetchUserData();

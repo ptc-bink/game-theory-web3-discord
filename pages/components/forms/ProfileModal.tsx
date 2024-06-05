@@ -1,14 +1,17 @@
 'use client'
 
 import React, { useState, useContext, useEffect } from "react";
+import toast from "react-hot-toast";
 import Image from "next/image";
 
-import Cancel from "@/public/avatar/close.svg"
+import Dropdown from "./Dropdown";
+
 import AppContext from "@/providers/AppContext";
 import { IDropdownListProps, IServer } from "@/utils/_type";
-import Dropdown from "./Dropdown";
 import { getServers, getUserDetails } from "@/hook";
-import toast from "react-hot-toast";
+
+import Cancel from "@/public/avatar/close.svg"
+import User from "@/public/avatar/user.svg"
 
 const ProfileModal: React.FC<ProfileModalProps> = () => {
 
@@ -82,16 +85,25 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
             <div className="flex flex-col gap-3">
                 <div className="grid grid-cols-2 gap-2">
                     <div>
-                        <img src={userImage} width="155" height="155" alt="user avatar" className="rounded-lg" />
+                        {userImage ?
+                            <img src={userImage} width="155" height="155" alt="user avatar" className="rounded-lg" />
+                            : <Image
+                                src={User}
+                                width={155}
+                                height={155}
+                                alt="user avatar"
+                                className="rounded-full border-[1.5px] border-cgrey-200"
+                            />
+                        }
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">User Name</p>
-                            <input type="text" disabled placeholder="Input User ID" value={username} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
+                            <input type="text" disabled placeholder="-" value={username} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
                         </div>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">User ID</p>
-                            <input type="text" disabled placeholder="Input User ID" value={userID} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
+                            <input type="text" disabled placeholder="-" value={userID} onChange={(e) => setUserID(e.target.value)} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
                         </div>
                     </div>
                 </div>
@@ -107,7 +119,7 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">ETH HOT*</p>
-                        <input type="text" placeholder="0" onChange={(e) => setEthCold(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
+                        <input type="text" placeholder="0" onChange={(e) => setEthHot(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">ETH COLD*</p>

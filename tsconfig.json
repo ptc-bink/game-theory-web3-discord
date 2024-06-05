@@ -30,11 +30,12 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "pages/api/auth/[...nextauth].tsx",
-    "pages/api/auth/redirect.js",
-    "pages/api/auth/[...nextauth].s",
-    "pages/api/auth/[...nextauth].js"
-, "pages/api/allocation/[...slug].js"  ],
+    ".next/auth/[...nextauth].tsx",
+    ".next/auth/redirect.js",
+    ".next/auth/[...nextauth].s",
+    ".next/auth/[...nextauth].js",
+    "pages/api/allocation/[...slug].js"
+  ],
   "exclude": [
     "node_modules"
   ]

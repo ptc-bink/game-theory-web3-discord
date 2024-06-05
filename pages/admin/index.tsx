@@ -15,7 +15,7 @@ import Driver from "@/public/avatar/driver.svg"
 
 import AppContext from "@/providers/AppContext";
 import { IAdminProps, IServer, IDropdownListProps, IAdministrationTrustedServers, IChannel } from "@/utils/_type";
-import { administrationChannellist, getAdministrationTrustedServers, getServers } from "@/hook";
+import { addServer, administrationChannellist, getAdministrationTrustedServers, getServers } from "@/hook";
 import BackBtn from "../components/BackBtn";
 
 import { tempServerList } from "@/utils/_data";
@@ -41,14 +41,7 @@ const Admin: React.FC<IAdminProps> = () => {
     }
 
     const mainAction = async (serverID: string) => {
-
-        console.log("serverID =====>", serverID);
-
-
         const tempData = await getAdministrationTrustedServers(serverID);
-
-        console.log("tempData ================>", tempData);
-
 
         if (tempData) {
             if (tempData !== null) {
@@ -58,8 +51,6 @@ const Admin: React.FC<IAdminProps> = () => {
                         data: tempData[key]
                     }
                 })
-
-                console.log("tempTrustedServers ===>", tempTrustedServers);
 
                 setApprovedServerList(tempTrustedServers);
                 setFilterApprovedServerList(tempTrustedServers);
@@ -146,14 +137,14 @@ const Admin: React.FC<IAdminProps> = () => {
                         <p className="text-cwhite text-2xl font-semibold">Approved Servers</p>
                     </div>
                 </div>
-                <div className="items-center w-full grid md:grid-cols-2 grid-cols-1 gap-4 pt-4 text-sm realtive">
+                <div className="items-center w-full grid lg:grid-cols-2 grid-cols-1 gap-4 pt-4 text-sm realtive">
                     <Dropdown
                         dropdownList={serverDropdownList}
                         placeholder="Select"
                         className="hover:bg-cdark-100 bg-cdark-200"
                         callback={setServer}
                     />
-                    <div className="flex w-full text-sm font-normal">
+                    <div className="flex w-full text-sm font-normal gap-2">
                         <div className="flex flex-grow">
                             <SearchBtn
                                 placeholder="Search servers"
@@ -161,20 +152,23 @@ const Admin: React.FC<IAdminProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        <button aria-label="add server" onClick={handleAddBtn} className="ml-2 flex justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-3">
+                        <div aria-label="add server" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
                             <Image
                                 src={Add}
                                 width="16"
                                 height="16"
                                 alt="add button"
                             />
-                            <p className="text-cdark-100 text-sm leading-5 font-medium lg:block hidden">Add Server</p>
-                        </button>
+                            <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Add Server</p>
+                        </div>
                     </div>
                     {addServerModalOpen && (
                         <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                             <AddServerModal />
                         </div>
+                    )}
+                    {addServerModalOpen && (
+                        <div className="fixed top-0 z-[50] left-0 h-screen w-screen bg-[transparent]" onClick={() => setAddServerModalOpen(false)}></div>
                     )}
                 </div>
             </div>

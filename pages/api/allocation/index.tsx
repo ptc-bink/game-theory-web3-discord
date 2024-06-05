@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import qs from "qs"
+import { config_cookie } from "@/utils/_config";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // get allocation
@@ -15,6 +16,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             let config = {
                 method: "get",
                 url: `${process.env.baseURL_back}/allocations?serverID=${serverID}`,
+                headers: {
+                    Cookie: config_cookie
+                }
             }
 
             const response = await axios.request(config);
@@ -33,6 +37,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             let config = {
                 method: "post",
                 url: `${process.env.baseURL_back}/allocation`,
+                headers: {
+                    Cookie: config_cookie
+                },
                 data: qs.stringify({
                     data
                 }),

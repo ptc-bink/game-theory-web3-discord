@@ -66,10 +66,10 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
     }
 
     return (
-        <div className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
-            <div className="flex justify-between gap-4">
+        <div className="flex flex-col w-[450px] rounded-md p-6 max-h-[calc(100vh-50px)] overflow-scroll gap-6 border border-cgrey-200 bg-cgrey-100">
+            <div className="flex justify-between gap-4 items-center">
                 <p className="text-base text-cwhite font-semibold">Add Server</p>
-                <div onClick={() => setAddServerModalOpen(false)} className="cursor-pointer">
+                <div onClick={() => setAddServerModalOpen(false)} className="cursor-pointer hover:bg-cdark-100 p-1 rounded-full">
                     <Image
                         src={Cancel}
                         width="24"
@@ -83,7 +83,7 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
                     <p className="text-sm font-normal text-cwhite">Redis Key</p>
                     <input type="text" placeholder="Input redis key" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" value={redisKey} onChange={(e) => setRediskey(e.target.value)} />
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid md:md:grid-cols-2 grid-cols-1 gap-2">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Market Channel ID</p>
                         <Dropdown dropdownList={channelDropdownList} placeholder="Select market ID" callback={setMarketChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
@@ -93,7 +93,7 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
                         <Dropdown dropdownList={channelDropdownList} placeholder="Select general ID" callback={setGeneralChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Submit Wallet ID</p>
                         <Dropdown dropdownList={channelDropdownList} placeholder="Select wallet ID" callback={setSubmitWalletId} className="hover:bg-cdark-200 bg-cdark-100" />
@@ -103,7 +103,7 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
                         <Dropdown dropdownList={channelDropdownList} placeholder="Select vesting ID" callback={setVestingChannelId} className="hover:bg-cdark-200 bg-cdark-100" />
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Reminder Channel ID</p>
                         <Dropdown dropdownList={channelDropdownList} placeholder="Select reminder ID" callback={setReminderChannelId} className="hover:bg-cdark-200 bg-cdark-100" />

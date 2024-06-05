@@ -1,3 +1,4 @@
+import { config_cookie } from "@/utils/_config";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -12,6 +13,9 @@ export default async function handler(
             let config = {
                 method: "get",
                 url: `${process.env.baseURL_back}/administration-channellist?serverID=${serverID}`,
+                headers: {
+                    Cookie: config_cookie
+                }
             }
 
             const response = await axios.request(config);

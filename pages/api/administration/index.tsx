@@ -1,3 +1,4 @@
+import { config_cookie } from "@/utils/_config";
 import { NextApiRequest, NextApiResponse } from "next";
 import qs from "qs"
 
@@ -13,6 +14,9 @@ export default async function handler(
             let config = {
                 method: "PUT",
                 url: `${process.env.baseURL_back}/administration`,
+                headers: {
+                    Cookie: config_cookie
+                },
                 data: qs.stringify({
                     id, redisKey, name, paymentExpires, General_Channel_ID, Market_Channel_ID, Submit_Wallet_ID, Database, Vesting_Channel_ID, Reminder_Channel_ID, Winners_Channel_ID, Supported_Wallets
                 }),
@@ -32,6 +36,9 @@ export default async function handler(
             let config = {
                 method: "GET",
                 url: `${process.env.baseURL_back}/administration`,
+                headers: {
+                    Cookie: config_cookie
+                }
             }
 
             const response = await axios.request(config);

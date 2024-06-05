@@ -28,8 +28,6 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
         return () => clearInterval(intervalId); // Cleanup interval on unmount
     }, []);
 
-
-
     const multiView = (data: IServerRole[]) => {
         return (
             (Array.isArray(data) && data.length > 0)
@@ -74,7 +72,13 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                         <p className="text-sm leading-[18px] font-normal">{description ? description : "Description"}</p>
                     </div>
                     {userImage ? <img src={userImage} alt="user image" width={48} height={48} className="rounded-lg" />
-                        : <img src={User} alt="user image" width={48} height={48} className="rounded-lg" />
+                        : <Image
+                            src={User}
+                            width={48}
+                            height={48}
+                            alt="user avatar"
+                            className="rounded-full border-[1.5px] border-cgrey-200"
+                        />
                     }
                 </div>
                 <div className="flex flex-col gap-3">
@@ -136,7 +140,13 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                 <div className="border border-[#393A3D]"></div>
                 <div className="flex gap-2 items-center justify-start">
                     {userImage ? <img src={userImage} alt="user avatar" width={24} height={24} className="rounded-full" />
-                        : <img src={User} alt="user avatar" width={24} height={24} className="rounded-full" />
+                        : <Image
+                            src={User}
+                            width={24}
+                            height={24}
+                            alt="user avatar"
+                            className="rounded-full border-[1.5px] border-cgrey-200"
+                        />
                     }
                     <p className=" text-sm leading-[18px] font-normal text-cwhite">Created By - {username}<span className="border mx-1 rounded-full border-[#cwhite]" />Today at {date}</p>
                 </div>
