@@ -33,18 +33,23 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
 
     const initAction = async () => {
 
-        const tempServerList: IServer[] = await getServers();
+        const tempServerList: any = await getServers();
 
-        if (tempServerList) {
-            if (tempServerList.length > 0) {
-                const initServerValue: string = tempServerList[0].guildID;
-                const tempUserProfile = await getUserDetails(userID, initServerValue);
-                const tempServerDropdownList: IDropdownListProps[] = tempServerList?.map((item, index) => {
+        if (tempServerList.status === 200) {
+            if (tempServerList.data.length > 0) {
+                const initServerValue: string = tempServerList.data[0].guildID;
+                const tempServerDropdownList: IDropdownListProps[] = tempServerList.data?.map((item: IServer, index: number) => {
                     return { name: item.guild.name, id: item.guild.id }
                 })
+                const tempUserProfile: any = await getUserDetails(userID, initServerValue);
+
+                if (tempUserProfile.status == 200) {
+                    setUserProfile(tempUserProfile.data);
+                } else {
+                    toast.error("No user info to show")
+                }
 
                 setServerDropdownList(tempServerDropdownList);
-                setUserProfile(tempUserProfile);
                 setServerValue(initServerValue)
                 setUserProfile(userProfile);
             } else {

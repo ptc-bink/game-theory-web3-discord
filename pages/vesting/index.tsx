@@ -29,25 +29,29 @@ const VESTING: React.FC<IVESTING> = () => {
     const [serverValue, setServerValue] = useState<string>("");
 
     const initAction = async () => {
-        const tempServerList: IServer[] = await getServers();
+        const tempServerList: any = await getServers();
 
-        if (tempServerList) {
-            if (tempServerList.length > 0) {
-                const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
+        if (tempServerList.status == 200) {
+            if (tempServerList.data.length > 0) {
+                const tempServerDropdownList: IDropdownListProps[] = tempServerList.data.map((item: IServer, index: number) => {
                     return { name: item.guild.name, id: item.guild.id }
                 })
 
                 setServerDropdownList(tempServerDropdownList);
 
-                const tempPermittedUsers: IPermittedUser[] = await getPermittedusers(tempServerList[0].guildID);
+                const tempPermittedUsers: any = await getPermittedusers(tempServerList.data[0].guildID);
 
-                if (tempPermittedUsers && tempPermittedUsers.length > 0) {
-                    setPermittedUsers(tempPermittedUsers);
-                    setFilterMiddlePermittedUsers(tempPermittedUsers);
-                    setFilterPermittedUsers(tempPermittedUsers);
-                } else {
-                    toast.error("No permitted user to show")
+                if (tempPermittedUsers.status == 200) {
+                    if (Array.isArray(tempPermittedUsers.data) && tempPermittedUsers.data.length > 0) {
+                        setPermittedUsers(tempPermittedUsers.data);
+                        setFilterMiddlePermittedUsers(tempPermittedUsers.data);
+                        setFilterPermittedUsers(tempPermittedUsers.data);
+                    } else {
+                        toast.error("No permitted user to show")
+                    }
                 }
+            } else {
+                toast.error("No server to show")
             }
         }
     }

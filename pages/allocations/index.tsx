@@ -13,8 +13,7 @@ import { getAllocation, getServers } from "@/hook";
 import { IAllocation, IServer } from "@/utils/_type";
 import AppContext from "@/providers/AppContext";
 import BackBtn from "../components/BackBtn";
-
-import { tempServerList } from "@/utils/_data";
+import toast from "react-hot-toast";
 
 const Allocation: React.FC<IAllocationProps> = () => {
 
@@ -25,19 +24,26 @@ const Allocation: React.FC<IAllocationProps> = () => {
 
     const initAction = async () => {
 
-        // const tempServerList = await getServers();
+        const tempServerList: any = await getServers();
 
-        if (tempServerList) {
-            if (tempServerList.length > 0) {
-                const tempAllocations: IAllocation[] = await getAllocation(tempServerList[0]?.guildID);
+        if (tempServerList.status == 200) {
+            if (tempServerList.data.length > 0) {
+                const tempAllocations: any = await getAllocation(tempServerList.data[0].guildID);
 
-                if (tempAllocations && tempAllocations.length > 0) {
-                    setAllocations(tempAllocations);
-                    setFilterAllocations(tempAllocations);
+                if (tempAllocations.status == 200) {
+                    if (Array.isArray(tempAllocations.data) && tempAllocations.data.length > 0) {
+                        setAllocations(tempAllocations.data);
+                        setFilterAllocations(tempAllocations.data);
+                    } else {
+                        toast.error("No allocation to show");
+                    }
                 }
+            } else {
+                toast.error("No server to show");
             }
         }
     }
+
     useEffect(() => {
         initAction();
     }, [])

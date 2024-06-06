@@ -11,16 +11,15 @@ import Preview from "@/public/avatar/eye.svg"
 
 import AppContext from "@/providers/AppContext";
 import BackBtn from "@/pages/components/BackBtn";
-import { getChainList, getGiveaways, getServerRoles, getServers, handleEditGiveAway } from "@/hook";
+import { getChainList, getGiveaways, getServerRoles, getServers, handleEditGiveaway } from "@/hook";
 import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/utils/_type";
-import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
-import { tempServerList } from "@/utils/_data";
-
-const EditGiveAway: React.FC = () => {
+const EditGiveaway: React.FC = () => {
 
     const { setShowCreditCard, setGiveawayCreated, showCreditCard } = useContext(AppContext);
+    const [serverList, setServerList] = useState<IServer[]>([])
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [tempRestrictedRoles, setTempRestrictedRoles] = useState<IServerRole[]>([]);
@@ -47,55 +46,67 @@ const EditGiveAway: React.FC = () => {
     const router = useRouter();
 
     const mainAction = async (serverID: string) => {
-        const tempChainList: string[] = await getChainList(serverID);
+        const tempChainList: any = await getChainList(serverID);
 
-        if (Array.isArray(tempChainList)) {
-            if (tempChainList.length > 0) {
-                const tempChainDropdownList: IDropdownListProps[] = tempChainList?.map((item, index) => ({
+        if (tempChainList.status == 200) {
+            if (tempChainList.data.length > 0) {
+                const tempChainDropdownList: IDropdownListProps[] = tempChainList.data?.map((item: string, index: number) => ({
                     name: item,
                     id: item,
                 }))
                 setChainDropdownList(tempChainDropdownList);
+            } else {
+                toast.error("No chain list to show")
             }
         }
 
-        const tempSeverRoles: IServerRole[] = await getServerRoles(serverID);
+        const tempServerRoles: any = await getServerRoles(serverID);
 
-        if (tempSeverRoles) {
-            if (tempSeverRoles.length > 0) {
-                setServerRoles(tempSeverRoles);
-                setTempRequiredRoles(tempSeverRoles);
-                setTempRestrictedRoles(tempSeverRoles)
+        if (tempServerRoles.status == 200) {
+            if (tempServerRoles.data.length > 0) {
+                setServerRoles(tempServerRoles.data);
+                setTempRequiredRoles(tempServerRoles.data);
+                setTempRestrictedRoles(tempServerRoles.data)
+            } else {
+                toast.error("No server role to show")
             }
         }
     }
 
     const initAction = async () => {
+        const tempServer: any = await getServers();
 
-        // const tempServerList: IServer[] = await getServers();
+        if (tempServer.status == 200) {
+            if (Array.isArray(tempServer.data)) {
+                if (tempServer.data.length > 0) {
+                    setServerList(tempServer.data);
 
-        if (Array.isArray(tempServerList)) {
-            if (tempServerList.length > 0) {
+                    await mainAction(tempServer.data[0].guildID)
 
-                await mainAction(tempServerList[0].guildID)
+                    const serverDropdownList: IDropdownListProps[] = tempServer.data?.map((item: IServer, index: number) => {
+                        return { name: item.guild.name, id: item.guild.id }
+                    })
+                    setServerDropdownList(serverDropdownList);
 
-                const serverDropdownList: IDropdownListProps[] = tempServerList?.map((item, index) => {
-                    return { name: item.guild.name, id: item.guild.id }
-                })
-                setServerDropdownList(serverDropdownList);
+                    const res: any = await getGiveaways(tempServer.data[0].guildID);
 
-                const tempGiveaways: IGiveaway[] = await getGiveaways(tempServerList[0].guildID);
-
-                if (Array.isArray(tempGiveaways)) {
-                    if (tempGiveaways.length > 0) {
-                        const tempGiveawayDropdownList: IDropdownListProps[] = tempGiveaways.map((item, index) => ({
-                            name: item.type,
-                            id: item.messageID,
-                        }))
-                        setGiveawayDropdownList(tempGiveawayDropdownList);
+                    if (res.status == 200) {
+                        if (res.data.length > 0) {
+                            const tempGiveawayDropdownList: IDropdownListProps[] = res.data.map((item: IGiveaway, index: number) => ({
+                                name: item.type,
+                                id: item.messageID,
+                            }))
+                            setGiveawayDropdownList(tempGiveawayDropdownList);
+                        } else {
+                            toast.error("No giveaway to show")
+                        }
                     }
+                } else {
+                    toast.error("No server to show");
                 }
             }
+        } else {
+            toast.error("Try again later")
         }
     }
 
@@ -162,7 +173,12 @@ const EditGiveAway: React.FC = () => {
             setExpiresHour(new Date().toISOString().slice(11, 16));
         }
 
-        setExpires(expiresDate + expiresDate)
+        console.log("expiresDate ==>", expiresDate);
+        console.log("expiresDate ==>", typeof (expiresDate));
+        console.log("expiresHour ==>", expiresHour);
+
+
+        setExpires(expiresDate + "  " + expiresHour)
     }, [expiresDate, expiresHour]);
 
     useEffect(() => {
@@ -420,7 +436,7 @@ const EditGiveAway: React.FC = () => {
     );
 }
 
-export default EditGiveAway;
+export default EditGiveaway;
 
 interface DataOption {
     value: string;

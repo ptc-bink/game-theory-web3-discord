@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import BackBtn from "@/pages/components/BackBtn";
 import { getHarvestWinners, getServers } from "@/hook";
 import JsonView from "react18-json-view";
+import toast from "react-hot-toast";
 
 // import { jsonFileDownload } from "@/download";
 
@@ -31,9 +32,13 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
     };
 
     const initAction = async () => {
-        const tempHarvestWinners = await getHarvestWinners();
+        const tempHarvestWinners: any = await getHarvestWinners();
 
-        setHarvest(tempHarvestWinners);
+        if (tempHarvestWinners.status == 200) {
+            setHarvest(tempHarvestWinners.data);
+        } else {
+            toast.error("No harvest winners to show")
+        }
     };
 
     useEffect(() => {

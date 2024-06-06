@@ -9,25 +9,36 @@ import Logo from "./components/Logo";
 import DiscordSVG from "@/public/avatar/discord.svg"
 import { baseURL_back } from "@/utils/_config";
 import { getUser } from "@/hook";
+import { useRouter } from "next/router";
+import { IUserInfo } from "@/utils/_type";
+import toast from "react-hot-toast";
 
 export default function Page() {
 
+  const router = useRouter();
+
+  const initAction = async () => {
+
+    const res: any = await getUser();
+
+    console.log("res ====>", res);
+
+    if (res.status == 401) {
+      toast.error(res.data);
+    } else if (res.status == 200) {
+      router.push("/dashboard");
+    }
+
+  };
+
   useEffect(() => {
-    const fetchUserData = async () => {
-
-      const res = await getUser();
-
-      console.log('Response:', res); // Log the entire response here
-    };
-
-    fetchUserData();
+    initAction();
   }, []);
 
   const handleLogin = async () => {
-    // signIn('discord')
-    console.log("=====================-0-----------------", document.cookie);
 
     window.location.href = `${baseURL_back}/auth/discord`
+
   }
 
   return (

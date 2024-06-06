@@ -16,44 +16,54 @@ import { baseURL_back } from "@/utils/_config";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin, giveawayCreated, giveawayEdited, setGiveawayEdited, setGiveawayCreated, setIsLoading } = useContext(AppContext);
+    const { isAdmin, giveawayCreated, giveawayEdited, setGiveawayEdited, setGiveawayCreated } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
     const [filterData, setFilterData] = useState<IGiveaway[]>([]);
     const [serverValue, setServerValue] = useState<string>("");
     const [searchInput, setSearchInput] = useState<string>("");
+    const [serverList, setServerList] = useState<IServer[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
 
     const initAction = async () => {
+        const tempServer: any = await getServers();
 
-        const tempServerList: IServer[] = await getServers();
-        // const tempServerList: any = await fetchCookies();
+        if (tempServer.status == 200) {
+            if (Array.isArray(tempServer.data)) {
+                if (tempServer.data.length > 0) {
+                    setServerList(tempServer.data);
 
-        console.log("tempServerList  ====>", tempServerList);
+                    const tempServerDropdownList: IDropdownListProps[] = tempServer.data.map((item: IServer, index: number) => {
+                        return { name: item.guild.name, id: item.guild.id }
+                    })
 
-        const tempGiveaways: IGiveaway[] = await getGiveaways("1219682506475831446");
+                    setServerDropdownList(tempServerDropdownList);
 
-        if (Array.isArray(tempServerList)) {
-            if (tempServerList.length > 0) {
-                const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
-                    return { name: item.guild.name, id: item.guild.id }
-                })
-                setServerDropdownList(tempServerDropdownList);
+                    let tempGiveaways: IGiveaway[] = [];
+
+                    for (const server of tempServer.data) {
+                        const res: any = await getGiveaways(server.guildID);
+
+                        if (res.data !== undefined) {
+                            if (res.data.length > 0) {
+                                tempGiveaways = tempGiveaways.concat(res.data);
+                            } else {
+                                return toast.error(`No giveaway of this server : ${server.guild.name}`);
+                            }
+                        } else {
+                            return toast.error("Sever error");
+                        }
+                    }
+
+                    setGiveaways(tempGiveaways);
+                    setMiddleGiveaways(tempGiveaways);
+                    setFilterData(tempGiveaways);
+                } else {
+                    toast.error("No server to show")
+                }
             } else {
-                return toast.error("No server to show")
+                toast.error("Try again later")
             }
-        }
-
-        if (tempGiveaways !== undefined) {
-            if (tempGiveaways.length > 0) {
-                setGiveaways(tempGiveaways);
-                setMiddleGiveaways(tempGiveaways);
-                setFilterData(tempGiveaways);
-            } else {
-                return toast.error("No giveaway to show");
-            }
-        } else {
-            return toast.error("Sever error");
         }
     }
 
@@ -62,7 +72,7 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         if (giveaways.length > 0) {
             tempFilterData = giveaways.filter(giveaway =>
-                giveaway.messageID.toLowerCase().includes(serverValue.toLowerCase())
+                giveaway.messageID?.includes(serverValue.toLowerCase())
             )
 
             setMiddleGiveaways(tempFilterData);
@@ -71,10 +81,10 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         if (searchInput !== "" && middleGiveaways.length > 0) {
             let tempFilterData: IGiveaway[] = middleGiveaways.filter(giveaway =>
-                giveaway.title.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                giveaway.messageID.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                giveaway.chain.toLowerCase().includes(searchInput?.toLowerCase()) ||
-                giveaway.type.toLowerCase().includes(searchInput?.toLowerCase())
+                giveaway.title?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                giveaway.messageID?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                giveaway.chain?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+                giveaway.type?.toLowerCase().includes(searchInput?.toLowerCase())
             )
 
             setFilterData(tempFilterData);
@@ -142,7 +152,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                                 key={index}
                                 giveawayID={item.messageID}
                                 chain={item.chain}
-                                avatar={item.creator.avatar}
+                                avatar={item?.creator?.avatar}
                                 title={item.title}
                                 entrants={item.entrants}
                                 quantity={item.quantity}

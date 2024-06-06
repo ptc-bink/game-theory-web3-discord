@@ -25,14 +25,19 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
     const [winnersChannelName, setWinnersChannelName] = useState<string>();
 
     const initAction = async () => {
+        console.log("allChannelList ====>", allChannelList);
+
+        console.log(typeof (marketChannel));
+
+
         if (allChannelList) {
             if (allChannelList.length > 0) {
-                const tempMarketChannelName = allChannelList[allChannelList.findIndex(item => (item.id === marketChannel))].name;
-                const tempGeneralChannelName = allChannelList[allChannelList.findIndex(item => (item.id === generalChannel))].name;
-                const tempSubmitWalletName = allChannelList[allChannelList.findIndex(item => (item.id === submitWallet))].name;
-                const tempVestingChannelName = allChannelList[allChannelList.findIndex(item => (item.id === vestingChannel))].name;
-                const tempReminderChannelName = allChannelList[allChannelList.findIndex(item => (item.id === reminderChannel))].name;
-                const tempWinnersChannelName = allChannelList[allChannelList.findIndex(item => (item.id === winnersChannel))].name;
+                const tempMarketChannelName = allChannelList[allChannelList.findIndex(item => (item.id == marketChannel))]?.name;
+                const tempGeneralChannelName = allChannelList[allChannelList.findIndex(item => (item.id == generalChannel))]?.name;
+                const tempSubmitWalletName = allChannelList[allChannelList.findIndex(item => (item.id == submitWallet))]?.name;
+                const tempVestingChannelName = allChannelList[allChannelList.findIndex(item => (item.id == vestingChannel))]?.name;
+                const tempReminderChannelName = allChannelList[allChannelList.findIndex(item => (item.id == reminderChannel))]?.name;
+                const tempWinnersChannelName = allChannelList[allChannelList.findIndex(item => (item.id == winnersChannel))]?.name;
 
                 setMarketChannelName(tempMarketChannelName);
                 setGeneralChannelName(tempGeneralChannelName);

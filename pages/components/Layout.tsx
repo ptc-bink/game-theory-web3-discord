@@ -3,29 +3,39 @@
 import { useContext, useState } from 'react';
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from "next/router";
+import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 import AppContext from '../../providers/AppContext';
 import SmallSidebar from './SmallSidebar';
 import BigSidebar from './BigSidebar';
 import Navbar from './Navbar';
-import { adminCheck, getUser } from '@/hook';
+import { getUser } from '@/hook';
 import { IUserInfo } from '@/utils/_type';
+
+import Arrowleft from "@/public/avatar/arrow-up.svg"
 
 const Layout = ({ children }: { children: ReactNode }) => {
 
-    const { setUserImage, setUsername, setUserID, setIsAdmin, isLoading } = useContext(AppContext);
+    const { setUserImage, setUsername, setUserID, isLoading } = useContext(AppContext);
     const router = useRouter();
+    const path = usePathname()
 
     const initAction = async () => {
-        const user: IUserInfo = await getUser();
-        // const isAdmin = await adminCheck();
 
-        console.log("user ===>", user);
+        const tempUser: any = await getUser();
 
-
-        setUserID(user.id);
-        setUserImage(user.avatar);
-        setUsername(user.username);
+        if (tempUser.status == 401) {
+            if (path !== "/") {
+                toast.error(tempUser.data);
+            }
+            router.push("/")
+        } else if (tempUser.status == 200) {
+            setUserID(tempUser.data.id);
+            setUserImage(tempUser.data.avatar);
+            setUsername(tempUser.data.username);
+        }
     }
 
     useEffect(() => {
@@ -34,21 +44,31 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
     return (
         <div>
-            <div className="bg-cgrey-100 min-h-screen relative">
-                <div className="sticky top-0 z-50">
+            <div className="bg-cgrey-100 min-h-screen">
+                <div className="sticky top-0 z-50 overfl">
                     <Navbar />
                 </div>
-                <div className="flex">
-                    <div className="md:block hidden bg-[#1D1E22]">
+                <div className="flex ">
+                    <div className="md:block hidden bg-[#1D1E22] ">
                         <BigSidebar />
                     </div>
-                    <div className="w-full bg-cdark-100 min-h-[calc(100vh-88px)]">
+                    <div className="w-full bg-cdark-100 max-h-[calc(100vh-81px)] overflow-auto">
                         {children}
                     </div>
                 </div>
                 <div className="md:hidden block sticky bottom-0">
                     <SmallSidebar />
                 </div>
+                {/* <div className='sticky bottom-10 w-fit z-50'>
+                    <div onClick={() => window.scroll({ top: 0, behavior: 'smooth' })} className="bg-cdark-200 border hover:cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
+                        <Image
+                            src={Arrowleft}
+                            width="24"
+                            height="24"
+                            alt="arrow left"
+                        />
+                    </div>
+                </div> */}
             </div>
         </div>
     );

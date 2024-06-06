@@ -2,7 +2,12 @@ export interface IAdministrationTrustedServers {
     id: string;
     data: {
         name: string,
-        admin: string,
+        admin: {
+            avatar: string,
+            id: string,
+            username: string
+        },
+        default_Required_Role_ID: string,
         serverImage?: string,
         adminImage?: string,
         redisKey: string,
@@ -245,7 +250,7 @@ export interface IServerCardProps {
 export interface IGiveawayCardProps {
     giveawayID: string;
     title: string;
-    avatar?: string;
+    avatar: string;
     chain?: string;
     entrants?: number;
     quantity?: number;

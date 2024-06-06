@@ -18,7 +18,6 @@ import { IAdminProps, IServer, IDropdownListProps, IAdministrationTrustedServers
 import { addServer, administrationChannellist, getAdministrationTrustedServers, getServers } from "@/hook";
 import BackBtn from "../components/BackBtn";
 
-import { tempServerList } from "@/utils/_data";
 
 const Admin: React.FC<IAdminProps> = () => {
 
@@ -32,7 +31,7 @@ const Admin: React.FC<IAdminProps> = () => {
     const router = useRouter();
 
     const handleAddBtn = async () => {
-        if (server) {
+        if (server == "") {
             return toast.error("Please select server")
         }
 
@@ -41,16 +40,18 @@ const Admin: React.FC<IAdminProps> = () => {
     }
 
     const mainAction = async (serverID: string) => {
-        const tempData = await getAdministrationTrustedServers(serverID);
+        const tempData: any = await getAdministrationTrustedServers(serverID);
 
-        if (tempData) {
-            if (tempData !== null) {
-                const tempTrustedServers: IAdministrationTrustedServers[] = Object.keys(tempData).map((key) => {
+        if (tempData.status == 200) {
+            if (tempData.data !== null) {
+                const tempTrustedServers: IAdministrationTrustedServers[] = Object.keys(tempData.data).map((key) => {
                     return {
                         id: key,
-                        data: tempData[key]
+                        data: tempData.data[key]
                     }
                 })
+
+                console.log("tempTrustedServers ====?", tempTrustedServers);
 
                 setApprovedServerList(tempTrustedServers);
                 setFilterApprovedServerList(tempTrustedServers);
@@ -59,12 +60,12 @@ const Admin: React.FC<IAdminProps> = () => {
     }
 
     const initAction = async () => {
-        // const tempServerList: IServer[] = await getServers();
+        const tempServerList: any = await getServers();
 
-        if (tempServerList) {
-            if (tempServerList.length > 0) {
+        if (tempServerList.status == 200) {
+            if (tempServerList.data.length > 0) {
 
-                const tempServerDropdownList: IDropdownListProps[] = tempServerList.map((item, index) => {
+                const tempServerDropdownList: IDropdownListProps[] = tempServerList.data.map((item: IServer, index: number) => {
                     return {
                         name: item.guild.name,
                         id: item.guild.id
@@ -77,20 +78,19 @@ const Admin: React.FC<IAdminProps> = () => {
 
                 let tempAllChannelList: IChannel[] = [];
 
-                for (let i = 0; i < tempServerList.length; i++) {
-                    const tempChannelList: IChannel[] = await administrationChannellist(tempServerList[i].guildID);
+                for (let i = 0; i < tempServerList.data.length; i++) {
+                    const tempChannelList: any = await administrationChannellist(tempServerList.data[i].guildID);
 
-                    if (tempChannelList) {
-                        if (tempChannelList.length > 0) {
-                            console.log("tempChannelList ====>", tempChannelList);
-                            tempAllChannelList = tempAllChannelList.concat(tempChannelList);
+                    if (tempChannelList.status == 200) {
+                        if (tempChannelList.data.length > 0) {
+                            console.log("tempChannelList.data ====>", tempChannelList.data);
+                            tempAllChannelList = tempAllChannelList.concat(tempChannelList.data);
                         }
                     }
                 }
-
                 setAllChannelList(tempAllChannelList);
 
-                await mainAction(tempServerList[0].guildID);
+                await mainAction(tempServerList.data[0].guildID);
 
             } else {
                 return toast.error('No Server to Show')
@@ -106,7 +106,7 @@ const Admin: React.FC<IAdminProps> = () => {
             if (approvedServerList.length > 0) {
                 const tempFilterApprovedServerList = approvedServerList.filter(item =>
                     item.data.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-                    item.data.admin.toLowerCase().includes(searchInput.toLowerCase())
+                    item.data.admin.id.toLowerCase().includes(searchInput.toLowerCase())
                 )
                 setFilterApprovedServerList(tempFilterApprovedServerList);
 
@@ -172,14 +172,14 @@ const Admin: React.FC<IAdminProps> = () => {
                     )}
                 </div>
             </div>
-            {/* {filterApprovedServerList.length > 0 ? <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
+            {filterApprovedServerList.length > 0 ? <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
                 {filterApprovedServerList.map((item, index) => (
                     <ServerCard
                         key={index}
                         id={item.id}
                         rediskey={item.data.redisKey}
                         name={item.data.name}
-                        createdBy={item.data.admin}
+                        createdBy={item.data.admin.username}
                         serverImg={item.data.serverImage}
                         adminImg={item.data.adminImage}
                         paymentExpires={item.data.paymentExpires}
@@ -208,7 +208,7 @@ const Admin: React.FC<IAdminProps> = () => {
                 <div className="z-[60] flex fixed top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                     <AddServerModal />
                 </div>
-            )} */}
+            )}
 
         </div>
     );

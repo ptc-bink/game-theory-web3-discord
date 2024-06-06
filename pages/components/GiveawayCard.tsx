@@ -11,7 +11,6 @@ import Edit from "@/public/avatar/edit.svg"
 import Cancel from "@/public/avatar/close-circle.svg"
 
 import { IGiveawayCardProps, IUserInfo } from "@/utils/_type";
-import { UserInfo } from "@/hook";
 import AppContext from "@/providers/AppContext";
 import { useRouter } from "next/router";
 
