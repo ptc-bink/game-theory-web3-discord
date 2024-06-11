@@ -6,6 +6,9 @@ import JsonView from "react18-json-view";
 import toast from "react-hot-toast";
 import 'react18-json-view/src/style.css'
 
+import { IoClose } from "react-icons/io5";
+import { TiTick } from "react-icons/ti";
+
 import ArrowLeft from "@/public/avatar/arrow-left.svg"
 import UserAdd from "@/public/avatar/user-add.svg"
 
@@ -132,6 +135,26 @@ const VESTING: React.FC<IVESTING> = () => {
         }
     }
 
+    const tablebody = (item: IVestingReport, index: number) => {
+        return (
+            <tr key={index} className="hover:bg-cgrey-200">
+                <td>{index + 1}</td>
+                <td className="text-left pl-3">{item.username.length > 10 ? item.username.slice(0, 4) + "..." + item.username.slice(-3) : item.username}</td>
+                <td>{item.wallet1 ? item.wallet1.slice(0, 4) + "..." + item.wallet1.slice(-3) : "-"}</td>
+                <td>{item.wallet2 ? item.wallet2.slice(0, 4) + "..." + item.wallet2.slice(-3) : "-"}</td>
+                <td>{item.NFTs_held == 0 ? "-" : item.NFTs_held}</td>
+                <td>{item.NFTs_minted == 0 ? "-" : item.NFTs_minted}</td>
+                <td>{item.Held_Minted_for_Days == 0 ? "-" : item.Held_Minted_for_Days + "  days"}</td>
+                <td>{item.NFTs_bought == 0 ? "-" : item.NFTs_bought}</td>
+                <td>{item.Held_Bought_for_Days == 0 ? "-" : item.Held_Bought_for_Days + "  days"}</td>
+                <td>{parseFloat(item.Amount_Spent_NFTs).toFixed(3) == "0.000" ? "-" : parseFloat(item.Amount_Spent_NFTs).toFixed(3)}</td>
+                <td>{item.NFTs_sold == 0 ? "-" : item.NFTs_sold}</td>
+                <td>{parseFloat(item.Amount_Earned_NFTs).toFixed(3) == "0.000" ? "-" : parseFloat(item.Amount_Earned_NFTs).toFixed(3)}</td>
+                <td className="flex items-center justify-center">{item.passed_vesting ? <TiTick className=" text-[#00FF00]" /> : <IoClose className="text-[#FF0000] " />}</td>
+            </tr>
+        )
+    }
+
     const handlePermiitedBtn = async () => {
         if (serverValue == "") {
             return toast.error("Please select server")
@@ -191,7 +214,7 @@ const VESTING: React.FC<IVESTING> = () => {
                                 callback={setSearchValue}
                             />
                         </div>
-                        <div onClick={handlePermiitedBtn} className=" cursor-pointer hover:bg-cgrey-900 hover:border-cdark-100 flex gap-2 justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
+                        {/* <div onClick={handlePermiitedBtn} className=" cursor-pointer hover:bg-cgrey-900 hover:border-cdark-100 flex gap-2 justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
                             <Image
                                 src={UserAdd}
                                 width="16"
@@ -199,36 +222,37 @@ const VESTING: React.FC<IVESTING> = () => {
                                 alt="user avatar"
                             />
                             <p className="text-cdark-100 text-sm leading-5 font-medium text-center sm:block hidden">Permitted Users</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
             <div id="Allied table" className="w-full flex justify-center items-center text-cwhite">
-                <table className="text-center">
-                    <tr>
-                        <th>Total Held</th>
-                        <th>Total Mint</th>
-                        <th>Total Bought</th>
-                        <th>Total Spend</th>
-                        <th>Total Sold</th>
-                        <th>Total Earned</th>
-                        <th>Passed vesting</th>
+                <table className="text-center border-collapse border border-cgrey-900">
+                    <tr className="border-collapse border border-cgrey-900 p-2">
+                        <th className="border-collapse border border-cgrey-900 p-2">Total Held</th>
+                        <th className="border-collapse border border-cgrey-900 p-2">Total Mint</th>
+                        <th className="border-collapse border border-cgrey-900 p-2">Total Bought</th>
+                        <th className="border-collapse border border-cgrey-900 p-2">Total Spend</th>
+                        <th className="border-collapse border border-cgrey-900 p-2">Total Sold</th>
+                        <th className="border-collapse border border-cgrey-900 p-2">Total Earned</th>
+                        <th className="border-collapse border border-cgrey-900 p-2">Passed vesting</th>
                     </tr>
-                    <tr>
-                        <td>{totalHeld}</td>
-                        <td>{totalMint}</td>
-                        <td>{totalBought}</td>
-                        <td>{totalSpend}</td>
-                        <td>{totalSold}</td>
-                        <td>{totalEarned}</td>
-                        <td>{passedVesting}</td>
+                    <tr className="border-collapse border border-cgrey-900">
+                        <td className="border-collapse border border-cgrey-900 p-2">{totalHeld}</td>
+                        <td className="border-collapse border border-cgrey-900 p-2">{totalMint}</td>
+                        <td className="border-collapse border border-cgrey-900 p-2">{totalBought}</td>
+                        <td className="border-collapse border border-cgrey-900 p-2">{totalSpend.toFixed(2)}</td>
+                        <td className="border-collapse border border-cgrey-900 p-2">{totalSold}</td>
+                        <td className="border-collapse border border-cgrey-900 p-2">{totalEarned.toFixed(2)}</td>
+                        <td className="border-collapse border border-cgrey-900 p-2">{passedVesting}</td>
                     </tr>
                 </table>
             </div>
-            <div id="Allocation table" className="w-full text-cwhite">
-                <table className="text-center">
-                    <tr>
-                        <th>username</th>
+            <div id="Allocation table" className="w-full text-center items-center text-cwhite text-sm font-semibold overflow-scroll max-h-[calc(100vh-330px)]">
+                <table className="w-full border-collapse">
+                    <tr className="sticky z-10 top-0 bg-cgrey-200 rounded-lg">
+                        <th>ID</th>
+                        <th className="text-left pl-3">Name</th>
                         <th>Wallet1</th>
                         <th>Wallet2</th>
                         <th>NFTs Held</th>
@@ -241,10 +265,10 @@ const VESTING: React.FC<IVESTING> = () => {
                         <th>Amount Earned</th>
                         <th>Passed Vesting</th>
                     </tr>
+                    {vestingReports.map((item: IVestingReport, index: number) => {
+                        return tablebody(item, index);
+                    })}
                 </table>
-            </div>
-            <div className="rounded-2xl border border-cgrey-200 bg-cdark-50 px-2 py-3 text-cwhite text-base font-normal overflow-scroll h-[calc(100vh-280px)]">
-                <JsonView className="text-cwhite" src={filterVestingReports} theme="winter-is-coming" collapsed={false} />
             </div>
             {permittedUserModalOpen && <PermittedUsersModal />}
         </div>

@@ -28,11 +28,11 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, ma
     const [date, setDate] = useState<string>("");
 
     const initAction = async () => {
-        const tempChannelList: IChannel[] = await administrationChannellist(server);
+        const tempChannelList: any = await administrationChannellist(server);
 
-        if (tempChannelList) {
-            if (tempChannelList.length > 0) {
-                const tempChainDropdownList: IDropdownListProps[] = tempChannelList.map((item) => (
+        if (tempChannelList.status == 200) {
+            if (tempChannelList.data.length > 0) {
+                const tempChainDropdownList: IDropdownListProps[] = tempChannelList.data.map((item: IChannel) => (
                     {
                         name: item.name,
                         id: item.id,
@@ -41,12 +41,12 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, ma
 
                 setChainDropdownList(tempChainDropdownList);
 
-                const tempMarketChannelName: string = tempChannelList[tempChannelList.findIndex(item => (item.id === marketChannel))].name
-                const tempGeneralChannelName: string = tempChannelList[tempChannelList.findIndex(item => (item.id === generalChannel))].name
-                const tempSubmitWalletName: string = tempChannelList[tempChannelList.findIndex(item => (item.id === submitWallet))].name
-                const tempVestingChannelName: string = tempChannelList[tempChannelList.findIndex(item => (item.id === vestingChannel))].name
-                const tempReminderChannelName: string = tempChannelList[tempChannelList.findIndex(item => (item.id === reminderChannel))].name
-                const tempWinnersChannelName: string = tempChannelList[tempChannelList.findIndex(item => (item.id === winnersChannel))].name
+                const tempMarketChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === marketChannel))].name
+                const tempGeneralChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === generalChannel))].name
+                const tempSubmitWalletName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === submitWallet))].name
+                const tempVestingChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === vestingChannel))].name
+                const tempReminderChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === reminderChannel))].name
+                const tempWinnersChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === winnersChannel))].name
 
                 setMarketChannelName(tempMarketChannelName);
                 setGeneralChannelName(tempGeneralChannelName);

@@ -25,20 +25,23 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
 
     useEffect(() => {
         const initAction = async () => {
-            const tempChannelList: IChannel[] = await getChainList(serverID);
+            const tempChannelList: any = await getChainList(serverID);
 
-            if (Array.isArray(tempChannelList)) {
-                if (tempChannelList.length > 0) {
-                    const tempChannelDropdownList: IDropdownListProps[] = tempChannelList?.map((item) => (
-                        {
-                            name: item.name,
-                            id: item.id,
-                        }
-                    ))
+            if (tempChannelList.status == 200) {
+                if (Array.isArray(tempChannelList.data)) {
+                    if (tempChannelList.data.length > 0) {
+                        const tempChannelDropdownList: IDropdownListProps[] = tempChannelList.data?.map((item: IChannel) => (
+                            {
+                                name: item.name,
+                                id: item.id,
+                            }
+                        ))
 
-                    setChannelDropdownList(tempChannelDropdownList);
+                        setChannelDropdownList(tempChannelDropdownList);
+                    }
                 }
             }
+
         }
         initAction()
     }, [])
