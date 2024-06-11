@@ -8,7 +8,7 @@ import ArrowUp from "@/public/avatar/arrow-up.svg"
 
 import { IMultiDropdownProps, IServerRole } from "@/utils/_type";
 
-const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholder, className, callback }) => {
+const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholder, className, callback, initValue }) => {
 
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>(placeholder);
@@ -31,7 +31,7 @@ const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholde
     return (
         <div className="w-full relative">
             <div className={`flex items-center w-full cursor-pointer border border-cgrey-200 px-4 py-[10px] rounded-lg justify-between ${className}`} onClick={handleDropdown}>
-                <p className="text-sm font-normal text-cwhite">{value}</p>
+                <p className="text-sm font-normal text-cwhite">{initValue ? initValue : value}</p>
                 <div className="flex gap-2 justify-between">
                     {value !== placeholder &&
                         <div className="cursor-pointer " onClick={handleCancelBtn}>

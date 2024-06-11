@@ -52,6 +52,40 @@ export interface IAllocation {
     }
 }
 
+export interface ISetVestingParams {
+    serverId: string,
+    contract: string,
+    mintDate: string,
+    mintHoldDays: string,
+    secondaryHoldDays?: number,
+    secondaryBuyHours?: number,
+    secondaryBuyAmount?: number,
+    floorPriceVoid?: string
+}
+
+export interface IVestingReport {
+    serverID: string,
+    user_id: string,
+    NFTs_held: number
+    NFTs_bought: number
+    Held_Bought_for_Days: number
+    Amount_Spent_NFTs: string,
+    NFTs_minted: number
+    Held_Minted_for_Days: number
+    NFTs_sold: number
+    Amount_Earned_NFTs: string
+    NFTs_transferred: number,
+    wallet1: string,
+    wallet2: string
+    last_updated: string
+    passed_vesting: number
+    transaction_hashes: {
+        type: string,
+        hash: string
+    }
+    username: string
+}
+
 export interface ICreateGiveaway {
     serverID: string
     Expiry: any
@@ -64,7 +98,27 @@ export interface ICreateGiveaway {
     requiredRoles?: any
     restrictedRoles?: any
     winningRole?: any
-    requireAllRoles?: boolean
+    requireAllRoles?: boolean,
+}
+
+
+export interface IUpdateGiveaway {
+    serverID: string,
+    giveawayID: string,
+    expires: any
+    title: string
+    description: string
+    chain: string
+    type: string
+    quantity: number
+    price?: number
+    requiredRoles?: any
+    restrictedRoles?: any
+    winningRole?: any
+    requireAllRoles?: boolean,
+    image?: string,
+    links: string,
+    requirements: string
 }
 
 export interface IDashboard {
@@ -151,6 +205,7 @@ export interface IMultiDropdownProps {
     placeholder: string;
     className: string;
     callback: any;
+    initValue?: string;
 }
 
 export interface IChannel {
@@ -161,6 +216,7 @@ export interface IChannel {
 
 export interface IGiveaway {
     messageID: string,
+    serverData: IGuild,
     expiry: number,
     creator: {
         id: string,
@@ -209,14 +265,16 @@ export interface IDashboardres {
 
 export interface IServer {
     guildID: string,
-    guild: {
-        id: string,
-        name: string,
-        iconURL: string,
-        memberCount: number
-    },
+    guild: IGuild,
     admins: string[],
     owner: string
+}
+
+export interface IGuild {
+    id: string,
+    name: string,
+    iconURL: string,
+    memberCount: number
 }
 
 export interface IActiveServer {
@@ -248,6 +306,8 @@ export interface IServerCardProps {
 }
 
 export interface IGiveawayCardProps {
+    serverData: IGuild;
+    giveawayName: string;
     giveawayID: string;
     title: string;
     avatar: string;

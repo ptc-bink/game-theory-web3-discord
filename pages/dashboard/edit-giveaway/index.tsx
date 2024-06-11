@@ -18,20 +18,20 @@ import toast from "react-hot-toast";
 
 const EditGiveaway: React.FC = () => {
 
-    const { setShowCreditCard, setGiveawayCreated, showCreditCard } = useContext(AppContext);
-    const [serverList, setServerList] = useState<IServer[]>([])
+    const { setShowCreditCard, setGiveawayCreated, showCreditCard, serverID, selectedGiveawayID } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
+    const [initRestrictedRoles, setInitRestrictedRoles] = useState<any>();
     const [tempRestrictedRoles, setTempRestrictedRoles] = useState<IServerRole[]>([]);
     const [tempRequiredRoles, setTempRequiredRoles] = useState<IServerRole[]>([]);
     const [requiredRoles, setReqiuredRoles] = useState<IServerRole[]>([]);
+    const [initRequiredRoles, setInitRequiredRoles] = useState<any>();
     const [winningRole, setWinningRole] = useState<IServerRole>();
-    const [giveawayDropdownList, setGiveawayDropdownList] = useState<IDropdownListProps[]>([]);
-    const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
+    const [editableGiveaway, setEditableGiveaway] = useState<IGiveaway>();
+    const [serverValue, setServerValue] = useState<string>("");
     const [chainDropdownList, setChainDropdownList] = useState<IDropdownListProps[]>([]);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [chainList, setChainList] = useState<string[]>([]);
     const [expiresDate, setExpiresDate] = useState<any>();
     const [expiresHour, setExpiresHour] = useState<any>();
     const [expires, setExpires] = useState<any>();
@@ -42,11 +42,42 @@ const EditGiveaway: React.FC = () => {
     const [price, setPrice] = useState<number>();
     const [links, setLinks] = useState<string>("");
     const [requirements, setRequirements] = useState<string>("");
-    const [serverValue, setServerValue] = useState<string>("");
     const router = useRouter();
 
-    const mainAction = async (serverID: string) => {
+    const initAction = async () => {
+
+        const tempServer: any = await getServers();
+
+        // Get server list
+        if (tempServer.status == 200) {
+            if (Array.isArray(tempServer.data)) {
+                if (tempServer.data.length > 0) {
+                    const tempServerValue = tempServer.data.find((item: IServer) => {
+                        if (item.guildID === serverID) {
+                            return item
+                        }
+                    })
+
+                    console.log("tempServerValue ====> ", tempServerValue);
+
+                    if (tempServerValue) {
+                        setServerValue(tempServerValue.guild.name)
+                    }
+                } else {
+                    toast.error("No server value");
+                    return router.push("/dashboard")
+                }
+            }
+        }
+
+        if (serverID == "") {
+            toast.error("No server error");
+            return router.push("/dashboard")
+        }
+
         const tempChainList: any = await getChainList(serverID);
+
+        console.log("tempChainList ====>", tempChainList.data);
 
         if (tempChainList.status == 200) {
             if (tempChainList.data.length > 0) {
@@ -60,53 +91,65 @@ const EditGiveaway: React.FC = () => {
             }
         }
 
+        // Get server roles
         const tempServerRoles: any = await getServerRoles(serverID);
+
+        // Get giveaway list
+        const res: any = await getGiveaways(serverID);
+
+        if (res.status == 200) {
+            if (res.data.length > 0) {
+                const tempEditableGiveaway: IGiveaway = res.data.find((item: IGiveaway) => {
+                    if (item.messageID === selectedGiveawayID) {
+                        return item
+                    }
+                })
+                if (tempEditableGiveaway) {
+                    setEditableGiveaway(tempEditableGiveaway);
+                    setTitle(tempEditableGiveaway.title);
+                    setDescription(tempEditableGiveaway.description);
+                    setChain(tempEditableGiveaway.chain);
+                    setPrice(tempEditableGiveaway.price);
+                    setReqiuredAllRoles(tempEditableGiveaway.requireAllRoles);
+                    console.log("tempEditableGiveaway.required ====> ", tempEditableGiveaway.required);
+                    console.log("serverRoles ====> ", tempServerRoles.data);
+
+                    const tempRequiredRoles = tempServerRoles.data?.filter((item: IServerRole) => {
+                        return tempEditableGiveaway.required.includes(item.id)
+                    })
+
+                    const tempRestrictedRoles = tempServerRoles.data.filter((item: IServerRole) => {
+                        return tempEditableGiveaway.restriction.includes(item.id)
+                    })
+
+                    const tempWinningRole = tempServerRoles.data.find((item: IServerRole) => {
+                        return tempEditableGiveaway.winningRole === item.id
+                    })
+
+                    console.log('tempRequiredRoles, tempRestrictedRoles, tempWinningRole ====> ', tempRequiredRoles, tempRestrictedRoles, tempWinningRole);
+
+                    setReqiuredRoles(tempRequiredRoles);
+                    setInitRequiredRoles(tempRequiredRoles);
+                    setRestrictedRoles(tempRestrictedRoles);
+                    setWinningRole(tempWinningRole);
+                    setInitRequiredRoles(new Set(tempEditableGiveaway.required));
+                    setInitRestrictedRoles(new Set(tempEditableGiveaway.restriction));
+
+                }
+
+            } else {
+                toast.error("No giveaway to show")
+            }
+        }
 
         if (tempServerRoles.status == 200) {
             if (tempServerRoles.data.length > 0) {
                 setServerRoles(tempServerRoles.data);
                 setTempRequiredRoles(tempServerRoles.data);
-                setTempRestrictedRoles(tempServerRoles.data)
+                setTempRestrictedRoles(tempServerRoles.data);
             } else {
                 toast.error("No server role to show")
             }
-        }
-    }
-
-    const initAction = async () => {
-        const tempServer: any = await getServers();
-
-        if (tempServer.status == 200) {
-            if (Array.isArray(tempServer.data)) {
-                if (tempServer.data.length > 0) {
-                    setServerList(tempServer.data);
-
-                    await mainAction(tempServer.data[0].guildID)
-
-                    const serverDropdownList: IDropdownListProps[] = tempServer.data?.map((item: IServer, index: number) => {
-                        return { name: item.guild.name, id: item.guild.id }
-                    })
-                    setServerDropdownList(serverDropdownList);
-
-                    const res: any = await getGiveaways(tempServer.data[0].guildID);
-
-                    if (res.status == 200) {
-                        if (res.data.length > 0) {
-                            const tempGiveawayDropdownList: IDropdownListProps[] = res.data.map((item: IGiveaway, index: number) => ({
-                                name: item.type,
-                                id: item.messageID,
-                            }))
-                            setGiveawayDropdownList(tempGiveawayDropdownList);
-                        } else {
-                            toast.error("No giveaway to show")
-                        }
-                    }
-                } else {
-                    toast.error("No server to show");
-                }
-            }
-        } else {
-            toast.error("Try again later")
         }
     }
 
@@ -126,33 +169,35 @@ const EditGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        toast.error("Coming Soon")
+        if (!expires || !title || !description || !chain || !type || !quantity) {
+            return toast.error("Please input all values");
+        }
 
-        // if (!serverValue || !expires || !title || !description || !chain || !type || !quantity) {
-        //     return toast.error("Please input all values");
-        // }
+        const data = {
+            serverID: serverID,
+            giveawayID: selectedGiveawayID,
+            expires: expires,
+            title: title,
+            description: description,
+            chain: chain,
+            type: type,
+            quantity: quantity,
+            price: price ? price : 0,
+            requiredRoles: requiredRoles.map(item => item.id),
+            restrictedRoles: restrictedRoles.map(item => item.id),
+            winningRole: winningRole,
+            requiredAllRoles: requiredAllRoles,
+            image: editableGiveaway?.creator.avatar,
+            links: links,
+            requirements: requirements
+        }
 
-        // const data = {
-        //     serverID: serverValue,
-        //     Expiry: expires,
-        //     title: title,
-        //     description: description,
-        //     chain: chain,
-        //     type: type,
-        //     quantity: quantity,
-        //     price: price,
-        //     requiredRoles: requiredRoles.map(item => item.id),
-        //     restrictedRoles: restrictedRoles.map(item => item.id),
-        //     winningRole: winningRole,
-        //     requiredAllRoles: requiredAllRoles
-        // }
+        const res = await handleEditGiveaway(data);
 
-        // const res = await handleEditGiveAway(data);
-
-        // if (res) {
-        //     setGiveawayCreated(true);
-        //     router.back();
-        // }
+        if (res) {
+            setGiveawayCreated(true);
+            router.back();
+        }
     }
 
     const handleCreditCard = () => {
@@ -173,17 +218,8 @@ const EditGiveaway: React.FC = () => {
             setExpiresHour(new Date().toISOString().slice(11, 16));
         }
 
-        console.log("expiresDate ==>", expiresDate);
-        console.log("expiresDate ==>", typeof (expiresDate));
-        console.log("expiresHour ==>", expiresHour);
-
-
         setExpires(expiresDate + "  " + expiresHour)
     }, [expiresDate, expiresHour]);
-
-    useEffect(() => {
-        mainAction(serverValue)
-    }, [serverValue])
 
     useEffect(() => {
         const tRequiredRoles = serverRoles.filter(item => !restrictedRoles.includes(item));
@@ -199,7 +235,7 @@ const EditGiveaway: React.FC = () => {
                 <div className="flex gap-6 items-center justify-between">
                     <div className="flex gap-6 items-center">
                         <BackBtn />
-                        <p className="text-cwhite text-2xl font-semibold md:block hidden">Create Giveaway</p>
+                        <p className="text-cwhite text-2xl font-semibold md:block hidden">Edit Giveaway</p>
                     </div>
                     <div onClick={handleCreditCard} className="md:hidden block">
                         <Image
@@ -210,13 +246,8 @@ const EditGiveaway: React.FC = () => {
                         />
                     </div>
                 </div>
-                <div>
-                    <Dropdown
-                        dropdownList={serverDropdownList}
-                        placeholder="Select server"
-                        className="hover:bg-cdark-100 bg-cdark-200"
-                        callback={setServerValue}
-                    />
+                <div className="text-cwhite">
+                    {serverValue} / {editableGiveaway?.type}
                 </div>
                 <div className="flex flex-col gap-3 text-cwhite">
                     {/* Title */}
@@ -246,32 +277,12 @@ const EditGiveaway: React.FC = () => {
                                 placeholder="Select chain"
                                 className="hover:bg-cdark-200 bg-cdark-100"
                                 callback={setChain}
+                                initValue={editableGiveaway?.chain}
                             />
                         </div>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Quantity*</p>
                             <input type="number" placeholder="0" onChange={(e) => setQuantity(e.target.valueAsNumber)} value={quantity} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
-                        </div>
-                    </div>
-                    {/* Type & Winning role */}
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-cwhite">Type*</p>
-                            <Dropdown
-                                dropdownList={giveawayDropdownList}
-                                placeholder="Select giveaway"
-                                className="hover:bg-cdark-200 bg-cdark-100"
-                                callback={setType}
-                            />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-cwhite">Winning Role*</p>
-                            <MultiDropdown
-                                dropdownList={serverRoles}
-                                placeholder="Select winning role"
-                                className="hover:bg-cdark-200"
-                                callback={setWinningRole}
-                            />
                         </div>
                     </div>
                     {/* Restricted Roles & Required Roles */}
@@ -303,6 +314,7 @@ const EditGiveaway: React.FC = () => {
                                 selectorIcon={<></>}
                                 isMultiline={true}
                                 radius="sm"
+                                selectedKeys={initRestrictedRoles}
                                 onChange={handleRestrictedRolesChange}
                                 renderValue={(items) => {
                                     return (
@@ -338,7 +350,6 @@ const EditGiveaway: React.FC = () => {
                                         ],
                                     }
                                 }}
-                                onChange={handleRequiredRolesChange}
                                 popoverProps={{
                                     classNames: {
                                         base: " rounded-none",
@@ -347,6 +358,8 @@ const EditGiveaway: React.FC = () => {
                                 }}
                                 size="lg"
                                 selectorIcon={<></>}
+                                selectedKeys={initRequiredRoles}
+                                onChange={handleRequiredRolesChange}
                                 isMultiline={true}
                                 radius="sm"
                                 renderValue={(items) => {
@@ -368,16 +381,34 @@ const EditGiveaway: React.FC = () => {
                             </Select>
                         </div>
                     </div>
+                    {/* Type & Winning role */}
+                    <div className="grid grid-cols-2 gap-3">
+                        {/* <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-cwhite">Type*</p>
+                            <p className="text-cwhite">{serverValue}</p>
+                        </div> */}
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-cwhite">Winning Role*</p>
+                            <MultiDropdown
+                                dropdownList={serverRoles}
+                                placeholder="Select winning role"
+                                className="hover:bg-cdark-200"
+                                callback={setWinningRole}
+                                initValue={winningRole?.name}
+                            />
+                        </div>
+                        {/* Price */}
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-cwhite">Price*</p>
+                            <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" />
+                        </div>
+                    </div>
                     {/* Required all roles */}
                     <div className="flex gap-2 hover:cursor-pointer w-fit" >
                         <input type="checkbox" onChange={() => setReqiuredAllRoles(!requiredAllRoles)} className="rounded-[4px]" />
                         <p className="text-sm font-normal">Required all roles</p>
                     </div>
-                    {/* Price */}
-                    <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Price*</p>
-                        <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" />
-                    </div>
+
                     {/* Links & Requirements */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
@@ -394,7 +425,8 @@ const EditGiveaway: React.FC = () => {
                     <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-cwhite hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-cwhite text-sm leading-4 font-medium">submit</div>
                 </div>
             </div>
-            {showCreditCard &&
+            {
+                showCreditCard &&
                 <div className="md:hidden block z-[60] max-h-[calc(100vh-280px)]">
                     <div className="flex fixed overflow-scroll top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                         <PreviewCard
@@ -403,7 +435,7 @@ const EditGiveaway: React.FC = () => {
                             expiry={expires}
                             winningRole={winningRole}
                             chain={chain}
-                            type={type}
+                            type={editableGiveaway?.type as string}
                             requiredAllRoles={requiredAllRoles}
                             quantity={quantity}
                             required={requiredRoles}
@@ -422,7 +454,7 @@ const EditGiveaway: React.FC = () => {
                     expiry={expires}
                     winningRole={winningRole}
                     chain={chain}
-                    type={type}
+                    type={editableGiveaway?.type as string}
                     requiredAllRoles={requiredAllRoles}
                     links={links}
                     quantity={quantity}
@@ -437,14 +469,3 @@ const EditGiveaway: React.FC = () => {
 }
 
 export default EditGiveaway;
-
-interface DataOption {
-    value: string;
-    label: string;
-}
-
-interface serverRole {
-    id: string
-    color: string
-    name: string
-}

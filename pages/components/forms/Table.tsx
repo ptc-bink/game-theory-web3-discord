@@ -44,7 +44,6 @@ const Table: React.FC<ITable> = ({ allocations }) => {
         setAllocationDeleted(true);
 
         toast.error("Coming Soon");
-        ``
     }
 
     const btnGroup = (index: number) => {

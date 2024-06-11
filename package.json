@@ -20,7 +20,8 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-select": "^5.8.0",
-    "react18-json-view": "^0.2.8"
+    "react18-json-view": "^0.2.8",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/node": "^20",

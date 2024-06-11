@@ -14,9 +14,9 @@ import { IGiveawayCardProps, IUserInfo } from "@/utils/_type";
 import AppContext from "@/providers/AppContext";
 import { useRouter } from "next/router";
 
-const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayID, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
+const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
 
-    const { setSelectedGiveawayID, isAdmin } = useContext(AppContext);
+    const { setSelectedGiveawayID, setServerID, isAdmin } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
 
@@ -43,6 +43,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayID, chain, avatar,
 
     const handleEdit = async () => {
         setSelectedGiveawayID(giveawayID);
+        setServerID(serverData.id);
 
         router.push('/dashboard/edit-giveaway')
     }
@@ -55,7 +56,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayID, chain, avatar,
                 </div>
                 <div className="flex flex-col gap-1">
                     <p className="text-cwhite text-base font-normal">{title}</p>
-                    <p className="text-cgrey-900 text-xs leading-[18px] font-normal">{giveawayID}</p>
+                    <p className="text-cgrey-900 text-xs leading-[18px] font-normal">{giveawayName}</p>
                 </div>
             </div>
             <div className="grid md:grid-cols-2 grid-row-2 gap-3">

@@ -19,13 +19,13 @@ export default function Page() {
 
   const initAction = async () => {
 
+    toast.success("Welcome to Game Theory")
+
     const res: any = await getUser();
 
     console.log("res ====>", res);
 
-    if (res.status == 401) {
-      toast.error(res.data);
-    } else if (res.status == 200) {
+    if (res.status == 200) {
       router.push("/dashboard");
     }
 

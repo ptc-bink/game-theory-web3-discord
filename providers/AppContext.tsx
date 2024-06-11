@@ -5,7 +5,6 @@ interface ContextType {
   addServerModalOpen: boolean;
   editServerModalOpen: boolean;
   profileModalOpen: boolean;
-  serverID: string;
   userID: string;
   username: string;
   userImage: string;
@@ -22,6 +21,7 @@ interface ContextType {
   giveawayCreated: boolean;
   giveawayEdited: boolean;
   showCreditCard: boolean;
+  serverID: string;
   setShowCreditCard: (showCreditCard: boolean) => void,
   setGiveawayCreated: (giveawayCreated: boolean) => void,
   setGiveawayEdited: (giveawayEdited: boolean) => void,
@@ -38,10 +38,10 @@ interface ContextType {
   setAddServerModalOpen: (addServerModalOpen: boolean) => void;
   setEditServerModalOpen: (editServerModalOpen: boolean) => void;
   setProfileModalOpen: (profileModalOpen: boolean) => void;
-  setServerID: (serverID: string) => void;
   setUserID: (userID: string) => void;
   setUsername: (username: string) => void;
   setUserImage: (userImage: string) => void;
+  setServerID: (serverID: string) => void;
 }
 
 const initialValue: ContextType = {
@@ -49,7 +49,6 @@ const initialValue: ContextType = {
   editServerModalOpen: false,
   removeEntrantModalOpen: false,
   profileModalOpen: false,
-  serverID: "",
   userID: "",
   userImage: "",
   username: "",
@@ -65,6 +64,7 @@ const initialValue: ContextType = {
   giveawayCreated: false,
   giveawayEdited: false,
   showCreditCard: false,
+  serverID: "",
   setShowCreditCard(showCreditCard) { },
   setGiveawayCreated(giveawayCreated) { },
   setGiveawayEdited(giveawayEdited) { },

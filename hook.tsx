@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import qs from "qs"
 
-import { ICreateGiveaway, IAdministrationTrustedServers, IAddserverInfo, IEditserverInfo } from "./utils/_type";
+import { ICreateGiveaway, IAdministrationTrustedServers, IAddserverInfo, IEditserverInfo, ISetVestingParams, IUpdateGiveaway } from "./utils/_type";
 import { baseURL_back } from "./utils/_config";
 
 export const test = async () => {
@@ -182,34 +182,33 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
     }
 }
 
-export const handleEditGiveaway = async (data: ICreateGiveaway) => {
+export const handleEditGiveaway = async (data: IUpdateGiveaway) => {
 
-    const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles } = data;
+    const { serverID, giveawayID, expires, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles } = data;
 
-    if (!serverID || !Expiry || !title || !description || !chain || !type || !quantity || !price) {
+    if (serverID == "" || !expires || giveawayID == "" || !title || !description || !chain || !type || !quantity || !price) {
         return toast.error("Plz input all values");
     }
 
-    return "Coming soon"
-    // try {
-    //     const res = await fetch(`/api/giveaways/`, {
-    //         method: "POST",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify({
-    //             data
-    //         }),
-    //     });
+    try {
+        const res = await fetch(`/api/giveaways/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                data
+            }),
+        });
 
-    //     if (!res.ok) {
-    //         throw new Error(res.statusText);
-    //     }
-    //     const result = await res.json();
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        const result = await res.json();
 
-    //     return result
+        return result
 
-    // } catch (error: any) {
-    //     toast.error("Failed your request")
-    // }
+    } catch (error: any) {
+        toast.error("Failed your request")
+    }
 }
 
 export const logout = async () => {
@@ -289,8 +288,35 @@ export const enterGiveaway = async (serverID: string, giveAwayID: string, userID
 
 export const getAllocation = async (serverID: string, id?: string) => {
     try {
+        console.log("serverID ===>", serverID);
+
         const response = await fetch(`${baseURL_back}/allocations?serverID=${serverID}`, {
             method: 'GET',
+            credentials: 'include', // Include credentials to get the cookies
+        });
+
+        console.log("get allocation response", response);
+        const data = await response.json(); // Parse the response body as JSON
+
+        console.log("get allocation response", data);
+
+        if (response.status === 200) {
+            return { status: 200, data: data };
+        }
+
+        return { status: 401, data: data };
+    } catch (error) {
+        return {
+            status: 401, data: "No allocation to show"
+        };
+    }
+}
+
+export const generateVestingReports = async (serverId: string, allocationNumber: number, userIds?: string[]) => {
+    try {
+        // const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=${allocationNumber}`, {
+        const response = await fetch(`${baseURL_back}/generateVestingReport`, {
+            method: 'post',
             credentials: 'include', // Include credentials to get the cookies
         });
 
@@ -305,27 +331,77 @@ export const getAllocation = async (serverID: string, id?: string) => {
         return { status: 401, data: data };
     } catch (error) {
         return {
-            status: 401, data: "No allocation to show"
+            status: 401, data: "No vesting-report to show"
         };
     }
 }
 
-export const getVestingReports = async () => {
+
+
+export const getAllocationReadyForVesting = async (serverId: string) => {
     try {
-        const response = await fetch(`${baseURL_back}/vestingreports`, {
+        const response = await fetch(`${baseURL_back}/get-allocations-ready-for-vesting?serverId=${serverId}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });
 
         const data = await response.json(); // Parse the response body as JSON
 
-        console.log("get server response", data);
+        console.log("get allocations ready for vesting response", data);
 
         if (response.status === 200) {
             return { status: 200, data: data };
         }
 
         return { status: 401, data: data };
+    } catch (error) {
+        return {
+            status: 401, data: "No allocations ready for vesting to show"
+        };
+    }
+}
+
+export const getVestingReports = async (serverId: string, allocationNumber?: string) => {
+    try {
+        const response = await fetch(`https://iamabackendserverhello.com/test/get-vesting-report`, {
+            // const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=1`, {
+            method: 'GET',
+            credentials: 'include', // Include credentials to get the cookies
+        });
+
+        const data = await response.json(); // Parse the response body as JSON
+
+        console.log("get vesting-reports response", data);
+
+        if (response.status === 200) {
+            return { status: 200, data: data };
+        }
+
+        return { status: 401, data: data };
+    } catch (error) {
+        return {
+            status: 401, data: "No vesting-report to show"
+        };
+    }
+}
+
+export const setVestingParams = async (data: ISetVestingParams) => {
+    try {
+        const response = await fetch(`${baseURL_back}/set-vesting-parameters`, {
+            method: 'PUT',
+            credentials: 'include', // Include credentials to get the cookies
+            body: qs.stringify(data)
+        });
+
+        const res = await response.json(); // Parse the response body as JSON
+
+        console.log("get vesting-reports response", res);
+
+        if (response.status === 200) {
+            return { status: 200, data: res };
+        }
+
+        return { status: 401, data: res };
     } catch (error) {
         return {
             status: 401, data: "No vesting-report to show"
@@ -478,6 +554,9 @@ export const administrationChannellist = async (serverID: string) => {
 
 export const getChainList = async (serverID: string) => {
     try {
+
+        console.log("get chainlist serverid ===> ", serverID);
+
         const response = await fetch(`${baseURL_back}/supported-chains?serverId=${serverID}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
@@ -485,7 +564,7 @@ export const getChainList = async (serverID: string) => {
 
         const data = await response.json(); // Parse the response body as JSON
 
-        console.log("get server response", data);
+        console.log("get chainlist response", data);
 
         if (response.status === 200) {
             return { status: 200, data: data };

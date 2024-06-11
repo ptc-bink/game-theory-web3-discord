@@ -46,7 +46,12 @@ const Dashboard: React.FC<IDashboard> = () => {
 
                         if (res.data !== undefined) {
                             if (res.data.length > 0) {
-                                tempGiveaways = tempGiveaways.concat(res.data);
+                                for (const giveaway of res.data) {
+                                    console.log("server ===>", server);
+
+                                    giveaway.serverData = server.guild;
+                                    tempGiveaways = tempGiveaways.concat(giveaway);
+                                }
                             } else {
                                 return toast.error(`No giveaway of this server : ${server.guild.name}`);
                             }
@@ -54,6 +59,9 @@ const Dashboard: React.FC<IDashboard> = () => {
                             return toast.error("Sever error");
                         }
                     }
+
+                    console.log("tempGiveaways ====>", tempGiveaways);
+
 
                     setGiveaways(tempGiveaways);
                     setMiddleGiveaways(tempGiveaways);
@@ -72,7 +80,7 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         if (giveaways.length > 0) {
             tempFilterData = giveaways.filter(giveaway =>
-                giveaway.messageID?.includes(serverValue.toLowerCase())
+                giveaway.serverData.id?.includes(serverValue.toLowerCase())
             )
 
             setMiddleGiveaways(tempFilterData);
@@ -150,6 +158,8 @@ const Dashboard: React.FC<IDashboard> = () => {
                         {filterData?.map((item, index) => (
                             < GiveawayCard
                                 key={index}
+                                serverData={item.serverData}
+                                giveawayName={item.type}
                                 giveawayID={item.messageID}
                                 chain={item.chain}
                                 avatar={item?.creator?.avatar}

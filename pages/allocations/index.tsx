@@ -26,18 +26,25 @@ const Allocation: React.FC<IAllocationProps> = () => {
 
         const tempServerList: any = await getServers();
 
-        if (tempServerList.status == 200) {
+        if (tempServerList.status === 200) {
             if (tempServerList.data.length > 0) {
-                const tempAllocations: any = await getAllocation(tempServerList.data[0].guildID);
 
-                if (tempAllocations.status == 200) {
-                    if (Array.isArray(tempAllocations.data) && tempAllocations.data.length > 0) {
-                        setAllocations(tempAllocations.data);
-                        setFilterAllocations(tempAllocations.data);
-                    } else {
-                        toast.error("No allocation to show");
+                let tempAllocations: IAllocation[] = [];
+
+                for (const server of tempServerList.data) {
+                    console.log("server ====>", server);
+
+                    const res: any = await getAllocation(server.guildID);
+
+                    if (res.status == 200) {
+                        if (Array.isArray(res.data) && res.data.length > 0) {
+                            tempAllocations = tempAllocations.concat(res.data)
+                        }
                     }
                 }
+
+                setAllocations(tempAllocations);
+                setFilterAllocations(tempAllocations);
             } else {
                 toast.error("No server to show");
             }

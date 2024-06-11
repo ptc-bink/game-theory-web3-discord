@@ -17,12 +17,14 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
     const [flags, setFlags] = useState<boolean[]>([]);
 
     const initAction = async () => {
-        const tempServerList: IServer[] = await getServers();
+        const tempServerList: any = await getServers();
 
-        if (tempServerList) {
-            if (tempServerList.length > 0) {
-                const tempPermmittedusers: IPermittedUser[] = await getPermittedusers(tempServerList[0].guildID);
-                return setPermittedusers(tempPermmittedusers);
+        if (tempServerList.status == 200) {
+            if (tempServerList.data.length > 0) {
+                const tempPermmittedusers: any = await getPermittedusers(tempServerList[0].guildID);
+                if (tempPermmittedusers.status == 200) {
+                    return setPermittedusers(tempPermmittedusers.data);
+                }
             }
             toast.error("No server to show")
         }
