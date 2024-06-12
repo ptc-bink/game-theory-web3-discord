@@ -24,8 +24,9 @@ const VESTING: React.FC<IVESTING> = () => {
 
     const { permittedUserModalOpen, setPermittedUserModalOpen } = useContext(AppContext);
     const [vestingReports, setVestingReports] = useState<IVestingReport[]>([]);
-    const [filterMiddleVestingReports, setFilterMiddleVestingReports] = useState<IVestingReport[]>([]);
     const [filterVestingReports, setFilterVestingReports] = useState<IVestingReport[]>([]);
+    const [filterMiddleVestingReports, setFilterMiddleVestingReports] = useState<IVestingReport[]>([]);
+    const [filterFinalVestingReports, setFilterFinalVestingReports] = useState<IVestingReport[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [reportNameDropdownList, setReportNameDropdownList] = useState<IDropdownListProps[]>([]);
     const [reportNameFilterDropdownList, setReportNameFilterDropdownList] = useState<IDropdownListProps[]>([]);
@@ -89,7 +90,15 @@ const VESTING: React.FC<IVESTING> = () => {
                     tempTotalSold += tempVestingReport.NFTs_sold;
                     tempTotalEarned += parseFloat(tempVestingReport.Amount_Earned_NFTs);
                     tempPassedVesting += tempVestingReport.passed_vesting;
+
                 }
+
+                const tempReportNameDropdownList: IDropdownListProps[] = tempVestingReports.map(item => {
+                    return { id: item.username, name: item.username }
+                })
+
+                setReportNameFilterDropdownList(tempReportNameDropdownList);
+                setReportNameDropdownList(tempReportNameDropdownList);
 
                 setTotalHeld(tempTotalHeld);
                 setTotalMint(tempTotalMint);
@@ -102,6 +111,7 @@ const VESTING: React.FC<IVESTING> = () => {
                 setVestingReports(tempVestingReports);
                 setFilterMiddleVestingReports(tempVestingReports);
                 setFilterVestingReports(tempVestingReports);
+                setFilterFinalVestingReports(tempVestingReports);
 
             } else {
                 toast.error("No server to show")
@@ -117,22 +127,34 @@ const VESTING: React.FC<IVESTING> = () => {
             if (vestingReports.length > 0) {
                 tempVestingReports = vestingReports.filter(vestingReport =>
                     vestingReport.user_id.includes(searchValue?.toLowerCase()) ||
-                    vestingReport.wallet1.toLowerCase().includes(searchValue?.toLowerCase()) ||
-                    vestingReport.wallet2.toLowerCase().includes(searchValue?.toLowerCase())
+                    vestingReport.wallet1.includes(searchValue?.toLowerCase()) ||
+                    vestingReport.wallet2.includes(searchValue?.toLowerCase())
                 )
+
                 setFilterVestingReports(tempVestingReports)
                 setFilterMiddleVestingReports(tempVestingReports);
             }
         }
 
         if (serverValue !== "") {
-            if (filterMiddleVestingReports.length > 0) {
-                tempVestingReports = filterMiddleVestingReports.filter(filterMiddleVestingReport =>
-                    filterMiddleVestingReport.serverID.includes(serverValue)
+            if (filterVestingReports.length > 0) {
+                tempVestingReports = filterVestingReports.filter(filterVestingReport =>
+                    filterVestingReport.serverID.includes(serverValue)
                 )
-                setFilterVestingReports(tempVestingReports);
+
+                setFilterMiddleVestingReports(tempVestingReports);
             }
         }
+
+        if(reportName !==""){
+            if(filterMiddleVestingReports.length > 0) {
+                tempVestingReports = filterMiddleVestingReports.filter(filterMiddleVestingReport => 
+                    filterMiddleVestingReport.username === reportName
+                )
+            }
+        }
+
+        setFilterFinalVestingReports(tempVestingReports);
     }
 
     const tablebody = (item: IVestingReport, index: number) => {
@@ -165,9 +187,12 @@ const VESTING: React.FC<IVESTING> = () => {
 
     useEffect(() => {
 
+        console.log("searchValue ====>", searchValue);
+        
+
         filterAction();
 
-    }, [searchValue, serverValue])
+    }, [searchValue, serverValue, reportName])
 
     useEffect(() => {
 
@@ -200,7 +225,7 @@ const VESTING: React.FC<IVESTING> = () => {
                             callback={setServerValue}
                         />
                         <Dropdown
-                            dropdownList={serverDropdownList}
+                            dropdownList={reportNameFilterDropdownList}
                             placeholder="Select report"
                             className="hover:bg-cdark-100 bg-cdark-200"
                             callback={setServerValue}
@@ -209,7 +234,7 @@ const VESTING: React.FC<IVESTING> = () => {
                     <div className="flex w-full text-sm font-normal gap-2 items-center">
                         <div className="flex flex-grow ">
                             <SearchBtn
-                                placeholder="Search servers"
+                                placeholder="Search reports"
                                 endContent="Refresh"
                                 callback={setSearchValue}
                             />
@@ -248,10 +273,10 @@ const VESTING: React.FC<IVESTING> = () => {
                     </tr>
                 </table>
             </div>
-            <div id="Allocation table" className="w-full text-center items-center text-cwhite text-sm font-semibold overflow-scroll max-h-[calc(100vh-330px)]">
+            <div id="Allocation table" className="w-full text-center items-center text-cwhite text-sm font-semibold overflow-scroll border border-cgrey-200 rounded-lg">
                 <table className="w-full border-collapse">
-                    <tr className="sticky z-10 top-0 bg-cgrey-200 rounded-lg">
-                        <th>ID</th>
+                    <tr className="sticky z-10 top-0 bg-cgrey-200">
+                        <th className="pl-3">ID</th>
                         <th className="text-left pl-3">Name</th>
                         <th>Wallet1</th>
                         <th>Wallet2</th>
@@ -265,7 +290,7 @@ const VESTING: React.FC<IVESTING> = () => {
                         <th>Amount Earned</th>
                         <th>Passed Vesting</th>
                     </tr>
-                    {vestingReports.map((item: IVestingReport, index: number) => {
+                    {filterFinalVestingReports.map((item: IVestingReport, index: number) => {
                         return tablebody(item, index);
                     })}
                 </table>

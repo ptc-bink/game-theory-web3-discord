@@ -159,7 +159,7 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
         const response = await fetch(`${baseURL_back}/create-giveaway`, {
             method: 'post',
             credentials: 'include', // Include credentials to get the cookies
-            body: qs.stringify({
+            body: JSON.stringify({
                 serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
             }),
         });
@@ -414,7 +414,7 @@ export const addAllocation = async (data: any) => {
         const response = await fetch(`${baseURL_back}/allocation`, {
             method: 'post',
             credentials: 'include', // Include credentials to get the cookies
-            body: qs.stringify({
+            body: JSON.stringify({
                 data
             }),
         });
@@ -648,7 +648,7 @@ export const addServer = async (data: IAddserverInfo) => {
         const response = await fetch(`${baseURL_back}/create-giveaway`, {
             method: 'POST',
             credentials: 'include', // Include credentials to get the cookies
-            body: qs.stringify({ data }),
+            body: JSON.stringify({ data }),
         });
 
         console.log(await response.json());
@@ -672,7 +672,7 @@ export const editServer = async (data: IEditserverInfo) => {
         const response = await fetch(`${baseURL_back}/create-giveaway`, {
             method: 'POST',
             credentials: 'include', // Include credentials to get the cookies
-            body: qs.stringify({ data }),
+            body: JSON.stringify({ data }),
         });
 
         console.log(await response.json());

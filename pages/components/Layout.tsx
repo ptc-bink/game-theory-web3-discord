@@ -48,7 +48,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 <div className="sticky top-0 z-50">
                     <Navbar />
                 </div>
-                <div className="flex overflow-">
+                <div className="flex overflow-scroll">
                     <div className="md:block hidden bg-[#1D1E22] ">
                         <BigSidebar />
                     </div>

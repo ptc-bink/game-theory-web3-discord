@@ -152,7 +152,7 @@ const Admin: React.FC<IAdminProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        <div aria-label="add server" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
+                        <div aria-label="add server" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 hover:cursor-pointer outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
                             <Image
                                 src={Add}
                                 width="16"

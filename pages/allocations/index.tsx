@@ -107,8 +107,10 @@ const Allocation: React.FC<IAllocationProps> = () => {
                 </div>
             </div>
             {filterAllocations.length > 0 ?
-                <Table allocations={filterAllocations}
-                /> : <div className="flex justify-center items-center min-h-[calc(100vh-280px)]">
+                <div className="flex justify-center h-[calc(100vh-280px)]">
+                    <Table allocations={filterAllocations}
+                />
+                </div> : <div className="flex justify-center items-center h-[calc(100vh-280px)]">
                     <div className="flex flex-col w-fit gap-4 px-3 py-4 justify-center items-center">
                         <Image
                             src={Driver}
