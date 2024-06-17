@@ -34,11 +34,46 @@ export interface IEditServerModalProps {
     winnersChannel: string;
 }
 
-export interface IAllocation {
+export interface IUserProfile {
+    username: string,
     id: string,
+    avatar: string,
+    ETH_HOT: number
+    ETH_COLD: number
+    BTC_HOT: number
+    BTC_COLD: number
+    SOL_HOT: number
+    SOL_COLD: number
+}
+
+export interface IProfileEdit {
+    ETH_HOT?: number,
+    ETH_COLD?: number,
+    BTC_HOT?: number,
+    BTC_COLD?: number,
+    SOL_HOT?: number,
+    SOL_COLD?: number,
+}
+
+export interface ISetAllocation {
+    serverId: string,
+    title: string,
+    amount: string,
+    allocation_id?: string,
+    contract?: string,
+    mintdate?: number,
+    mintHoldDays?: number,
+    secondaryHoldDays?: number,
+    secondaryBuyHours?: number,
+    secondaryBuyAmount: number,
+    floorPriceVoid?: number
+}
+
+export interface IAllocation {
+    id: number,
     title: string,
     allocation: number,
-    for_server: number,
+    for_server: string,
     role: number,
     contract: string,
     mint_date: number,
@@ -114,7 +149,7 @@ export interface IUpdateGiveaway {
     price?: number
     requiredRoles?: any
     restrictedRoles?: any
-    winningRole?: any
+    winningRole?: string
     requireAllRoles?: boolean,
     image?: string,
     links: string,
@@ -261,6 +296,13 @@ export interface IDashboardres {
     serverList: IServer[],
     biddersGiveawayList: IBiddersGiveaway[],
     initGiveawayList: IGiveaway[]
+}
+
+export interface IUserServer {
+    name: string,
+    id: string,
+    iconURL?: string,
+    memberCount: number
 }
 
 export interface IServer {

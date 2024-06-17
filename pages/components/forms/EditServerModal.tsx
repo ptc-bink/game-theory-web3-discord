@@ -28,6 +28,9 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, ma
     const [date, setDate] = useState<string>("");
 
     const initAction = async () => {
+
+        console.log("server ====>", server);
+        
         const tempChannelList: any = await administrationChannellist(server);
 
         if (tempChannelList.status == 200) {

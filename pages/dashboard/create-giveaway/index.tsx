@@ -132,7 +132,7 @@ const CreateGiveaway: React.FC = () => {
 
         const data = {
             serverID: serverValue,
-            Expiry: expires,
+            Expiry: Math.floor(new Date(expiresDate).getTime() / 1000),
             title: title,
             description: description,
             chain: chain,
@@ -149,6 +149,7 @@ const CreateGiveaway: React.FC = () => {
 
         if (res) {
             setGiveawayCreated(true);
+            toast.success("Created successfully!")
             router.back();
         }
     }

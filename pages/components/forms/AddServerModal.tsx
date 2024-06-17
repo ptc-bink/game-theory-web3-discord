@@ -6,7 +6,7 @@ import Dropdown from "./Dropdown";
 
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
-import { addServer, getChainList } from "@/hook";
+import { addServer, administrationChannellist, getChainList } from "@/hook";
 import { IChannel, IDropdownListProps } from "@/utils/_type";
 import toast from "react-hot-toast";
 
@@ -25,9 +25,9 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
 
     useEffect(() => {
         const initAction = async () => {
-            const tempChannelList: any = await getChainList(serverID);
+            const tempChannelList: any = await administrationChannellist(serverID);
 
-            if (tempChannelList.status == 200) {
+            if (tempChannelList.status === 200) {
                 if (Array.isArray(tempChannelList.data)) {
                     if (tempChannelList.data.length > 0) {
                         const tempChannelDropdownList: IDropdownListProps[] = tempChannelList.data?.map((item: IChannel) => (
@@ -118,7 +118,7 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
                 </div>
                 <div className="flex flex-col gap-2">
                     <p className="text-sm font-normal text-cwhite">Date</p>
-                    <input type="date" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) => setDate(e.target.value)} />
+                    <input type="date" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) => setDate(e.target.valueAsDate ? (e.target.valueAsDate.getTime() / 1000).toString() : "")} />
                 </div>
             </div>
             <div className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={() => handleSave()}>Save</div>

@@ -51,7 +51,7 @@ const Admin: React.FC<IAdminProps> = () => {
                     }
                 })
 
-                console.log("tempTrustedServers ====?", tempTrustedServers);
+                console.log("tempTrustedServers ====> ", tempTrustedServers);
 
                 setApprovedServerList(tempTrustedServers);
                 setFilterApprovedServerList(tempTrustedServers);
@@ -140,7 +140,7 @@ const Admin: React.FC<IAdminProps> = () => {
                 <div className="items-center w-full grid lg:grid-cols-2 grid-cols-1 gap-4 pt-4 text-sm realtive">
                     <Dropdown
                         dropdownList={serverDropdownList}
-                        placeholder="Select"
+                        placeholder="Select server"
                         className="hover:bg-cdark-100 bg-cdark-200"
                         callback={setServer}
                     />
@@ -181,7 +181,7 @@ const Admin: React.FC<IAdminProps> = () => {
                         name={item.data.name}
                         createdBy={item.data.admin.username}
                         serverImg={item.data.serverImage}
-                        adminImg={item.data.adminImage}
+                        adminImg={item.data.admin.avatar}
                         paymentExpires={item.data.paymentExpires}
                         marketChannel={item.data.Market_Channel_ID}
                         submitWallet={item.data.Submit_Wallet_ID}

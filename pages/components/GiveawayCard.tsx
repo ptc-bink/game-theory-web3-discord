@@ -51,8 +51,10 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     return (
         <div className="flex flex-col p-6 gap-6 rounded-2xl border border-cgrey-200">
             <div className="flex items-center gap-4">
-                <div className="bg-cdark-200 border border-cgrey-200 rounded-lg p-3">
-                    <img src={`https://cdn.discordapp.com/avatars/137375133336731648/${avatar}.webp`} alt="creator avatar" width={24} height={24} />
+                <div className="bg-cdark-200 border border-cgrey-200 rounded-lg">
+                    {avatar ?
+                        <img src={avatar} alt="creator avatar" width={48} height={48} className="rounded-lg" />
+                        : <CardLogo />}
                 </div>
                 <div className="flex flex-col gap-1">
                     <p className="text-cwhite text-base font-normal">{title}</p>
@@ -95,7 +97,8 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         </div>
                         <div className="flex flex-col gap-1">
                             <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Time remaining</p>
-                            <p className="text-cwhite text-sm font-semibold">{Math.floor(timeRemaining / 3600 / 60 / 24)} days</p>
+                            {/* <p className="text-cwhite text-sm font-semibold">{Math.floor(timeRemaining / 3600 / 60 / 24)} days</p> */}
+                            <p className="text-cwhite text-sm font-semibold">{new Date(timeRemaining * 1000).toDateString()}</p>
                             {/* <p className="text-cwhite text-sm font-semibold">{timeRemaining}</p> */}
                         </div>
                     </div>}

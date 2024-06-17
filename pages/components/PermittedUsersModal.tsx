@@ -9,7 +9,7 @@ import { getPermittedusers, getServers } from "@/hook";
 import AppContext from "@/providers/AppContext";
 import { IPermittedUser, IServer } from "@/utils/_type";
 
-const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
+const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue }) => {
 
     const { setPermittedUserModalOpen, setIsLoading } = useContext(AppContext);
     const [users, setUsers] = useState<string[]>([]);
@@ -17,19 +17,14 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
     const [flags, setFlags] = useState<boolean[]>([]);
 
     const initAction = async () => {
-        const tempServerList: any = await getServers();
-
-        if (tempServerList.status == 200) {
-            if (tempServerList.data.length > 0) {
-                const tempPermmittedusers: any = await getPermittedusers(tempServerList[0].guildID);
-                if (tempPermmittedusers.status == 200) {
-                    return setPermittedusers(tempPermmittedusers.data);
-                }
-            }
-            toast.error("No server to show")
+        if (serverValue === "") {
+            return toast.error("No server selected")
         }
 
-        return toast.error("No user to show");
+        const tempPermmittedusers: any = await getPermittedusers(serverValue);
+        if (tempPermmittedusers.status == 200) {
+            return setPermittedusers(tempPermmittedusers.data);
+        }
     }
 
     const handleSetUser = (user: string, index: number) => {
@@ -92,5 +87,5 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ }) => {
 export default PermittedUsersModal;
 
 interface IPermittedUsersModal {
-
+    serverValue: string
 }

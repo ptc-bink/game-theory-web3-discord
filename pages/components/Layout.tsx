@@ -11,7 +11,7 @@ import AppContext from '../../providers/AppContext';
 import SmallSidebar from './SmallSidebar';
 import BigSidebar from './BigSidebar';
 import Navbar from './Navbar';
-import { getUser } from '@/hook';
+import { getUser, getUserPermission } from '@/hook';
 import { IUserInfo } from '@/utils/_type';
 
 import Arrowleft from "@/public/avatar/arrow-up.svg"
@@ -25,6 +25,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
     const initAction = async () => {
 
         const tempUser: any = await getUser();
+        const tempUserPermission:any = await getUserPermission();
+
+        console.log("tempUser ====>", tempUser);
+        console.log("tempUserPermission ====>", tempUserPermission);
 
         if (tempUser.status === 401) {
             if (path !== "/") {
@@ -49,17 +53,17 @@ const Layout = ({ children }: { children: ReactNode }) => {
                     <Navbar />
                 </div>
                 <div className="flex overflow-scroll">
-                    <div className="md:block hidden bg-[#1D1E22] ">
+                    <div className="md:block hidden bg-[#1D1E22] h-[calc(100vh-88px)] overflow-scroll">
                         <BigSidebar />
                     </div>
-                    <div className="w-full bg-cdark-100">
+                    <div className="w-full bg-cdark-100 h-[calc(100vh-88px)] overflow-scroll">
                         {children}
                     </div>
                 </div>
                 <div className="md:hidden block sticky max-h-[calc(100vh-81px)] bottom-0">
                     <SmallSidebar />
                 </div>
-                <div className='fixed bottom-10 right-[10px] w-fit z-50'>
+                {/* <div className='fixed bottom-10 right-[10px] w-fit z-50'>
                     <div onClick={() => window.scroll({ top: 0, behavior: 'smooth' })} className="bg-cdark-200 border hover:cursor-pointer hover:bg-cdark-100 border-cgrey-200 p-3 rounded-lg">
                         <Image
                             src={Arrowleft}
@@ -68,7 +72,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                             alt="arrow left"
                         />
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

@@ -81,8 +81,6 @@ const VESTING: React.FC<IVESTING> = () => {
                 let tempPassedVesting = 0;
 
                 for (const tempVestingReport of tempVestingReports) {
-                    console.log(typeof (tempVestingReport.Amount_Spent_NFTs), "=================");
-
                     tempTotalHeld += tempVestingReport.NFTs_held;
                     tempTotalMint += tempVestingReport.NFTs_minted;
                     tempTotalBought += tempVestingReport.NFTs_bought;
@@ -126,14 +124,17 @@ const VESTING: React.FC<IVESTING> = () => {
         if (searchValue !== "") {
             if (vestingReports.length > 0) {
                 tempVestingReports = vestingReports.filter(vestingReport =>
+                    
                     vestingReport.user_id.includes(searchValue?.toLowerCase()) ||
-                    vestingReport.wallet1.includes(searchValue?.toLowerCase()) ||
-                    vestingReport.wallet2.includes(searchValue?.toLowerCase())
+                    vestingReport.wallet1?.toLowerCase().includes(searchValue?.toLowerCase()) ||
+                    vestingReport.wallet2?.toLowerCase().includes(searchValue?.toLowerCase())
                 )
 
                 setFilterVestingReports(tempVestingReports)
                 setFilterMiddleVestingReports(tempVestingReports);
             }
+        } else {
+            tempVestingReports = vestingReports
         }
 
         if (serverValue !== "") {
@@ -188,7 +189,6 @@ const VESTING: React.FC<IVESTING> = () => {
     useEffect(() => {
 
         console.log("searchValue ====>", searchValue);
-        
 
         filterAction();
 
@@ -228,7 +228,7 @@ const VESTING: React.FC<IVESTING> = () => {
                             dropdownList={reportNameFilterDropdownList}
                             placeholder="Select report"
                             className="hover:bg-cdark-100 bg-cdark-200"
-                            callback={setServerValue}
+                            callback={setReportName}
                         />
                     </div>
                     <div className="flex w-full text-sm font-normal gap-2 items-center">
@@ -239,7 +239,7 @@ const VESTING: React.FC<IVESTING> = () => {
                                 callback={setSearchValue}
                             />
                         </div>
-                        {/* <div onClick={handlePermiitedBtn} className=" cursor-pointer hover:bg-cgrey-900 hover:border-cdark-100 flex gap-2 justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
+                        <div onClick={handlePermiitedBtn} className=" cursor-pointer hover:bg-cgrey-900 hover:border-cdark-100 flex gap-2 justify-between w-fit items-center rounded-lg outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
                             <Image
                                 src={UserAdd}
                                 width="16"
@@ -247,13 +247,13 @@ const VESTING: React.FC<IVESTING> = () => {
                                 alt="user avatar"
                             />
                             <p className="text-cdark-100 text-sm leading-5 font-medium text-center sm:block hidden">Permitted Users</p>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div id="Allied table" className="w-full flex justify-center items-center text-cwhite">
+            <div id="Allied table" className="w-full flex justify-center items-center">
                 <table className="text-center border-collapse border border-cgrey-900">
-                    <tr className="border-collapse border border-cgrey-900 p-2">
+                    <tr className="border-collapse border border-cgrey-900 p-2 text-sm font-normal text-cgrey-900">
                         <th className="border-collapse border border-cgrey-900 p-2">Total Held</th>
                         <th className="border-collapse border border-cgrey-900 p-2">Total Mint</th>
                         <th className="border-collapse border border-cgrey-900 p-2">Total Bought</th>
@@ -262,7 +262,7 @@ const VESTING: React.FC<IVESTING> = () => {
                         <th className="border-collapse border border-cgrey-900 p-2">Total Earned</th>
                         <th className="border-collapse border border-cgrey-900 p-2">Passed vesting</th>
                     </tr>
-                    <tr className="border-collapse border border-cgrey-900">
+                    <tr className="border-collapse border border-cgrey-900 font-normal text-cwhite">
                         <td className="border-collapse border border-cgrey-900 p-2">{totalHeld}</td>
                         <td className="border-collapse border border-cgrey-900 p-2">{totalMint}</td>
                         <td className="border-collapse border border-cgrey-900 p-2">{totalBought}</td>
@@ -273,9 +273,9 @@ const VESTING: React.FC<IVESTING> = () => {
                     </tr>
                 </table>
             </div>
-            <div id="Allocation table" className="w-full text-center items-center text-cwhite text-sm font-semibold overflow-scroll border border-cgrey-200 rounded-lg">
+            <div id="Allocation table" className="w-full text-center items-center text-cwhite text-sm border border-cgrey-200 rounded">
                 <table className="w-full border-collapse">
-                    <tr className="sticky z-10 top-0 bg-cgrey-200">
+                    <tr className="sticky z-10 top-0 bg-cgrey-200 text-sm font-normal text-cgrey-900">
                         <th className="pl-3">ID</th>
                         <th className="text-left pl-3">Name</th>
                         <th>Wallet1</th>
@@ -295,7 +295,7 @@ const VESTING: React.FC<IVESTING> = () => {
                     })}
                 </table>
             </div>
-            {permittedUserModalOpen && <PermittedUsersModal />}
+            {permittedUserModalOpen && serverValue !== "" && <PermittedUsersModal serverValue={serverValue} />}
         </div>
     );
 }

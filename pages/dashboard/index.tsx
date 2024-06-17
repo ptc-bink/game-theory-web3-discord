@@ -47,8 +47,6 @@ const Dashboard: React.FC<IDashboard> = () => {
                         if (res.data !== undefined) {
                             if (res.data.length > 0) {
                                 for (const giveaway of res.data) {
-                                    console.log("server ===>", server);
-
                                     giveaway.serverData = server.guild;
                                     tempGiveaways = tempGiveaways.concat(giveaway);
                                 }
@@ -59,9 +57,6 @@ const Dashboard: React.FC<IDashboard> = () => {
                             return toast.error("Sever error");
                         }
                     }
-
-                    console.log("tempGiveaways ====>", tempGiveaways);
-
 
                     setGiveaways(tempGiveaways);
                     setMiddleGiveaways(tempGiveaways);
@@ -88,7 +83,7 @@ const Dashboard: React.FC<IDashboard> = () => {
         }
 
         if (searchInput !== "" && middleGiveaways.length > 0) {
-            let tempFilterData: IGiveaway[] = middleGiveaways.filter(giveaway =>
+            tempFilterData = middleGiveaways.filter(giveaway =>
                 giveaway.title?.toLowerCase().includes(searchInput?.toLowerCase()) ||
                 giveaway.messageID?.toLowerCase().includes(searchInput?.toLowerCase()) ||
                 giveaway.chain?.toLowerCase().includes(searchInput?.toLowerCase()) ||
@@ -132,7 +127,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                             callback={setServerValue}
                         />
                     </div>
-                    <div className="flex w-full text-sm font-normal">
+                    <div className="flex w-full text-sm font-normal gap-2">
                         <div className="flex flex-grow">
                             <SearchBtn
                                 placeholder="Search giveaway"
@@ -140,7 +135,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        {isAdmin && <Link href="/dashboard/create-giveaway" className="ml-2 flex justify-between bg-cwhite w-fit items-center rounded-lg outline-none border border-[#EEEEEE] px-[10px] py-3">
+                        {isAdmin && <Link href="/dashboard/create-giveaway" className="flex justify-between bg-cwhite w-fit items-center rounded-lg outline-none border border-[#EEEEEE] px-[10px] py-3">
                             <Image
                                 src={Add}
                                 width="16"
@@ -159,7 +154,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                             < GiveawayCard
                                 key={index}
                                 serverData={item.serverData}
-                                giveawayName={item.type}
+                                giveawayName={item.title}
                                 giveawayID={item.messageID}
                                 chain={item.chain}
                                 avatar={item?.creator?.avatar}

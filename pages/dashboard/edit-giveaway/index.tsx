@@ -132,6 +132,9 @@ const EditGiveaway: React.FC = () => {
                     setInitRequiredRoles(tempRequiredRoles);
                     setRestrictedRoles(tempRestrictedRoles);
                     setWinningRole(tempWinningRole);
+
+                    console.log("tempEditableGiveaway ====>", tempEditableGiveaway.required);
+
                     setInitRequiredRoles(new Set(tempEditableGiveaway.required));
                     setInitRestrictedRoles(new Set(tempEditableGiveaway.restriction));
 
@@ -157,6 +160,10 @@ const EditGiveaway: React.FC = () => {
         const seleted: string[] = object.target.value.split(",");
         const tempRequiredRoles = serverRoles.filter(item => seleted.includes(item.id));
 
+        console.log("seleted ====>", seleted);
+
+
+        setInitRequiredRoles(new Set(seleted));
         setReqiuredRoles(tempRequiredRoles)
     }
 
@@ -164,28 +171,31 @@ const EditGiveaway: React.FC = () => {
         const seleted: string[] = object.target.value.split(",");
         const tempRestrictedRoles = serverRoles.filter(item => seleted.includes(item.id));
 
+        setInitRestrictedRoles(new Set(seleted));
         setRestrictedRoles(tempRestrictedRoles);
     }
 
     const handleSubmit = async () => {
 
-        if (!expires || !title || !description || !chain || !type || !quantity) {
-            return toast.error("Please input all values");
-        }
+        // if (!expires || !title || !description || !chain || !type || !quantity) {
+        //     return toast.error("Please input all values");
+        // }
 
         const data = {
-            serverID: serverID,
-            giveawayID: selectedGiveawayID,
-            expires: expires,
+            // serverID: serverID,
+            serverID: "1219682506475831446",
+            // giveawayID: selectedGiveawayID,
+            giveawayID: "1243148624808906802",
+            expires: Math.floor(new Date(expiresDate).getTime() / 1000),
             title: title,
             description: description,
             chain: chain,
-            type: type,
+            type: editableGiveaway?.type as string,
             quantity: quantity,
             price: price ? price : 0,
             requiredRoles: requiredRoles.map(item => item.id),
             restrictedRoles: restrictedRoles.map(item => item.id),
-            winningRole: winningRole,
+            winningRole: winningRole?.id,
             requiredAllRoles: requiredAllRoles,
             image: editableGiveaway?.creator.avatar,
             links: links,
@@ -196,6 +206,7 @@ const EditGiveaway: React.FC = () => {
 
         if (res) {
             setGiveawayCreated(true);
+            toast.success("Updated successfully!")
             router.back();
         }
     }
@@ -218,7 +229,7 @@ const EditGiveaway: React.FC = () => {
             setExpiresHour(new Date().toISOString().slice(11, 16));
         }
 
-        setExpires(expiresDate + "  " + expiresHour)
+        setExpires(expiresDate + " " + expiresHour);
     }, [expiresDate, expiresHour]);
 
     useEffect(() => {
@@ -247,7 +258,7 @@ const EditGiveaway: React.FC = () => {
                     </div>
                 </div>
                 <div className="text-cwhite">
-                    {serverValue} / {editableGiveaway?.type}
+                    {serverValue} / {editableGiveaway?.title}
                 </div>
                 <div className="flex flex-col gap-3 text-cwhite">
                     {/* Title */}

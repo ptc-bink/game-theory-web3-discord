@@ -21,10 +21,11 @@ const Table: React.FC<ITable> = ({ allocations }) => {
 
     useEffect(() => {
         // Initialize checkedState based on jsonObjectList length
+
         setCheckedState(new Array(allocations?.length).fill(false));
     }, []);
 
-    const handleEditBtn = async () => {
+    const handleEditBtn = async (index: number) => {
         toast.error("coming soon")
 
         setAllocationEdited(true);
@@ -49,7 +50,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
     const btnGroup = (index: number) => {
         return (
             <div key={index} className="flex my-1 gap-2 justify-center">
-                <button aria-label="edit" className="rounded-lg border border-cgrey-200 outline-none px-[10px] py-3">
+                <button aria-label="edit" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleEditBtn(index)}>
                     <Image
                         src={Edit}
                         width={16}
@@ -57,7 +58,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                         alt="edit"
                     />
                 </button>
-                <button className="rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleCopyBtn(index)}>
+                <button aria-label="copy" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleCopyBtn(index)}>
                     <Image
                         src={Copy}
                         width={16}
@@ -65,7 +66,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                         alt="copy"
                     />
                 </button>
-                <button aria-label="trash" className="rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleDelBtn(index)}>
+                <button aria-label="trash" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleDelBtn(index)}>
                     <Image
                         src={Trash}
                         width={16}
@@ -85,10 +86,10 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                 </td>
                 <td className="text-center" >{item.title}</td>
                 <td className="text-center" >{item.allocation}</td>
-                <td className="text-center" >{item.role}</td>
-                <td className="text-center" >{item.mint_date / (60 * 60 * 24)}</td>
+                <td className="text-center" >{item.role ? item.role : "-"}</td>
+                <td className="text-center" >{new Date(item.mint_date * 1000).toDateString()}</td>
                 <td className="text-center">{item.vesting ? item.vesting.mint_hold_days : "-"}</td>
-                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days + " days " + item.vesting.secondary_buy_hours + " hours" : "-"}</td>
+                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days + " days "  + item.vesting.secondary_buy_hours + " hours" : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.price_void : "-"}</td>
                 <td className="left-3">{btnGroup(index)}</td>
@@ -101,16 +102,16 @@ const Table: React.FC<ITable> = ({ allocations }) => {
             <div className="lg:block hidden w-full">
                 <table className="w-full text-sm font-normal text-cgrey-900">
                     <tr className="border-b border-cgrey-200 p-4">
-                        <th>No</th>
-                        <th>Title</th>
-                        <th>Allocation</th>
-                        <th>Role</th>
-                        <th>Mint Date</th>
-                        <th>Hold days</th>
-                        <th>Secondary Buy Hold</th>
-                        <th>Amount</th>
-                        <th>Price void</th>
-                        <th className="text-center">Action</th>
+                        <th className="p-4">No</th>
+                        <th className="p-4">Title</th>
+                        <th className="p-4">Allocation</th>
+                        <th className="p-4">Role</th>
+                        <th className="p-4">Mint Date</th>
+                        <th className="p-4">Hold days</th>
+                        <th className="p-4">Secondary Buy Hold</th>
+                        <th className="p-4">Amount</th>
+                        <th className="p-4">Price void</th>
+                        <th className="p-4 text-center">Action</th>
                     </tr>
                     {Array.isArray(allocations) && allocations?.map((item, index) => (
                         tableBody(index, item)
@@ -132,11 +133,11 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Role</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.role}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.role ? item.role : "-"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint Date</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.mint_date / (60 * 60 * 24)}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{new Date(item.mint_date * 1000).toDateString()}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint hold days</p>
@@ -144,7 +145,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Secondary Buy Hold</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.secondary_buy_hold_days + " days " + item.vesting.secondary_buy_hours + " hours" : "-"}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.secondary_buy_hold_days + " days "  + item.vesting.secondary_buy_hours + " hours" : "-"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Amount</p>
@@ -156,7 +157,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                 </div>
                             </div>
                             <div key={index} className="flex my-1 gap-2 justify-center">
-                                <div className="flex gap-2 items-center border rounded-lg justify-center w-full cursor-pointer px-[10px] py-3 border-cgrey-200" onClick={() => handleEditBtn()}>
+                                <div className="flex gap-2 items-center border rounded-lg justify-center w-full cursor-pointer px-[10px] py-3 border-cgrey-200" onClick={() => handleEditBtn(index)}>
                                     <p className="text-sm font-normal text-cwhite">Edit</p>
                                     <button aria-label="edit" className="outline-none">
                                         <Image

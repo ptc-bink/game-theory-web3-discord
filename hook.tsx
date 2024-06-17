@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import qs from "qs"
 
-import { ICreateGiveaway, IAdministrationTrustedServers, IAddserverInfo, IEditserverInfo, ISetVestingParams, IUpdateGiveaway } from "./utils/_type";
+import { ICreateGiveaway, IAdministrationTrustedServers, IAddserverInfo, IEditserverInfo, ISetVestingParams, IUpdateGiveaway, ISetAllocation, IProfileEdit } from "./utils/_type";
 import { baseURL_back } from "./utils/_config";
 
 export const test = async () => {
@@ -52,16 +52,17 @@ export const getHarvestWinners = async () => {
     }
 }
 
-export const getUserDetails = async (userID: string, serverID: string) => {
+export const getUserDetails = async (serverID: string) => {
     try {
-        const response = await fetch(`${baseURL_back}/get-user-details?serverID=${serverID}&userID=${userID}`, {
+        // const response = await fetch(`${baseURL_back}/get-user-details?serverID=${serverID}&userID=${userID}`, {
+        const response = await fetch(`${baseURL_back}/user-profile?serverID=${serverID}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });
 
         const data = await response.json(); // Parse the response body as JSON
 
-        console.log("get user details response", data);
+        console.log("get user details response", response);
 
         if (response.status === 200) {
             return { status: 200, data: data };
@@ -69,8 +70,37 @@ export const getUserDetails = async (userID: string, serverID: string) => {
 
         return { status: 401, data: data };
     } catch (error) {
+        console.log(error);
+
         return {
             status: 401, data: "No user Info to show"
+        };
+    }
+}
+
+export const editUserProfile = async (serverID: string, data: IProfileEdit) => {
+    try {
+        console.log("serverID ====>", serverID);
+        console.log("data ====>", data);
+        
+        const response = await fetch(`${baseURL_back}/user-profile-edit&serverID=${serverID}`, {
+            method: 'PUT',
+            credentials: 'include', // Include credentials to get the cookies
+            body: JSON.stringify(data)
+        });
+
+        const res = await response.json(); // Parse the response body as JSON
+
+        console.log("eidt user profile response", res);
+
+        if (response.status === 200) {
+            return { status: 200, data: res };
+        }
+
+        return { status: 401, data: res };
+    } catch (error) {
+        return {
+            status: 401, data: "No giveaway to show"
         };
     }
 }
@@ -130,6 +160,7 @@ export const getGiveaways = async (serverId: string) => {
 
     try {
         const response = await fetch(`${baseURL_back}/giveaways?serverId=${serverId}`, {
+            // const response = await fetch(`${baseURL_back}/giveaways?serverId=1250486002112532584`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });
@@ -166,33 +197,23 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
 
         console.log("get servers response ======================>", response);
 
-        //print cookies and full repsonce
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        if (response.status === 200) {
+            return { status: 200, data: data };
         }
 
-        const res = await response.json(); // Parse the response body as JSON
-
-        return res
-
+        return { status: 401, data: data };
     } catch (error) {
-
-        throw error;
-
+        return {
+            status: 401, data: "No giveaway to show"
+        };
     }
 }
 
 export const handleEditGiveaway = async (data: IUpdateGiveaway) => {
-
-    const { serverID, giveawayID, expires, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles } = data;
-
-    if (serverID == "" || !expires || giveawayID == "" || !title || !description || !chain || !type || !quantity || !price) {
-        return toast.error("Plz input all values");
-    }
-
     try {
-        const res = await fetch(`/api/giveaways/`, {
+        const res = await fetch(`${baseURL_back}/update-giveaway/`, {
             method: "POST",
+            credentials: 'include', // Include credentials to get the cookies
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 data
@@ -246,7 +267,28 @@ export const getServers = async () => {
 
         const data = await response.json(); // Parse the response body as JSON
 
-        console.log("get server response", data);
+        if (response.status === 200) {
+            return { status: 200, data: data };
+        }
+
+        return { status: 401, data: data };
+    } catch (error) {
+        return {
+            status: 401, data: "No server to show"
+        };
+    }
+}
+
+export const getUserServers = async () => {
+    try {
+        const response = await fetch(`${baseURL_back}/user-servers`, {
+            method: 'GET',
+            credentials: 'include', // Include credentials to get the cookies
+        });
+
+        const data = await response.json(); // Parse the response body as JSON
+
+        console.log("get user server response", data);
 
         if (response.status === 200) {
             return { status: 200, data: data };
@@ -275,7 +317,7 @@ export const enterGiveaway = async (serverID: string, giveAwayID: string, userID
         }
 
         const data = await response.json(); // Parse the response body as JSON
-        console.log("get allocation data ====>", data);
+        console.log("enter giveaway data ====>", data);
 
         return data;
 
@@ -295,7 +337,6 @@ export const getAllocation = async (serverID: string, id?: string) => {
             credentials: 'include', // Include credentials to get the cookies
         });
 
-        console.log("get allocation response", response);
         const data = await response.json(); // Parse the response body as JSON
 
         console.log("get allocation response", data);
@@ -312,12 +353,36 @@ export const getAllocation = async (serverID: string, id?: string) => {
     }
 }
 
+export const setAllocation = async (data: ISetAllocation) => {
+    try {
+        const response = await fetch(`${baseURL_back}/set-allocation`, {
+            method: "PUT",
+            credentials: 'include',
+            body: JSON.stringify(data)
+        })
+
+        const res = await response.json();
+
+        if (response.status === 200) {
+            return { status: 200, data: data }
+        }
+
+        return { status: 401, data: "Error setting allocation" }
+    } catch (error) {
+        return { status: 401, data: "Error setting allocation" }
+    }
+}
+
 export const generateVestingReports = async (serverId: string, allocationNumber: number, userIds?: string[]) => {
     try {
-        // const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=${allocationNumber}`, {
-        const response = await fetch(`${baseURL_back}/generateVestingReport`, {
-            method: 'post',
+        const response = await fetch(`${baseURL_back}/generate-vesting-report`, {
+            method: 'put',
             credentials: 'include', // Include credentials to get the cookies
+            body: JSON.stringify({
+                serverId: serverId,
+                allocationNumber: allocationNumber,
+                userIds: userIds
+            })
         });
 
         const data = await response.json(); // Parse the response body as JSON
@@ -363,7 +428,7 @@ export const getAllocationReadyForVesting = async (serverId: string) => {
 
 export const getVestingReports = async (serverId: string, allocationNumber?: string) => {
     try {
-        const response = await fetch(`https://iamabackendserverhello.com/test/get-vesting-report`, {
+        const response = await fetch(`${baseURL_back}/test/get-vesting-report`, {
             // const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=1`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
@@ -431,6 +496,29 @@ export const addAllocation = async (data: any) => {
     } catch (error) {
         return {
             status: 401, data: "No vesting-report to show"
+        };
+    }
+}
+
+export const getUserPermission = async () => {
+    try {
+        const response = await fetch(`${baseURL_back}/user/user-permissions`, {
+            method: 'GET',
+            credentials: 'include', // Include credentials to get the cookies
+        });
+
+        const data = await response.json(); // Parse the response body as JSON
+
+        console.log("get user permission response", data);
+
+        if (response.status === 200) {
+            return { status: 200, data: data };
+        }
+
+        return { status: 401, data: data };
+    } catch (error) {
+        return {
+            status: 401, data: "User not authenticated"
         };
     }
 }
@@ -564,7 +652,7 @@ export const getChainList = async (serverID: string) => {
 
         const data = await response.json(); // Parse the response body as JSON
 
-        console.log("get chainlist response", data);
+        console.log("get chainlist response ====================>", data);
 
         if (response.status === 200) {
             return { status: 200, data: data };

@@ -25,11 +25,6 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
     const [winnersChannelName, setWinnersChannelName] = useState<string>();
 
     const initAction = async () => {
-        console.log("allChannelList ====>", allChannelList);
-
-        console.log(typeof (marketChannel));
-
-
         if (allChannelList) {
             if (allChannelList.length > 0) {
                 const tempMarketChannelName = allChannelList[allChannelList.findIndex(item => (item.id == marketChannel))]?.name;
@@ -79,12 +74,12 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
     }, [removeApproval])
 
     return (
-        <div className="w-full flex flex-col rounded gap-4 hover:border-2 hover:border-cwhite p-4 border border-cgrey-200">
+        <div className="w-full flex flex-col rounded gap-4 hover:border hover:border-cwhite p-4 border border-cgrey-200">
             <div className="flex gap-4 rounded">
                 <div className="flex justify-center items-center p-3 border border-cgrey-200 bg-cdark-200 rounded-lg">
                     {
                         serverImg ?
-                            <img src={serverImg} width={24} height={24} alt="server image" />
+                            <img src={serverImg} width={24} height={24} alt="server image" className="rounded-lg" />
                             : <Image
                                 src={Driver}
                                 width="24"
@@ -98,7 +93,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
                     <div className="flex gap-2">
                         {
                             adminImg ?
-                                <img src={adminImg} width={16} height={24} alt="created image" />
+                                <img src={adminImg} width={16} height={24} alt="created image" className="rounded-full" />
                                 : <Image
                                     src={Driver}
                                     width="24"
@@ -113,7 +108,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
             <div className="flex flex-col gap-1">
                 <div className="flex justify-between">
                     <p className="text-xs leading-[18px] font-normal text-cgrey-900">Payment Expires</p>
-                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{paymentExpires ? paymentExpires / (60 * 60 * 24) : "-"}</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{paymentExpires ? Math.floor(paymentExpires / (60 * 60 * 24)) + " days" : "-"}</p>
                 </div>
                 <div className="flex justify-between">
                     <p className="text-xs leading-[18px] font-normal text-cgrey-900">Market Channel</p>
@@ -165,7 +160,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
                     <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                         <EditServerModal
                             rediskey={rediskey}
-                            server={name}
+                            server={id}
                             marketChannel={marketChannel}
                             generalChannel={generalChannel}
                             submitWallet={submitWallet}
