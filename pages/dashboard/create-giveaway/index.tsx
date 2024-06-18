@@ -79,8 +79,9 @@ const CreateGiveaway: React.FC = () => {
         if (tempServer.status == 200) {
             if (Array.isArray(tempServer.data)) {
                 if (tempServer.data.length > 0) {
-                    setServerList(tempServer.data);
 
+                    setServerList(tempServer.data);
+                    
                     await mainAction(tempServer.data[0].guildID)
 
                     const serverDropdownList: IDropdownListProps[] = tempServer.data?.map((item: IServer, index: number) => {

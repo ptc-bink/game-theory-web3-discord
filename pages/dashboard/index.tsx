@@ -51,12 +51,15 @@ const Dashboard: React.FC<IDashboard> = () => {
                                     tempGiveaways = tempGiveaways.concat(giveaway);
                                 }
                             } else {
-                                return toast.error(`No giveaway of this server : ${server.guild.name}`);
+                                console.log(`No giveaway of this server : ${server.guild.name}`);
                             }
                         } else {
                             return toast.error("Sever error");
                         }
                     }
+
+                    console.log("tempGiveaways ====.", tempGiveaways);
+
 
                     setGiveaways(tempGiveaways);
                     setMiddleGiveaways(tempGiveaways);

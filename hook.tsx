@@ -107,7 +107,7 @@ export const editUserProfile = async (serverID: string, data: IProfileEdit) => {
 
 export const getPermittedusers = async (serverID: string) => {
     try {
-        const response = await fetch(`${baseURL_back}/get-permitted-users?serverID=${serverID}`, {
+        const response = await fetch(`${baseURL_back}/permitted-vesting-reports?serverID=${serverID}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });

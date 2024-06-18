@@ -9,9 +9,9 @@ import AppContext from "@/providers/AppContext";
 import { IChannel, IDropdownListProps, IEditServerModalProps } from "@/utils/_type";
 import { administrationChannellist } from "@/hook";
 
-const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel }) => {
+const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediskey, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel, channelList }) => {
 
-    const { setEditServerModalOpen } = useContext(AppContext);
+    const { setEditServerModalID } = useContext(AppContext);
     const [chainDropdownList, setChainDropdownList] = useState<IDropdownListProps[]>([])
     const [marketChannelID, setMarketChannelId] = useState<string>();
     const [generalChannelID, setGeneralChannelId] = useState<string>();
@@ -30,33 +30,63 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, ma
     const initAction = async () => {
 
         console.log("server ====>", server);
-        
-        const tempChannelList: any = await administrationChannellist(server);
 
-        if (tempChannelList.status == 200) {
-            if (tempChannelList.data.length > 0) {
-                const tempChainDropdownList: IDropdownListProps[] = tempChannelList.data.map((item: IChannel) => (
-                    {
-                        name: item.name,
-                        id: item.id,
-                    }
-                ))
+        if (channelList.length > 0) {
+            const tempChainDropdownList: IDropdownListProps[] = channelList.map((item: IChannel) => (
+                {
+                    name: item.name,
+                    id: item.id,
+                }
+            ))
 
-                setChainDropdownList(tempChainDropdownList);
+            setChainDropdownList(tempChainDropdownList);
 
-                const tempMarketChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === marketChannel))].name
-                const tempGeneralChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === generalChannel))].name
-                const tempSubmitWalletName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === submitWallet))].name
-                const tempVestingChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === vestingChannel))].name
-                const tempReminderChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === reminderChannel))].name
-                const tempWinnersChannelName: string = tempChannelList.data[tempChannelList.data.findIndex((item: IChannel) => (item.id === winnersChannel))].name
+            const tempMarketChannel = channelList.find((item:IChannel) => item.id === marketChannel);
 
-                setMarketChannelName(tempMarketChannelName);
-                setGeneralChannelName(tempGeneralChannelName);
-                setSubmitWalletName(tempSubmitWalletName);
-                setVestingChannelName(tempVestingChannelName);
-                setReminderChannelName(tempReminderChannelName);
-                setWinnersChannelName(tempWinnersChannelName);
+            if (tempMarketChannel) {
+                setMarketChannelName(tempMarketChannel.name);
+            } else {
+                console.error("Market channel not found");
+            }
+
+            const tempGeneralChannel = channelList.find((item:IChannel) => item.id === generalChannel);
+
+            if (tempGeneralChannel) {
+                setGeneralChannelName(tempGeneralChannel.name);
+            } else {
+                console.error("General channel not found");
+            }
+
+            const tempSubmitWallet = channelList.find((item:IChannel) => item.id === submitWallet);
+
+            if (tempSubmitWallet) {
+                setSubmitWalletName(tempSubmitWallet.name);
+            } else {
+                console.error("Submit channel not found");
+            }
+
+            const tempVestingChannel = channelList.find((item:IChannel) => item.id === vestingChannel);
+
+            if (tempVestingChannel) {
+                setVestingChannelName(tempVestingChannel.name);
+            } else {
+                console.error("Vesting channel not found");
+            }
+
+            const tempReminderChannel = channelList.find((item:IChannel) => item.id === reminderChannel);
+
+            if (tempReminderChannel) {
+                setReminderChannelName(tempReminderChannel.name);
+            } else {
+                console.error("Reminder channel not found");
+            }
+
+            const tempWinnersChannel = channelList.find((item:IChannel) => item.id === winnersChannel);
+
+            if (tempWinnersChannel) {
+                setWinnersChannelName(tempWinnersChannel.name);
+            } else {
+                console.error("Winners channel not found");
             }
         }
     }
@@ -66,7 +96,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, ma
     }, [])
 
     const closeModal = () => {
-        setEditServerModalOpen(false);
+        setEditServerModalID(0);
     }
 
     const handleSaveChange = () => {
@@ -75,7 +105,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ server, rediskey, ma
     }
 
     return (
-        <div className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
+        <div key={key} className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
                 <p className="text-base text-cwhite font-semibold">Edit Server</p>
                 <div onClick={closeModal} className="cursor-pointer">

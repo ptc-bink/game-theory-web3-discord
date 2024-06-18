@@ -1,5 +1,6 @@
 export interface IAdministrationTrustedServers {
     id: string;
+    serverID: string;
     data: {
         name: string,
         admin: {
@@ -20,10 +21,12 @@ export interface IAdministrationTrustedServers {
         Reminder_Channel_ID: string,
         Winners_Channel_ID: string,
         Supported_Wallets: string[]
-    }
+    },
+    channelList: IChannel[]
 }
 
 export interface IEditServerModalProps {
+    key: number;
     server: string;
     rediskey: string;
     marketChannel: string;
@@ -32,6 +35,7 @@ export interface IEditServerModalProps {
     vestingChannel: string;
     reminderChannel: string;
     winnersChannel: string;
+    channelList: IChannel[];
 }
 
 export interface IUserProfile {
@@ -332,6 +336,7 @@ export interface IRemoveEntrants {
 }
 
 export interface IServerCardProps {
+    index: number,
     id: string
     name: string;
     rediskey: string;
@@ -345,6 +350,7 @@ export interface IServerCardProps {
     winnersChannel: string;
     adminImg?: string;
     serverImg?: string;
+    channelList: IChannel[]
 }
 
 export interface IGiveawayCardProps {

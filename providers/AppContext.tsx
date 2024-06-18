@@ -1,9 +1,8 @@
 import { createContext, useContext } from "react";
-import { IChannel, IServer } from "../utils/_type";
 
 interface ContextType {
   addServerModalOpen: boolean;
-  editServerModalOpen: boolean;
+  editServerModalID: number;
   profileModalOpen: boolean;
   userID: string;
   username: string;
@@ -17,7 +16,6 @@ interface ContextType {
   permittedUserModalOpen: boolean;
   allocationDeleted: boolean;
   allocationEdited: boolean;
-  allChannelList: IChannel[];
   giveawayCreated: boolean;
   giveawayEdited: boolean;
   showCreditCard: boolean;
@@ -25,7 +23,6 @@ interface ContextType {
   setShowCreditCard: (showCreditCard: boolean) => void,
   setGiveawayCreated: (giveawayCreated: boolean) => void,
   setGiveawayEdited: (giveawayEdited: boolean) => void,
-  setAllChannelList: (allChainList: IChannel[]) => void,
   setPermittedUserModalOpen: (permittedUserModalOpen: boolean) => void,
   setAddAllocationModalOpen: (addAllocationModalOpen: boolean) => void,
   setRemoveEntrantModalOpen: (removeEntrantModalOpen: boolean) => void;
@@ -36,7 +33,7 @@ interface ContextType {
   setSelectedGiveawayID: (seletedGiveawayID: string) => void;
   setIsAdmin: (isAdmin: boolean) => void;
   setAddServerModalOpen: (addServerModalOpen: boolean) => void;
-  setEditServerModalOpen: (editServerModalOpen: boolean) => void;
+  setEditServerModalID: (editServerModalID: number) => void;
   setProfileModalOpen: (profileModalOpen: boolean) => void;
   setUserID: (userID: string) => void;
   setUsername: (username: string) => void;
@@ -46,7 +43,7 @@ interface ContextType {
 
 const initialValue: ContextType = {
   addServerModalOpen: false,
-  editServerModalOpen: false,
+  editServerModalID: 0,
   removeEntrantModalOpen: false,
   profileModalOpen: false,
   userID: "",
@@ -58,7 +55,6 @@ const initialValue: ContextType = {
   addAllocationModalOpen: false,
   permittedUserModalOpen: false,
   removeApproval: false,
-  allChannelList: [],
   allocationDeleted: false,
   allocationEdited: false,
   giveawayCreated: false,
@@ -70,11 +66,10 @@ const initialValue: ContextType = {
   setGiveawayEdited(giveawayEdited) { },
   setAllocationDeleted(allocationDeleted) { },
   setAllocationEdited(allocationEdited) { },
-  setAllChannelList(allChannelList) { },
   setPermittedUserModalOpen(permittedUserModalOpen) { },
   setAddAllocationModalOpen(addAllocationModalOpen) { },
   setRemoveEntrantModalOpen(removeEntrantModalOpen) { },
-  setRemoveApproval(rremoveApproval) { },
+  setRemoveApproval(removeApproval) { },
   setIsLoading: (isLoading) => { },
   setSelectedGiveawayID: (selectedGiveawayID) => { },
   setIsAdmin: (isAdmin) => { },
@@ -83,7 +78,7 @@ const initialValue: ContextType = {
   setUserID: (userID) => { },
   setServerID: (serverID) => { },
   setAddServerModalOpen: (addServerModalOpen) => { },
-  setEditServerModalOpen: (editServerModalOpen) => { },
+  setEditServerModalID: (editServerModalID) => { },
   setProfileModalOpen: (profileModalOpen) => { },
 };
 

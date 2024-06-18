@@ -14,9 +14,9 @@ import RemoveEntrantsModal from "./forms/RemoveEntrantsModal";
 import { IChannel, IServerCardProps } from "../../utils/_type";
 import { removeEntry } from "../../hook";
 
-const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg, adminImg, createdBy, paymentExpires, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel }) => {
+const ServerCard: React.FC<IServerCardProps> = ({ index, id, rediskey, name, serverImg, adminImg, createdBy, paymentExpires, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel, channelList }) => {
 
-    const { userID, allChannelList, editServerModalOpen, removeEntrantModalOpen, removeApproval, setRemoveApproval, setRemoveEntrantModalOpen, setEditServerModalOpen } = useContext(AppContext);
+    const { userID, editServerModalID, removeEntrantModalOpen, removeApproval, setRemoveApproval, setRemoveEntrantModalOpen, setEditServerModalID } = useContext(AppContext);
     const [marketChannelName, setMarketChannelName] = useState<string>();
     const [generalChannelName, setGeneralChannelName] = useState<string>();
     const [submitWalletName, setSubmitWalletName] = useState<string>();
@@ -25,14 +25,14 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
     const [winnersChannelName, setWinnersChannelName] = useState<string>();
 
     const initAction = async () => {
-        if (allChannelList) {
-            if (allChannelList.length > 0) {
-                const tempMarketChannelName = allChannelList[allChannelList.findIndex(item => (item.id == marketChannel))]?.name;
-                const tempGeneralChannelName = allChannelList[allChannelList.findIndex(item => (item.id == generalChannel))]?.name;
-                const tempSubmitWalletName = allChannelList[allChannelList.findIndex(item => (item.id == submitWallet))]?.name;
-                const tempVestingChannelName = allChannelList[allChannelList.findIndex(item => (item.id == vestingChannel))]?.name;
-                const tempReminderChannelName = allChannelList[allChannelList.findIndex(item => (item.id == reminderChannel))]?.name;
-                const tempWinnersChannelName = allChannelList[allChannelList.findIndex(item => (item.id == winnersChannel))]?.name;
+        if (channelList) {
+            if (channelList.length > 0) {
+                const tempMarketChannelName: string = channelList[channelList.findIndex(item => (item.id == marketChannel))]?.name;
+                const tempGeneralChannelName: string = channelList[channelList.findIndex(item => (item.id == generalChannel))]?.name;
+                const tempSubmitWalletName: string = channelList[channelList.findIndex(item => (item.id == submitWallet))]?.name;
+                const tempVestingChannelName: string = channelList[channelList.findIndex(item => (item.id == vestingChannel))]?.name;
+                const tempReminderChannelName: string = channelList[channelList.findIndex(item => (item.id == reminderChannel))]?.name;
+                const tempWinnersChannelName: string = channelList[channelList.findIndex(item => (item.id == winnersChannel))]?.name;
 
                 setMarketChannelName(tempMarketChannelName);
                 setGeneralChannelName(tempGeneralChannelName);
@@ -54,11 +54,15 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
             serverID: id,
             removeUserID: createdBy
         }
-        console.log("server card remove call");
-
         const res = await removeEntry(data);
 
         setRemoveApproval(false);
+    }
+
+    const handleModalOpen = () => {
+        console.log("key ==========================================>", index);
+        
+        setEditServerModalID(index)
     }
 
     useEffect(() => {
@@ -74,7 +78,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
     }, [removeApproval])
 
     return (
-        <div className="w-full flex flex-col rounded gap-4 hover:border hover:border-cwhite p-4 border border-cgrey-200">
+        <div key={index} className="w-full flex flex-col rounded gap-4 hover:border hover:border-cwhite p-4 border border-cgrey-200">
             <div className="flex gap-4 rounded">
                 <div className="flex justify-center items-center p-3 border border-cgrey-200 bg-cdark-200 rounded-lg">
                     {
@@ -108,7 +112,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
             <div className="flex flex-col gap-1">
                 <div className="flex justify-between">
                     <p className="text-xs leading-[18px] font-normal text-cgrey-900">Payment Expires</p>
-                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{paymentExpires ? Math.floor(paymentExpires / (60 * 60 * 24)) + " days" : "-"}</p>
+                    <p className="text-xs leading-[18px] font-semibold text-cwhite">{paymentExpires ? new Date(paymentExpires * 1000).toDateString() : "-"}</p>
                 </div>
                 <div className="flex justify-between">
                     <p className="text-xs leading-[18px] font-normal text-cgrey-900">Market Channel</p>
@@ -136,7 +140,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-2 w-full">
-                <div className="flex w-full justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={() => setEditServerModalOpen(true)}>
+                <div className="flex w-full justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 border-cgrey-200 gap-2" onClick={handleModalOpen}>
                     <p className="text-sm font-normal text-cwhite sm:block hidden">Edit Server</p>
                     <Image
                         src={Edit}
@@ -156,9 +160,10 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
                 </div>
             </div>
             {
-                editServerModalOpen && (
+                editServerModalID === index && (
                     <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                         <EditServerModal
+                            key={index}
                             rediskey={rediskey}
                             server={id}
                             marketChannel={marketChannel}
@@ -167,6 +172,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ id, rediskey, name, serverImg,
                             vestingChannel={vestingChannel}
                             reminderChannel={reminderChannel}
                             winnersChannel={winnersChannel}
+                            channelList={channelList}
                         />
                     </div>
                 )

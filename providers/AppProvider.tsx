@@ -6,7 +6,7 @@ import { IChannel, IServer } from "../utils/_type";
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [addServerModalOpen, setAddServerModalOpen] = useState<boolean>(false);
-  const [editServerModalOpen, setEditServerModalOpen] = useState<boolean>(false);
+  const [editServerModalID, setEditServerModalID] = useState<number>(0);
   const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
   const [addAllocationModalOpen, setAddAllocationModalOpen] = useState<boolean>(false);
   const [serverID, setServerID] = useState<string>("");
@@ -19,7 +19,6 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [removeEntrantModalOpen, setRemoveEntrantModalOpen] = useState<boolean>(false);
   const [permittedUserModalOpen, setPermittedUserModalOpen] = useState<boolean>(false);
   const [removeApproval, setRemoveApproval] = useState<boolean>(false);
-  const [allChannelList, setAllChannelList] = useState<IChannel[]>([]);
   const [allocationDeleted, setAllocationDeleted] = useState<boolean>(false);
   const [allocationEdited, setAllocationEdited] = useState<boolean>(false);
   const [giveawayCreated, setGiveawayCreated] = useState<boolean>(false);
@@ -30,7 +29,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     <AppContext.Provider
       value={{
         addServerModalOpen,
-        editServerModalOpen,
+        editServerModalID,
         profileModalOpen,
         serverID,
         userID,
@@ -43,7 +42,6 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         addAllocationModalOpen,
         permittedUserModalOpen,
         removeApproval,
-        allChannelList,
         allocationDeleted,
         allocationEdited,
         giveawayCreated,
@@ -54,7 +52,6 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         setGiveawayEdited,
         setAllocationDeleted,
         setAllocationEdited,
-        setAllChannelList,
         setRemoveApproval,
         setPermittedUserModalOpen,
         setAddAllocationModalOpen,
@@ -67,7 +64,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         setServerID,
         setUserID,
         setAddServerModalOpen,
-        setEditServerModalOpen,
+        setEditServerModalID,
         setProfileModalOpen,
       }}
     >
