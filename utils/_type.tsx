@@ -51,12 +51,12 @@ export interface IUserProfile {
 }
 
 export interface IProfileEdit {
-    ETH_HOT?: number,
-    ETH_COLD?: number,
-    BTC_HOT?: number,
-    BTC_COLD?: number,
-    SOL_HOT?: number,
-    SOL_COLD?: number,
+    ETH_HOT?: string,
+    ETH_COLD?: string,
+    BTC_HOT?: string,
+    BTC_COLD?: string,
+    SOL_HOT?: string,
+    SOL_COLD?: string,
 }
 
 export interface ISetAllocation {
@@ -102,7 +102,15 @@ export interface ISetVestingParams {
     floorPriceVoid?: string
 }
 
+export interface IVestingReportListItem {
+    id: number,
+    title: string,
+    last_updated: number,
+    guild: string
+}
+
 export interface IVestingReport {
+    reportID: number,
     serverID: string,
     user_id: string,
     NFTs_held: number
@@ -121,7 +129,7 @@ export interface IVestingReport {
     transaction_hashes: {
         type: string,
         hash: string
-    }
+    }[]
     username: string
 }
 
@@ -204,14 +212,14 @@ export interface IEditserverInfo {
 }
 
 export interface IAddserverInfo {
-    Submit_Wallet_ID: string,
-    Vesting_Channel_ID: string,
-    Reminder_Channel_ID: string,
-    Winners_Channel_ID: string,
+    Submit_Wallet_ID?: string,
+    Vesting_Channel_ID?: string,
+    Reminder_Channel_ID?: string,
+    Winners_Channel_ID?: string,
     rediskey: string,
     marketChannelID: string,
     generalChannelID: string,
-    date: string
+    date?: string
 }
 
 export interface IUserInfo {

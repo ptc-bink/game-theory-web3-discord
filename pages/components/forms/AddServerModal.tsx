@@ -47,7 +47,7 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
     }, [])
 
     const handleSave = async () => {
-        if (!redisKey || !marketChannelID || !generalChannelID || !submitWalletID || !vestingChannelID || !reminderChannelID || !winnersChannelID || !date) {
+        if (!redisKey || !marketChannelID || !generalChannelID) {
             return toast.error("Please insert all values")
         }
 

@@ -127,9 +127,9 @@ const CreateGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        // if (!serverValue || !expires || !title || !description || !chain || !type || !quantity) {
-        //     return toast.error("Please input all values");
-        // }
+        if ( !expires || title !== "" || description !== "" || !chain || !quantity) {
+            return toast.error("Please input all values");
+        }
 
         const data = {
             serverID: serverValue,

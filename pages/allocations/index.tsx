@@ -92,6 +92,9 @@ const Allocation: React.FC<IAllocationProps> = () => {
 
     useEffect(() => {
         initAction();
+
+        console.log("filterAllocations ===================> ", filterAllocations);
+        
     }, [])
 
     useEffect(() => {

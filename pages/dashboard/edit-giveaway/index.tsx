@@ -177,9 +177,9 @@ const EditGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        // if (!expires || !title || !description || !chain || !type || !quantity) {
-        //     return toast.error("Please input all values");
-        // }
+        if (!expires || title !=="" || description !== "" || !chain || !quantity) {
+            return toast.error("Please input all values");
+        }
 
         const data = {
             // serverID: serverID,

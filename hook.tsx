@@ -105,16 +105,17 @@ export const editUserProfile = async (serverID: string, data: IProfileEdit) => {
     }
 }
 
-export const getPermittedusers = async (serverID: string) => {
+export const getVestingReportsList = async (serverID: string) => {
     try {
-        const response = await fetch(`${baseURL_back}/permitted-vesting-reports?serverID=${serverID}`, {
+        // const response = await fetch(`${baseURL_back}/permitted-vesting-reports?serverID=${serverID}`, {
+        const response = await fetch(`${baseURL_back}/get-vesting-reports?serverID=${serverID}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });
 
         const data = await response.json(); // Parse the response body as JSON
 
-        console.log("get permitted-users response", data);
+        console.log("get vesting report list response", data);
 
         if (response.status === 200) {
             return { status: 200, data: data };
@@ -426,10 +427,10 @@ export const getAllocationReadyForVesting = async (serverId: string) => {
     }
 }
 
-export const getVestingReports = async (serverId: string, allocationNumber?: string) => {
+export const getVestingReportData = async (serverId: string, allocationNumber: string) => {
     try {
         const response = await fetch(`${baseURL_back}/test/get-vesting-report`, {
-            // const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=1`, {
+            // const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=${allocationNumber}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });
@@ -545,6 +546,30 @@ export const getUser = async () => {
         };
     }
 }
+
+export const getAllocationpermittedusers = async (serverID: string, vestingReportID:number) => {
+    try {
+        const response = await fetch(`${baseURL_back}/allocation-permitted-users?serverID=${serverID}&vestingReportID=${vestingReportID}`, {
+            method: 'GET',
+            credentials: 'include', // Include credentials to get the cookies
+        });
+
+        const data = await response.json(); // Parse the response body as JSON
+
+        console.log("get allocation permitted users response", data);
+
+        if (response.status === 200) {
+            return { status: 200, data: data };
+        }
+
+        return { status: 401, data: data };
+    } catch (error) {
+        return {
+            status: 401, data: "No trusted server to show"
+        };
+    }
+}
+
 
 export const getAdministrationTrustedServers = async (serverID: string) => {
     try {
@@ -757,21 +782,23 @@ export const addServer = async (data: IAddserverInfo) => {
 
 export const editServer = async (data: IEditserverInfo) => {
     try {
-        const response = await fetch(`${baseURL_back}/create-giveaway`, {
-            method: 'POST',
-            credentials: 'include', // Include credentials to get the cookies
-            body: JSON.stringify({ data }),
-        });
+        return console.log("data =====>", data);
+        
+        // const response = await fetch(`${baseURL_back}/create-giveaway`, {
+        //     method: 'POST',
+        //     credentials: 'include', // Include credentials to get the cookies
+        //     body: JSON.stringify({ data }),
+        // });
 
-        console.log(await response.json());
+        // console.log(await response.json());
 
-        if (!response.ok) {
-            throw 'Not invalid request'
-        }
+        // if (!response.ok) {
+        //     throw 'Not invalid request'
+        // }
 
-        const res = await response.json(); // Parse the response body as JSON
+        // const res = await response.json(); // Parse the response body as JSON
 
-        return res;
+        // return res;
     } catch (error) {
 
         throw ("Network response error")

@@ -63,9 +63,6 @@ const Admin: React.FC<IAdminProps> = () => {
                         channelList: tempChannelList
                     }
                 })
-
-                console.log("tempTrustedServers ====> ", tempTrustedServers);
-
             }
         }
 
@@ -85,6 +82,9 @@ const Admin: React.FC<IAdminProps> = () => {
                     }
                 })
 
+                console.log("tempServerDropdownList ====>", tempServerDropdownList);
+                
+
                 if (tempServerDropdownList.length > 0) {
                     setServerDropdownList(tempServerDropdownList);
                 }
@@ -96,6 +96,9 @@ const Admin: React.FC<IAdminProps> = () => {
 
                     trustedServers = trustedServers.concat(tempTrustedServers);
                 }
+
+                console.log("trustedServers ====>", trustedServers);
+                
 
                 setApprovedServerList(trustedServers);
                 setFilterApprovedServerList(trustedServers);
@@ -119,10 +122,6 @@ const Admin: React.FC<IAdminProps> = () => {
 
                 setMiddleApprovedServerList(tempFilterApprovedServerList);
                 setFilterApprovedServerList(tempFilterApprovedServerList);
-
-
-                console.log("tempFilterApprovedServerList ====>", tempFilterApprovedServerList);
-                console.log("searchInput ====>", searchInput);
             }
         }
 
@@ -162,7 +161,7 @@ const Admin: React.FC<IAdminProps> = () => {
                         placeholder="Select server"
                         className="hover:bg-cdark-100 bg-cdark-200"
                         callback={setServer}
-                        initValue={server}
+                        // initValue={}
                     />
                     <div className="flex w-full text-sm font-normal gap-2">
                         <div className="flex flex-grow">

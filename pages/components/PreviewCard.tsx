@@ -66,12 +66,12 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                 <p className="text-cwhite text-base font-semibold hover:underline">Preview</p>
             </div>
             <div className="flex flex-col gap-3 p-4 rounded-sm bg-cgrey-200 border-l-[3px] border-[#15F115]">
-                <div className="flex justify-between">
-                    <div className="flex flex-col gap-1 text-cwhite">
+                <div className="flex justify-between gap-2">
+                    <div className="flex flex-col gap-1 w-full text-cwhite">
                         <p className="text-base font-semibold">{title ? title : "Title"}</p>
-                        <p className="text-sm leading-[18px] font-normal">{description ? description : "Description"}</p>
+                        <pre className="text-sm leading-[18px] font-normal text-wrap">{description ? description : "Description"}</pre>
                     </div>
-                    {userImage ? <img src={userImage} alt="user image" width={48} height={48} className="rounded-lg" />
+                    {userImage ? <img src={userImage} alt="user image" width={48} height={48} className="rounded-lg h-12 w-12" />
                         : <Image
                             src={User}
                             width={48}

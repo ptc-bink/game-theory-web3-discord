@@ -16,18 +16,19 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
     const [allocation, setAllocation] = useState<number>(0);
     const [mintDate, setMintDate] = useState<Date>();
     const [mintHoldDays, setMintHoldDays] = useState<number>(0);
-    const [secondaryBuyHold, setSecondaryBuyHold] = useState<number>(0);
+    const [secondaryBuyHoldDays, setSecondaryBuyHoldDays] = useState<number>(0);
+    const [secondaryBuyHoldHours, setSecondaryBuyHoldHours] = useState<number>(0);
     const [secondaryBuyAmount, setSecondaryBuyAmount] = useState<number>(0);
     const [priceVoid, setPriceVoid] = useState<number>(0);
     const [contract, setContract] = useState<string>("");
 
     const handleSubmit = async () => {
 
-        if (!allocation || !mintHoldDays || !secondaryBuyHold || !secondaryBuyAmount || !amount || !priceVoid || !title || !contract || !mintDate) {
+        if (!allocation || !mintHoldDays || !secondaryBuyHoldDays || !secondaryBuyHoldHours || !secondaryBuyAmount || !amount || !priceVoid || !title || !contract || !mintDate) {
             return console.log("plz input all value");
         }
 
-        const data: any = { allocation, mintHoldDays, secondaryBuyHold, secondaryBuyAmount, priceVoid, mintDate, title, amount };
+        const data: any = { allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHoldHours, secondaryBuyAmount, priceVoid, mintDate, title, amount };
 
         await addAllocation(data);
     }
@@ -51,14 +52,14 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                         <input type="string" onChange={(e) => setTitle(e.target.value)} placeholder="Input title" value={title} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Allocation</p>
-                        <input type="number" onChange={(e) => setAllocation(e.target.valueAsNumber)} placeholder="Choose Allocation" value={allocation} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Contract</p>
+                        <input type="string" value={contract} onChange={(e) => setContract(e.target.value)} placeholder="Input contract" className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Contract</p>
-                        <input type="string" value={contract} onChange={(e) => setContract(e.target.value)} placeholder="Input contract" className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Allocation</p>
+                        <input type="number" onChange={(e) => setAllocation(e.target.valueAsNumber)} placeholder="Choose Allocation" value={allocation} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Mint hold days</p>
@@ -67,12 +68,12 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Secondary buy hold</p>
-                        <input type="number" onChange={(e) => setSecondaryBuyHold(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold" value={secondaryBuyHold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Secondary buy hold days</p>
+                        <input type="number" onChange={(e) => setSecondaryBuyHoldDays(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold" value={secondaryBuyHoldDays} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Amount</p>
-                        <input type="number" onChange={(e) => setAmount(e.target.valueAsNumber)} placeholder="Choose Amount" value={amount} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <p className="text-sm font-normal text-cwhite">Secondary buy hold hours</p>
+                        <input type="number" onChange={(e) => setSecondaryBuyHoldHours(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold" value={secondaryBuyHoldHours} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -85,6 +86,12 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                         <input type="number" step={.001} min={.001} onChange={(e) => setPriceVoid(e.target.valueAsNumber)} placeholder="Choose Price void" value={priceVoid} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-cwhite">Amount</p>
+                        <input type="number" onChange={(e) => setAmount(e.target.valueAsNumber)} placeholder="Choose Amount" value={amount} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                    </div>
+                </div>
                 <div className="grid gap-3">
                     {/* <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Mint Date</p>
@@ -92,7 +99,7 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                     </div> */}
                 </div>
             </div>
-            <button aria-label="submit" className="flex self-end outline-none bg-cwhite border border-[#EEEEEE] px-4 py-3 w-fit rounded-md text-cdark-100" onClick={handleSubmit}>Submit</button>
+            <button aria-label="submit" className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={handleSubmit}>Submit</button>
         </div>
     )
 }

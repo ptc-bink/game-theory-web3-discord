@@ -20,21 +20,46 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
 
-    const detailItem = (index: number, item: IUserInfo) => {
 
-        const isWinner = winners?.includes(item.id);
+
+    const detailItem = (index: number) => {
+
+        const isWinner = winners?.includes(bidders[index].id);
 
         return (
-            <div key={index} className="flex gap-1 hover:bg-cgrey-200 w-fit cursor-pointer">
+            <div key={index} className="flex gap-1 hover:bg-cgrey-200 w-full cursor-pointer px-2 text-clip">
                 <Image
                     src={Cancel}
                     width="16"
                     height="16"
                     alt={index + "th cancel"}
                 />
-                <p className={`text-sm leading-[18px] font-medium`} style={{ color: `${isWinner ? "#FFD105" : "#939393"}` }}>{`${index}. ${item.username}(${item.id})`}</p>
+                <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "#FFD105" : "#939393"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p>
             </div>
         )
+    }
+
+    const details = () => {
+        let content: any = [];
+
+        for (let i = 0; i < Math.ceil(bidders.length / 10); i++) {
+            content.push(
+                <div className="w-1/4 flex flex-col gap-2" key={i}>
+                    {Array.from({ length: 10 }, (_, j) => {
+                        const index = i * 10 + j;
+                        return (
+                            index < bidders.length && (
+                                <div key={index}>
+                                    {detailItem(index)}
+                                </div>
+                            )
+                        );
+                    })}
+                </div>
+            );
+        }
+
+        return <div className="flex gap-2 md:flex-row flex-col">{content}</div>;
     }
 
     const handleDetailOpen = () => {
@@ -97,18 +122,14 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         </div>
                         <div className="flex flex-col gap-1">
                             <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Time remaining</p>
-                            {/* <p className="text-cwhite text-sm font-semibold">{Math.floor(timeRemaining / 3600 / 60 / 24)} days</p> */}
-                            <p className="text-cwhite text-sm font-semibold">{new Date(timeRemaining * 1000).toDateString()}</p>
-                            {/* <p className="text-cwhite text-sm font-semibold">{timeRemaining}</p> */}
+                            <p className="text-cwhite text-sm font-semibold">{timeRemaining * 1000 < new Date().getTime() ? "Ended" : (Math.floor((timeRemaining * 1000 - new Date().getTime()) / (60 * 60 * 24 * 1000)) === 0 ? "" : Math.floor((timeRemaining * 1000 - new Date().getTime()) / (60 * 60 * 24 * 1000)) + " days  ") + (Math.floor((timeRemaining * 1000 - new Date().getTime()) / (60 * 60 * 1000)) - Math.floor((timeRemaining * 1000 - new Date().getTime()) / (60 * 60 * 24 * 1000)) * 24) + " hours"}</p>
                         </div>
                     </div>}
             </div>
             {detailOpen &&
                 <div className="flex flex-col rounded-lg">
-                    <div className="grid md:grid-rows-10 md:grid-flow-col max-h-[220px] overflow-scroll grid-flow-row gap-y-[1.5px] border border-cgrey-200 rounded-t-lg px-1 py-[10px] bg-cdark-50">
-                        {bidders?.map((item: IUserInfo, index: number) => (
-                            detailItem(index + 1, item)
-                        ))}
+                    <div className="grid md:grid-rows-10 md:grid-flow-col max-h-[270px] overflow-scroll grid-flow-row gap-y-[1.5px] border border-cgrey-200 rounded-t-lg px-1 py-[10px] bg-cdark-50">
+                        {details()}
                     </div>
                     {harvested || <div className="flex justify-center items-center bg-cgrey-200 gap-1 px-4 py-2 rounded-b-lg">
                         <Image

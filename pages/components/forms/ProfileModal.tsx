@@ -19,12 +19,12 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [userProfile, setUserProfile] = useState<IUserProfile>();
     const [serverValue, setServerValue] = useState<string>("");
-    const [ethHot, setEthHot] = useState<number>();
-    const [ethCold, setEthCold] = useState<number>();
-    const [btcHot, setBtcHot] = useState<number>();
-    const [btcCold, setBtcCold] = useState<number>();
-    const [solHot, setSolHot] = useState<number>();
-    const [solCold, setSolCold] = useState<number>();
+    const [ethHot, setEthHot] = useState<string>();
+    const [ethCold, setEthCold] = useState<string>();
+    const [btcHot, setBtcHot] = useState<string>();
+    const [btcCold, setBtcCold] = useState<string>();
+    const [solHot, setSolHot] = useState<string>();
+    const [solCold, setSolCold] = useState<string>();
 
     const handleEdit = async () => {
 
@@ -100,7 +100,9 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
     }
 
     useEffect(() => {
-        filterAction();
+        if (serverValue) {
+            filterAction();
+        }
     }, [serverValue])
 
     useEffect(() => {
@@ -108,7 +110,7 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
     }, [])
 
     return (
-        <div className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
+        <div className="flex flex-col w-[450px] h-[calc(100vh-88px)] overflow-scroll rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
                 <p className="text-base text-cwhite font-semibold">User Profile</p>
                 <div onClick={() => setProfileModalOpen(false)} className="cursor-pointer">
@@ -152,37 +154,37 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                         placeholder="Select Server"
                         className="hover:bg-cdark-200 bg-cdark-100"
                         callback={setServerValue}
-                        initValue={serverValue}
+                        initValue={serverDropdownList[0]?.name}
                     />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">ETH HOT*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setEthHot(e.target.valueAsNumber)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
+                        <input type="number" placeholder="" onChange={(e) => setEthHot(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">ETH COLD*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setEthCold(e.target.valueAsNumber)} value={ethCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="number" placeholder="" onChange={(e) => setEthCold(e.target.value)} value={ethCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">BTC HOT*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setBtcHot(e.target.valueAsNumber)} value={btcHot} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="number" placeholder="" onChange={(e) => setBtcHot(e.target.value)} value={btcHot} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">BTC COLD*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setBtcCold(e.target.valueAsNumber)} value={btcCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="number" placeholder="" onChange={(e) => setBtcCold(e.target.value)} value={btcCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">SOL HOT*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setSolHot(e.target.valueAsNumber)} value={solHot} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="number" placeholder="" onChange={(e) => setSolHot(e.target.value)} value={solHot} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">SOL COLD*</p>
-                        <input type="number" placeholder="0" onChange={(e) => setSolCold(e.target.valueAsNumber)} value={solCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="number" placeholder="" onChange={(e) => setSolCold(e.target.value)} value={solCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
             </div>

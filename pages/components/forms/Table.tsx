@@ -84,12 +84,12 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                 <td className="text-center justify-center">
                     <p>{index + 1}</p>
                 </td>
-                <td className="text-center" >{item.title}</td>
+                <td className="text-left" >{item.title.length > 10 ? item.title.slice(0, 3) + "..." + item.title.slice(-3) : item.title}</td>
                 <td className="text-center" >{item.allocation}</td>
                 <td className="text-center" >{item.role ? item.role : "-"}</td>
                 <td className="text-center" >{new Date(item.mint_date * 1000).toDateString()}</td>
-                <td className="text-center">{item.vesting ? item.vesting.mint_hold_days : "-"}</td>
-                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days + " days "  + item.vesting.secondary_buy_hours + " hours" : "-"}</td>
+                <td className="text-center">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</td>
+                <td className="text-center">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + " days ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + " hours") : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.price_void : "-"}</td>
                 <td className="left-3">{btnGroup(index)}</td>
@@ -100,18 +100,18 @@ const Table: React.FC<ITable> = ({ allocations }) => {
     return (
         <div className="flex w-full">
             <div className="lg:block hidden w-full">
-                <table className="w-full text-sm font-normal text-cgrey-900">
+                <table className="sticky z-10 top-0 w-full text-sm font-normal text-cgrey-900">
                     <tr className="border-b border-cgrey-200 p-4">
-                        <th className="p-4">No</th>
-                        <th className="p-4">Title</th>
-                        <th className="p-4">Allocation</th>
-                        <th className="p-4">Role</th>
-                        <th className="p-4">Mint Date</th>
-                        <th className="p-4">Hold days</th>
-                        <th className="p-4">Secondary Buy Hold</th>
-                        <th className="p-4">Amount</th>
-                        <th className="p-4">Price void</th>
-                        <th className="p-4 text-center">Action</th>
+                        <th className="py-4">No</th>
+                        <th className="py-4 text-left">Title</th>
+                        <th className="py-4">Allocation</th>
+                        <th className="py-4">Role</th>
+                        <th className="py-4">Mint Date</th>
+                        <th className="py-4">Mint Hold days</th>
+                        <th className="py-4">Secondary Buy Hold</th>
+                        <th className="py-4">Amount</th>
+                        <th className="py-4">Price void</th>
+                        <th className="py-4 text-center">Action</th>
                     </tr>
                     {Array.isArray(allocations) && allocations?.map((item, index) => (
                         tableBody(index, item)
@@ -137,15 +137,15 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint Date</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{new Date(item.mint_date * 1000).toDateString()}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.mint_date ? new Date(item.mint_date * 1000).toDateString() : "NOT SET"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint hold days</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.mint_hold_days : "-"}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Secondary Buy Hold</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.secondary_buy_hold_days + " days "  + item.vesting.secondary_buy_hours + " hours" : "-"}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.secondary_buy_hold_days + " days " + item.vesting.secondary_buy_hours + " hours" : "-"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Amount</p>

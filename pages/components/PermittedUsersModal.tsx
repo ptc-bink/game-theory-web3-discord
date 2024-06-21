@@ -5,26 +5,26 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 
 import Cancel from "@/public/avatar/close.svg"
-import { getPermittedusers, getServers } from "@/hook";
+import { getVestingReportData } from "@/hook";
 import AppContext from "@/providers/AppContext";
-import { IPermittedUser, IServer } from "@/utils/_type";
+import { IPermittedUser, IServer, IVestingReport } from "@/utils/_type";
 
-const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue }) => {
+const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ data }) => {
 
-    const { setPermittedUserModalOpen, setIsLoading } = useContext(AppContext);
+    const { setPermittedUserModalOpen } = useContext(AppContext);
     const [users, setUsers] = useState<string[]>([]);
-    const [PermittedUsers, setPermittedusers] = useState<IPermittedUser[]>([]);
+    const [permittedUsers, setPermittedusers] = useState<IPermittedUser[]>([]);
     const [flags, setFlags] = useState<boolean[]>([]);
 
     const initAction = async () => {
-        if (serverValue === "") {
-            return toast.error("No server selected")
-        }
+        // if (serverValue === "") {
+        //     return toast.error("No server selected")
+        // }
 
-        const tempPermmittedusers: any = await getPermittedusers(serverValue);
-        if (tempPermmittedusers.status == 200) {
-            return setPermittedusers(tempPermmittedusers.data);
-        }
+        // const tempPermmittedusers: any = await getVestingReportData(serverValue);
+        // if (tempPermmittedusers.status == 200) {
+        //     return setPermittedusers(tempPermmittedusers.data);
+        // }
     }
 
     const handleSetUser = (user: string, index: number) => {
@@ -75,7 +75,7 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue }) =>
                     </button>
                 </div>
                 <div className="flex flex-col px-1 py-[10px] gap-[6px] rounded-lg bg-cdark-50 border overflow-y-auto  border-cgrey-200 max-h-[235px]">
-                    {PermittedUsers.map((item, index) => (
+                    {permittedUsers.map((item, index) => (
                         <div key={index} className={`text-sm cursor-pointer leading-[18px] font-medium hover:text-cwhite hover:bg-cgrey-100 text-cgrey-900 ${flags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetUser(item.id, index)}>{item.id}</div>
                     ))}
                 </div>
@@ -87,5 +87,5 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue }) =>
 export default PermittedUsersModal;
 
 interface IPermittedUsersModal {
-    serverValue: string
+    data: IVestingReport[]
 }

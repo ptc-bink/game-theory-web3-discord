@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
@@ -24,6 +24,7 @@ const Dashboard: React.FC<IDashboard> = () => {
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverList, setServerList] = useState<IServer[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
+    const topRef = useRef<HTMLDivElement>(null);
 
     const initAction = async () => {
         const tempServer: any = await getServers();
@@ -60,6 +61,8 @@ const Dashboard: React.FC<IDashboard> = () => {
 
                     console.log("tempGiveaways ====.", tempGiveaways);
 
+                    tempGiveaways.sort((a,b) => a.expiry - b.expiry);
+                    tempGiveaways.reverse();
 
                     setGiveaways(tempGiveaways);
                     setMiddleGiveaways(tempGiveaways);
@@ -118,7 +121,7 @@ const Dashboard: React.FC<IDashboard> = () => {
     }, [giveawayCreated, giveawayEdited])
 
     return (
-        <div className="flex flex-col gap-4 p-8 bg-cdark-100">
+        <div ref={topRef} className="flex flex-col gap-4 p-8 bg-cdark-100">
             <div className="flex flex-col">
                 <p className="text-cwhite text-2xl font-semibold md:block hidden">Dashboard</p>
                 <div className="items-center w-full grid md:grid-cols-2 md:grid-rows-1 grid-cols-1 grid-rows-2 gap-4 pt-4 text-sm">

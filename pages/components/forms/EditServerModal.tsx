@@ -7,7 +7,8 @@ import Dropdown from "./Dropdown";
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
 import { IChannel, IDropdownListProps, IEditServerModalProps } from "@/utils/_type";
-import { administrationChannellist } from "@/hook";
+import { administrationChannellist, editServer } from "@/hook";
+import toast from "react-hot-toast";
 
 const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediskey, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel, channelList }) => {
 
@@ -100,12 +101,29 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
     }
 
     const handleSaveChange = () => {
-        console.log("handleSave");
+        if (!rediskey || !marketChannelID || !generalChannelID) {
+            return toast.error("Please insert all values")
+        }
+
+        const data = {
+            rediskey: rediskey,
+            marketChannelID: marketChannelID,
+            generalChannelID: generalChannelID,
+            Submit_Wallet_ID: submitWalletID,
+            Vesting_Channel_ID: vestingChannelID,
+            Reminder_Channel_ID: reminderChannelID,
+            Winners_Channel_ID: winnersChannelID,
+            date: date
+        }
+
+        const res = editServer(data);
+
+        console.log("edit server response:", res);
         closeModal();
     }
 
     return (
-        <div key={key} className="flex flex-col w-[450px] rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
+        <div key={key} className="flex flex-col w-[450px] max-h-[calc(100vh-88px)] overflow-scroll rounded-md p-6 gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
                 <p className="text-base text-cwhite font-semibold">Edit Server</p>
                 <div onClick={closeModal} className="cursor-pointer">
