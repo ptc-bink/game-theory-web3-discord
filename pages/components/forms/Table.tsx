@@ -84,10 +84,11 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                 <td className="text-center justify-center">
                     <p>{index + 1}</p>
                 </td>
-                <td className="text-left" >{item.title.length > 10 ? item.title.slice(0, 3) + "..." + item.title.slice(-3) : item.title}</td>
+                {/* <td className="text-left" >{item.title.length > 10 ? item.title.slice(0, 3) + "..." + item.title.slice(-3) : item.title}</td> */}
+                <td className="text-left break-all w-28" >{item.title}</td>
                 <td className="text-center" >{item.allocation}</td>
                 <td className="text-center" >{item.role ? item.role : "-"}</td>
-                <td className="text-center" >{new Date(item.mint_date * 1000).toDateString()}</td>
+                <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toDateString() : "Not Set"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</td>
                 <td className="text-center">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + " days ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + " hours") : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</td>
@@ -145,7 +146,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Secondary Buy Hold</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.secondary_buy_hold_days + " days " + item.vesting.secondary_buy_hours + " hours" : "-"}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + " days ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + " hours") : "-"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Amount</p>

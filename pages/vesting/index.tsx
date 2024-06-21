@@ -174,7 +174,7 @@ const VESTING: React.FC<IVESTING> = () => {
     const tablebody = (item: IVestingReport, index: number) => {
         return (
             <>
-                <tr key={index} onClick={() => handleDetailItem(index)} className="hover:bg-cgrey-200">
+                <tr key={index} onClick={() => handleDetailItem(index)} className={`${detailItemIndex==index && "bg-cgrey-200"} hover:bg-cgrey-100`}>
                     <td>{index}</td>
                     <td className="text-left pl-3">{item.username.length > 10 ? item.username.slice(0, 4) + "..." + item.username.slice(-3) : item.username}</td>
                     <td className="text-left">{item.wallet1 ? item.wallet1.slice(0, 4) + "..." + item.wallet1.slice(-3) : "-"}</td>
@@ -192,20 +192,20 @@ const VESTING: React.FC<IVESTING> = () => {
                 {detailItemIndex == index &&
                     item.transaction_hashes.length > 0 &&
                     (<>
-                        <tr className="hover:bg-cgrey-100">
+                        <tr className="bg-cgrey-200 hover:bg-cdark-100">
                             <td className="text-center" colSpan={13}>EXPANDED ( PROOFS ) - For&nbsp;&nbsp;&nbsp;<span className="underline uppercase">{item.username}</span></td>
                         </tr>
-                        <tr className="hover:bg-cgrey-100">
+                        <tr className="bg-cgrey-200 hover:bg-cdark-100">
                             <td></td>
                             <td className="text-left pl-3">Type</td>
                             <td className="text-left" colSpan={11}>Hash</td>
                         </tr>
                         {item.transaction_hashes.map(transaction => {
                             return (
-                                <tr key={index} className="hover:bg-cgrey-100">
+                                <tr key={index} className="bg-cgrey-200 hover:bg-cdark-100">
                                     <td></td>
                                     <td className="text-left pl-3">{transaction.type}</td>
-                                    <td colSpan={11} className="text-left">{transaction.hash}</td>
+                                    <td colSpan={11} className="text-left underline text-[#5865F2]"><a href={`https://etherscan.io/tx/${transaction.hash}`}>{`https://etherscan.io/tx/${transaction.hash}`}</a></td>
                                 </tr>
                             )
                         })}
@@ -324,7 +324,7 @@ const VESTING: React.FC<IVESTING> = () => {
                     className="w-full text-center items-center text-cwhite text-sm border border-cgrey-200 rounded">
                     <table className="w-full border-collapse overflow-scroll">
                         <thead>
-                            <tr className="sticky z-10 top-0 bg-cgrey-200 text-sm font-normal text-cgrey-900">
+                            <tr className="sticky z-10 top-0 bg-cgrey-200 text-sm font-bold text-cgrey-900">
                                 <th className="pl-3">ID</th>
                                 <th className="text-left pl-3">Name</th>
                                 <th>Wallet1</th>
