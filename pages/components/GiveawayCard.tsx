@@ -34,7 +34,8 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                     height="16"
                     alt={index + "th cancel"}
                 />
-                <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "#FFD105" : "#939393"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p>
+                {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "#FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
+                <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "#FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p>
             </div>
         )
     }

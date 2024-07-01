@@ -11,6 +11,7 @@ import Admin from "../../public/avatar/admin"
 import Bot from "../../public/avatar/bot";
 import { usePathname } from "next/navigation";
 import AppContext from "../../providers/AppContext";
+import { getUserGlobalPermission, getUserPermission } from "@/hook";
 
 interface SideDataProps {
     label: string,
@@ -21,8 +22,7 @@ interface SideDataProps {
 
 const BigSidebar = () => {
 
-    const [sideData, setSideData] = useState<SideDataProps[]>([])
-    const { isAdmin } = useContext(AppContext);
+    const { userID } = useContext(AppContext);
     const [selectedItem, setSelectedItem] = useState<string>("");
     const path = usePathname();
 
@@ -65,7 +65,7 @@ const BigSidebar = () => {
             image: <Allocation
                 fill={selectedItem}
             />,
-            userIn: false
+            userIn: true
         },
         {
             label: "Bot",
@@ -77,7 +77,27 @@ const BigSidebar = () => {
         },
     ]
 
-    const sideBar = isAdmin ? adminSideBar : adminSideBar.filter(item => item.userIn == true)
+    const [sideBar, setSideBar] = useState<any[]>(adminSideBar);
+
+    const initAction = async () => {
+        const res = await getUserGlobalPermission();
+
+        if (res.status === 200) {
+            console.log("res.data =====>", res.data);
+
+            if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
+                setSideBar(adminSideBar);
+            }
+
+            else if (res.data.isMember.includes(userID)) {
+                setSideBar(adminSideBar.filter(item => item.userIn === true))
+            }
+        }
+    }
+
+    useEffect(() => {
+        initAction();
+    }, [])
 
     return (
         <div className="flex flex-col">

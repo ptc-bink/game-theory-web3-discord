@@ -19,13 +19,27 @@ import AddAllocationModal from "../components/forms/AddAllocation";
 
 const Allocation: React.FC<IAllocationProps> = () => {
 
-    const { allocationDeleted, addAllocationModalOpen, allocationEdited, setAllocationDeleted, setAllocationEdited, setAddAllocationModalOpen } = useContext(AppContext)
+    const { addAllocationModalOpen, allocationEdited, setAllocationEdited, setAddAllocationModalOpen } = useContext(AppContext)
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
     const [allocations, setAllocations] = useState<IAllocation[]>([]);
     const [filterAllocations, setFilterAllocations] = useState<IAllocation[]>([]);
     const [filterMiddleAllocations, setFilterMiddleAllocations] = useState<IAllocation[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
+
+    const mainAction = async (serverID: string) => {
+        let tempAllocations: IAllocation[] = [];
+
+        const res: any = await getAllocation(serverID);
+
+        if (res.status === 200 && Array.isArray(res.data) && res.data.length > 0) {
+            tempAllocations = res.data;
+        }
+
+        setAllocations(tempAllocations);
+        setFilterAllocations(tempAllocations);
+        setFilterMiddleAllocations(tempAllocations)
+    }
 
     const initAction = async () => {
         const tempServerList: any = await getServers();
@@ -38,22 +52,8 @@ const Allocation: React.FC<IAllocationProps> = () => {
                 })
 
                 setServerDropdownList(tempServerDropdownList);
+                toast.success("Please select server")
 
-                let tempAllocations: IAllocation[] = [];
-
-                for (const server of tempServerList.data) {
-                    const res: any = await getAllocation(server.guildID);
-
-                    if (res.status === 200) {
-                        if (Array.isArray(res.data) && res.data.length > 0) {
-                            tempAllocations = tempAllocations.concat(res.data)
-                        }
-                    }
-                }
-
-                setAllocations(tempAllocations);
-                setFilterAllocations(tempAllocations);
-                setFilterMiddleAllocations(tempAllocations)
             } else {
                 toast.error("No server to show");
             }
@@ -76,13 +76,6 @@ const Allocation: React.FC<IAllocationProps> = () => {
             tempAllocations = allocations;
         }
 
-        if (serverValue !== "") {
-            if (filterMiddleAllocations.length > 0) {
-                tempAllocations = filterMiddleAllocations.filter(item => {
-                    return item.for_server === serverValue;
-                })
-            }
-        }
         setFilterAllocations(tempAllocations);
     }
 
@@ -92,22 +85,29 @@ const Allocation: React.FC<IAllocationProps> = () => {
 
     useEffect(() => {
         initAction();
-
-        console.log("filterAllocations ===================> ", filterAllocations);
-        
     }, [])
 
     useEffect(() => {
-        searchFilterAction();
-    }, [searchInput, serverValue])
+        if (serverValue) {
+            mainAction(serverValue);
+        } else {
+            setAllocations([]);
+            setFilterAllocations([]);
+            setFilterMiddleAllocations([])
+            toast.success("Please select server")
+        }
+    }, [serverValue])
 
     useEffect(() => {
-        if (allocationDeleted || allocationEdited) {
-            initAction()
-            setAllocationDeleted(false);
+        searchFilterAction();
+    }, [searchInput])
+
+    useEffect(() => {
+        if ( allocationEdited) {
+            mainAction(serverValue)
             setAllocationEdited(false);
         }
-    }, [allocationDeleted, allocationEdited])
+    }, [allocationEdited])
 
     return (
         <div className="flex flex-col p-8 gap-4 h-full">

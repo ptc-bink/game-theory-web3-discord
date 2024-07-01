@@ -59,8 +59,6 @@ const Dashboard: React.FC<IDashboard> = () => {
                         }
                     }
 
-                    console.log("tempGiveaways ====.", tempGiveaways);
-
                     tempGiveaways.sort((a,b) => a.expiry - b.expiry);
                     tempGiveaways.reverse();
 

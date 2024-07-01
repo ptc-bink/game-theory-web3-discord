@@ -193,19 +193,19 @@ const VESTING: React.FC<IVESTING> = () => {
                     item.transaction_hashes.length > 0 &&
                     (<>
                         <tr className="bg-cgrey-200 hover:bg-cdark-100">
-                            <td className="text-center" colSpan={13}>EXPANDED ( PROOFS ) - For&nbsp;&nbsp;&nbsp;<span className="underline uppercase">{item.username}</span></td>
+                            <td className="text-center underline font-bold" colSpan={13}>EXPANDED ( PROOFS ) - For&nbsp;&nbsp;&nbsp;<span className="underline font-bold uppercase">{item.username}</span></td>
                         </tr>
                         <tr className="bg-cgrey-200 hover:bg-cdark-100">
                             <td></td>
-                            <td className="text-left pl-3">Type</td>
-                            <td className="text-left" colSpan={11}>Hash</td>
+                            <td className="text-left pl-3 underline font-bold">Type</td>
+                            <td className="text-left underline font-bold" colSpan={11}>Hash</td>
                         </tr>
                         {item.transaction_hashes.map(transaction => {
                             return (
                                 <tr key={index} className="bg-cgrey-200 hover:bg-cdark-100">
                                     <td></td>
                                     <td className="text-left pl-3">{transaction.type}</td>
-                                    <td colSpan={11} className="text-left underline text-[#5865F2]"><a href={`https://etherscan.io/tx/${transaction.hash}`}>{`https://etherscan.io/tx/${transaction.hash}`}</a></td>
+                                    <td colSpan={11} className="text-left underline text-[#5865F2]"><a href={`https://etherscan.io/tx/${transaction.hash}`} target="_blank">{`https://etherscan.io/tx/${transaction.hash}`}</a></td>
                                 </tr>
                             )
                         })}

@@ -82,7 +82,7 @@ export const editUserProfile = async (serverID: string, data: IProfileEdit) => {
     try {
         console.log("serverID ====>", serverID);
         console.log("data ====>", data);
-        
+
         const response = await fetch(`${baseURL_back}/user-profile-edit&serverID=${serverID}`, {
             method: 'PUT',
             credentials: 'include', // Include credentials to get the cookies
@@ -547,7 +547,7 @@ export const getUser = async () => {
     }
 }
 
-export const getAllocationpermittedusers = async (serverID: string, vestingReportID:number) => {
+export const getAllocationpermittedusers = async (serverID: string, vestingReportID: number) => {
     try {
         const response = await fetch(`${baseURL_back}/allocation-permitted-users?serverID=${serverID}&vestingReportID=${vestingReportID}`, {
             method: 'GET',
@@ -661,6 +661,32 @@ export const administrationChannellist = async (serverID: string) => {
     } catch (error) {
         return {
             status: 401, data: "No administration-list to show"
+        };
+    }
+}
+
+export const getUserGlobalPermission = async () => {
+    try {
+        const response = await fetch(`${baseURL_back}/user-get-global-permissions`, {
+            method: "GET",
+            credentials: "include", // Include credentials to get the cookies
+        });
+
+        const data = await response.json(); // Parse the response body as JSON
+
+        console.log("get user get global permissions", data);
+
+        if (response.status === 200) {
+            return {
+                status: 200,
+                data: data
+            }
+        }
+
+        return { status: 401, data: data };
+    } catch (error) {
+        return {
+            status: 401, data: "No chain-list to show"
         };
     }
 }
@@ -783,7 +809,7 @@ export const addServer = async (data: IAddserverInfo) => {
 export const editServer = async (data: IEditserverInfo) => {
     try {
         return console.log("data =====>", data);
-        
+
         // const response = await fetch(`${baseURL_back}/create-giveaway`, {
         //     method: 'POST',
         //     credentials: 'include', // Include credentials to get the cookies

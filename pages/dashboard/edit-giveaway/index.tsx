@@ -109,6 +109,7 @@ const EditGiveaway: React.FC = () => {
                     setTitle(tempEditableGiveaway.title);
                     setDescription(tempEditableGiveaway.description);
                     setChain(tempEditableGiveaway.chain);
+                    setQuantity(tempEditableGiveaway.quantity);
                     setPrice(tempEditableGiveaway.price);
                     setReqiuredAllRoles(tempEditableGiveaway.requireAllRoles);
                     console.log("tempEditableGiveaway.required ====> ", tempEditableGiveaway.required);
@@ -175,9 +176,40 @@ const EditGiveaway: React.FC = () => {
         setRestrictedRoles(tempRestrictedRoles);
     }
 
+    function handleKeyDown(e: any) {
+        if (e.ctrlKey && (e.key === 'b' || e.key === 'i')) {
+            e.preventDefault();
+
+            const start = e.target.selectionStart;
+            const end = e.target.selectionEnd;
+            const selectedText = e.target.value.slice(start, end);
+            const wrapper = e.key === 'b' ? '**' : '*';
+
+            const newValue = e.target.value.slice(0, start) + wrapper + selectedText + wrapper + e.target.value.slice(end);
+
+            setDescription(newValue);
+        }
+    }
+
+
+    function formatText(text: string) {
+        let formattedText = text;
+
+        // Detect text wrapped with ***
+        formattedText = formattedText.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+
+        // Detect text wrapped with **
+        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // Detect text wrapped with *
+        formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        return formattedText;
+    }
+
     const handleSubmit = async () => {
 
-        if (!expires || title !=="" || description !== "" || !chain || !quantity) {
+        if (!expires || title !== "" || description !== "" || !chain || !quantity) {
             return toast.error("Please input all values");
         }
 
@@ -269,7 +301,18 @@ const EditGiveaway: React.FC = () => {
                     {/* Description */}
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Description*</p>
-                        <textarea placeholder="Description" onChange={(e) => setDescription(e.target.value)} value={description} className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <textarea
+                            placeholder="Description"
+                            onChange={(e) => setDescription(e.target.value)}
+                            value={description}
+                            className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <textarea
+                            id="description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            className="text-cwhite text-start h-[65px] outline-none placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
+                        />
                     </div>
                     {/* Expires */}
                     <div className="flex flex-col gap-2">

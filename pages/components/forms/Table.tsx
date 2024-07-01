@@ -13,7 +13,7 @@ import AppContext from "@/providers/AppContext";
 
 const Table: React.FC<ITable> = ({ allocations }) => {
 
-    const { setAllocationDeleted, setAllocationEdited } = useContext(AppContext);
+    const { setAllocationEdited } = useContext(AppContext);
     const [isChecked, setIsChecked] = useState<boolean>(false);
 
     // Maintain the state of individual checkboxes
@@ -26,25 +26,9 @@ const Table: React.FC<ITable> = ({ allocations }) => {
     }, []);
 
     const handleEditBtn = async (index: number) => {
-        toast.error("coming soon")
+        toast.success("coming soon")
 
         setAllocationEdited(true);
-    }
-
-    const handleCopyBtn = async (index: number) => {
-        try {
-            await navigator.clipboard.writeText(JSON.stringify(allocations[index]))
-
-            toast.success("Copied success")
-        } catch (error) {
-            toast.error("Copied failed")
-        }
-    }
-
-    const handleDelBtn = async (index: number) => {
-        setAllocationDeleted(true);
-
-        toast.error("Coming Soon");
     }
 
     const btnGroup = (index: number) => {
@@ -58,22 +42,6 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                         alt="edit"
                     />
                 </button>
-                <button aria-label="copy" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleCopyBtn(index)}>
-                    <Image
-                        src={Copy}
-                        width={16}
-                        height={16}
-                        alt="copy"
-                    />
-                </button>
-                <button aria-label="trash" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleDelBtn(index)}>
-                    <Image
-                        src={Trash}
-                        width={16}
-                        height={16}
-                        alt="trash"
-                    />
-                </button>
             </div>
         )
     }
@@ -82,11 +50,11 @@ const Table: React.FC<ITable> = ({ allocations }) => {
         return (
             <tr key={index} className="items-center border-b border-cgrey-200 cursor-pointer hover:bg-cgrey-100 text-sm leading-[18px] font-normal text-cwhite">
                 <td className="text-center justify-center">
-                    <p>{index + 1}</p>
+                    {index + 1}
                 </td>
                 {/* <td className="text-left" >{item.title.length > 10 ? item.title.slice(0, 3) + "..." + item.title.slice(-3) : item.title}</td> */}
-                <td className="text-left break-all w-28" >{item.title}</td>
-                <td className="text-center" >{item.allocation}</td>
+                <td className="text-left break-all">{item.title}</td>
+                <td className="text-center">{item.allocation}</td>
                 <td className="text-center" >{item.role ? item.role : "-"}</td>
                 <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toDateString() : "Not Set"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</td>
@@ -103,16 +71,16 @@ const Table: React.FC<ITable> = ({ allocations }) => {
             <div className="lg:block hidden w-full">
                 <table className="sticky z-10 top-0 w-full text-sm font-normal text-cgrey-900">
                     <tr className="border-b border-cgrey-200 p-4">
-                        <th className="py-4">No</th>
+                        <th className="py-4 text-center w-[40px]">No</th>
                         <th className="py-4 text-left">Title</th>
-                        <th className="py-4">Allocation</th>
-                        <th className="py-4">Role</th>
-                        <th className="py-4">Mint Date</th>
-                        <th className="py-4">Mint Hold days</th>
-                        <th className="py-4">Secondary Buy Hold</th>
-                        <th className="py-4">Amount</th>
-                        <th className="py-4">Price void</th>
-                        <th className="py-4 text-center">Action</th>
+                        <th className="py-4 max-w-[160px]">Allocation</th>
+                        <th className="py-4 max-w-[160px]">Role</th>
+                        <th className="py-4 max-w-[220px]">Mint Date</th>
+                        <th className="py-4 max-w-[160px]">Mint Hold days</th>
+                        <th className="py-4 max-w-[60px]">Secondary Buy Hold</th>
+                        <th className="py-4 max-w-[60px]">Amount</th>
+                        <th className="py-4 max-w-[60px]">Price void</th>
+                        <th className="py-4 max-w-[60px] text-center">Action</th>
                     </tr>
                     {Array.isArray(allocations) && allocations?.map((item, index) => (
                         tableBody(index, item)
@@ -169,22 +137,6 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                         />
                                     </button>
                                 </div>
-                                <button className="rounded-lg border border-cgrey-200 outline-none px-[10px] cursor-pointer py-3" onClick={() => handleCopyBtn(index)}>
-                                    <Image
-                                        src={Copy}
-                                        width={16}
-                                        height={16}
-                                        alt="copy"
-                                    />
-                                </button>
-                                <button aria-label="trash" className="rounded-lg border border-cgrey-200 outline-none px-[10px] cursor-pointer py-3" onClick={() => handleDelBtn(index)}>
-                                    <Image
-                                        src={Trash}
-                                        width={16}
-                                        height={16}
-                                        alt="trash"
-                                    />
-                                </button>
                             </div>
                         </div>
                     ))}

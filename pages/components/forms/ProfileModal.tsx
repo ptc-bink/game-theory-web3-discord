@@ -160,31 +160,31 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">ETH HOT*</p>
-                        <input type="number" placeholder="" onChange={(e) => setEthHot(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
+                        <input type="string" placeholder="" onChange={(e) => setEthHot(e.target.value)} value={ethHot} className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">ETH COLD*</p>
-                        <input type="number" placeholder="" onChange={(e) => setEthCold(e.target.value)} value={ethCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="string" placeholder="" onChange={(e) => setEthCold(e.target.value)} value={ethCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">BTC HOT*</p>
-                        <input type="number" placeholder="" onChange={(e) => setBtcHot(e.target.value)} value={btcHot} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="string" placeholder="" onChange={(e) => setBtcHot(e.target.value)} value={btcHot} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">BTC COLD*</p>
-                        <input type="number" placeholder="" onChange={(e) => setBtcCold(e.target.value)} value={btcCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="string" placeholder="" onChange={(e) => setBtcCold(e.target.value)} value={btcCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">SOL HOT*</p>
-                        <input type="number" placeholder="" onChange={(e) => setSolHot(e.target.value)} value={solHot} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="string" placeholder="" onChange={(e) => setSolHot(e.target.value)} value={solHot} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">SOL COLD*</p>
-                        <input type="number" placeholder="" onChange={(e) => setSolCold(e.target.value)} value={solCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="string" placeholder="" onChange={(e) => setSolCold(e.target.value)} value={solCold} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
             </div>
