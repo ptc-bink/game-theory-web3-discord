@@ -86,11 +86,11 @@ const BigSidebar = () => {
             console.log("res.data =====>", res.data);
 
             if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
-                setSideBar(adminSideBar);
+                return setSideBar(adminSideBar);
             }
 
             else if (res.data.isMember.includes(userID)) {
-                setSideBar(adminSideBar.filter(item => item.userIn === true))
+                return setSideBar(adminSideBar.filter(item => item.userIn === true))
             }
         }
     }
