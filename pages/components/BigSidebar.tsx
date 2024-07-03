@@ -42,7 +42,7 @@ const BigSidebar = () => {
             image: <Projects
                 fill={selectedItem}
             />,
-            userIn: true
+            userIn: false
         },
         {
             label: "Allocations",
@@ -50,7 +50,7 @@ const BigSidebar = () => {
             image: <Allocation
                 fill={selectedItem}
             />,
-            userIn: true
+            userIn: false
         },
         {
             label: "Admin",
@@ -66,7 +66,7 @@ const BigSidebar = () => {
             image: <Allocation
                 fill={selectedItem}
             />,
-            userIn: true
+            userIn: false
         },
         {
             label: "Bot",
@@ -84,20 +84,15 @@ const BigSidebar = () => {
         const res = await getUserGlobalPermission();
 
         if (res.status === 200) {
-            console.log("user-get-global-permissions =====>", res.data);
-            console.log("user-get-global-permissions =====>", res.data.isMember);
-            console.log("userID=====>", userID);
-            
-
-            
             if (res.data.isMember.includes(userID)) {
                 console.log("user is member");
                 return setSideBar(adminSideBar.filter(item => item.userIn === true))
-            }            else if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
+            } else if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
                 console.log("user is superadmin or admin");
-                
+
                 return setSideBar(adminSideBar);
-            } else {
+            }
+            else {
                 toast.error("User has no permission.")
                 return setSideBar([]);
             }

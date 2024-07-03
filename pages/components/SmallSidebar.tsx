@@ -11,6 +11,8 @@ import Admin from "../../public/avatar/admin"
 import Bot from "../../public/avatar/bot";
 import { usePathname } from "next/navigation";
 import AppContext from "../../providers/AppContext";
+import { getUserGlobalPermission } from "@/hook";
+import toast from "react-hot-toast";
 
 interface SideDataProps {
     label: string,
@@ -21,8 +23,7 @@ interface SideDataProps {
 
 const SmallSidebar = () => {
 
-    const [sideData, setSideData] = useState<SideDataProps[]>([])
-    const { isAdmin } = useContext(AppContext);
+    const { userID } = useContext(AppContext);
     const [selectedItem, setSelectedItem] = useState<string>("");
     const path = usePathname();
 
@@ -41,7 +42,7 @@ const SmallSidebar = () => {
             image: <Projects
                 fill={selectedItem}
             />,
-            userIn: true
+            userIn: false
         },
         {
             label: "Allocations",
@@ -49,7 +50,7 @@ const SmallSidebar = () => {
             image: <Allocation
                 fill={selectedItem}
             />,
-            userIn: true
+            userIn: false
         },
         {
             label: "Admin",
@@ -77,7 +78,30 @@ const SmallSidebar = () => {
         },
     ]
 
-    const sideBar = isAdmin ? adminSideBar : adminSideBar.filter(item => item.userIn == true)
+    const [sideBar, setSideBar] = useState<any[]>(adminSideBar);
+
+    const initAction = async () => {
+        const res = await getUserGlobalPermission();
+
+        if (res.status === 200) {
+            if (res.data.isMember.includes(userID)) {
+                console.log("user is member");
+                
+                return setSideBar(adminSideBar.filter(item => item.userIn === true))
+            }            else if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
+                console.log("user is superadmin or admin");
+                
+                return setSideBar(adminSideBar);
+            } else {
+                toast.error("User has no permission.")
+                return setSideBar([]);
+            }
+        }
+    }
+
+    useEffect(() => {
+        initAction();
+    }, [])
 
     return (
         <div className="flex justify-between overflow-auto bg-cgrey-100">
