@@ -516,7 +516,7 @@ export const getUserPermission = async () => {
             return { status: 200, data: data };
         }
 
-        return { status: 401, data: data };
+        return { status: 401, data: "User is not authorized" };
     } catch (error) {
         return {
             status: 401, data: "User not authenticated"
@@ -539,7 +539,7 @@ export const getUser = async () => {
             return { status: 200, data: data };
         }
 
-        return { status: 401, data: data };
+        return { status: 401, data: "User is not authorized" };
     } catch (error) {
         return {
             status: 401, data: "User not authenticated"

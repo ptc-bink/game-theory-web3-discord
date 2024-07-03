@@ -12,6 +12,7 @@ import Bot from "../../public/avatar/bot";
 import { usePathname } from "next/navigation";
 import AppContext from "../../providers/AppContext";
 import { getUserGlobalPermission, getUserPermission } from "@/hook";
+import toast from "react-hot-toast";
 
 interface SideDataProps {
     label: string,
@@ -83,14 +84,22 @@ const BigSidebar = () => {
         const res = await getUserGlobalPermission();
 
         if (res.status === 200) {
-            console.log("res.data =====>", res.data);
+            console.log("user-get-global-permissions =====>", res.data);
+            console.log("user-get-global-permissions =====>", res.data.isMember);
+            console.log("userID=====>", userID);
+            
 
-            if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
-                return setSideBar(adminSideBar);
-            }
-
-            else if (res.data.isMember.includes(userID)) {
+            
+            if (res.data.isMember.includes(userID)) {
+                console.log("user is member");
                 return setSideBar(adminSideBar.filter(item => item.userIn === true))
+            }            else if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
+                console.log("user is superadmin or admin");
+                
+                return setSideBar(adminSideBar);
+            } else {
+                toast.error("User has no permission.")
+                return setSideBar([]);
             }
         }
     }

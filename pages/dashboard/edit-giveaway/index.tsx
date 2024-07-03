@@ -305,14 +305,8 @@ const EditGiveaway: React.FC = () => {
                             placeholder="Description"
                             onChange={(e) => setDescription(e.target.value)}
                             value={description}
-                            className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
-                        <textarea
-                            id="description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="text-cwhite text-start h-[65px] outline-none placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
-                        />
+                            className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     {/* Expires */}
                     <div className="flex flex-col gap-2">

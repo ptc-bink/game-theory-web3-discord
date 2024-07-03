@@ -22,9 +22,34 @@ const Dashboard: React.FC<IDashboard> = () => {
     const [filterData, setFilterData] = useState<IGiveaway[]>([]);
     const [serverValue, setServerValue] = useState<string>("");
     const [searchInput, setSearchInput] = useState<string>("");
-    const [serverList, setServerList] = useState<IServer[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
     const topRef = useRef<HTMLDivElement>(null);
+
+    const mainAction = async (serverID: string) => {
+        let tempGiveaways: IGiveaway[] = [];
+
+        const res: any = await getGiveaways(serverID);
+
+        if (res.data !== undefined) {
+            if (res.data.length > 0) {
+                for (const giveaway of res.data) {
+                    giveaway.serverData = serverID;
+                    tempGiveaways = tempGiveaways.concat(giveaway);
+                }
+            } else {
+                console.log(`No giveaway of this server : ${serverID}`);
+            }
+        } else {
+            return toast.error("Sever error");
+        }
+
+        tempGiveaways.sort((a, b) => a.expiry - b.expiry);
+        tempGiveaways.reverse();
+
+        setGiveaways(tempGiveaways);
+        setMiddleGiveaways(tempGiveaways);
+        setFilterData(tempGiveaways);
+    }
 
     const initAction = async () => {
         const tempServer: any = await getServers();
@@ -32,39 +57,12 @@ const Dashboard: React.FC<IDashboard> = () => {
         if (tempServer.status == 200) {
             if (Array.isArray(tempServer.data)) {
                 if (tempServer.data.length > 0) {
-                    setServerList(tempServer.data);
 
                     const tempServerDropdownList: IDropdownListProps[] = tempServer.data.map((item: IServer, index: number) => {
                         return { name: item.guild.name, id: item.guild.id }
                     })
 
                     setServerDropdownList(tempServerDropdownList);
-
-                    let tempGiveaways: IGiveaway[] = [];
-
-                    for (const server of tempServer.data) {
-                        const res: any = await getGiveaways(server.guildID);
-
-                        if (res.data !== undefined) {
-                            if (res.data.length > 0) {
-                                for (const giveaway of res.data) {
-                                    giveaway.serverData = server.guild;
-                                    tempGiveaways = tempGiveaways.concat(giveaway);
-                                }
-                            } else {
-                                console.log(`No giveaway of this server : ${server.guild.name}`);
-                            }
-                        } else {
-                            return toast.error("Sever error");
-                        }
-                    }
-
-                    tempGiveaways.sort((a,b) => a.expiry - b.expiry);
-                    tempGiveaways.reverse();
-
-                    setGiveaways(tempGiveaways);
-                    setMiddleGiveaways(tempGiveaways);
-                    setFilterData(tempGiveaways);
                 } else {
                     toast.error("No server to show")
                 }
@@ -76,15 +74,6 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     const filterAction = async () => {
         let tempFilterData: IGiveaway[] = [];
-
-        if (giveaways.length > 0) {
-            tempFilterData = giveaways.filter(giveaway =>
-                giveaway.serverData.id?.includes(serverValue.toLowerCase())
-            )
-
-            setMiddleGiveaways(tempFilterData);
-            setFilterData(tempFilterData);
-        }
 
         if (searchInput !== "" && middleGiveaways.length > 0) {
             tempFilterData = middleGiveaways.filter(giveaway =>
@@ -108,7 +97,16 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         filterAction();
 
-    }, [searchInput, serverValue])
+    }, [searchInput])
+
+    useEffect(() =>{
+        if (serverValue) {
+            mainAction(serverValue);
+        } else {
+            setFilterData([]);
+            toast.success("Please select server")
+        }
+    },[serverValue])
 
     useEffect(() => {
         if (giveawayCreated || giveawayEdited) {

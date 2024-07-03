@@ -11,7 +11,7 @@ import AppContext from '../../providers/AppContext';
 import SmallSidebar from './SmallSidebar';
 import BigSidebar from './BigSidebar';
 import Navbar from './Navbar';
-import { getUser, getUserPermission } from '@/hook';
+import { getUser } from '@/hook';
 
 import Arrowleft from "@/public/avatar/arrow-up.svg"
 
@@ -25,10 +25,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
     const initAction = async () => {
 
         const tempUser: any = await getUser();
-        const tempUserPermission: any = await getUserPermission();
 
         console.log("tempUser ====>", tempUser);
-        console.log("tempUserPermission ====>", tempUserPermission);
 
         if (tempUser.status === 401) {
             if (path !== "/") {

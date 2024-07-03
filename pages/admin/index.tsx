@@ -81,7 +81,6 @@ const Admin: React.FC<IAdminProps> = () => {
                 })
 
                 setServerDropdownList(tempServerDropdownList);
-                toast.success("Please select server")
 
             } else {
                 toast.error("No server to show");

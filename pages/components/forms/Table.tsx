@@ -56,9 +56,9 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                 <td className="text-left break-all">{item.title}</td>
                 <td className="text-center">{item.allocation}</td>
                 <td className="text-center" >{item.role ? item.role : "-"}</td>
-                <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toDateString() : "Not Set"}</td>
+                <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "Not Set"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</td>
-                <td className="text-center">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + " days ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + " hours") : "-"}</td>
+                <td className="text-center">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + "d : ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + "h") : "Not Set"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.price_void : "-"}</td>
                 <td className="left-3">{btnGroup(index)}</td>
@@ -106,7 +106,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint Date</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.mint_date ? new Date(item.mint_date * 1000).toDateString() : "NOT SET"}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "Not Set"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint hold days</p>
@@ -114,7 +114,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Secondary Buy Hold</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + " days ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + " hours") : "-"}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + "d : ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + "h") : "Not Set"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Amount</p>

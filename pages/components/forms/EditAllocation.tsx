@@ -7,8 +7,9 @@ import Image from "next/image";
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
 import { addAllocation } from "@/hook";
+import { IAllocation } from '../../../utils/_type';
 
-const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
+const EditAllocationModal: React.FC<IAllocation> = () => {
 
     const { setAddAllocationModalOpen } = useContext(AppContext);
     const [title, setTitle] = useState<string>("");
@@ -104,8 +105,4 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
     )
 }
 
-export default AddAllocationModal;
-
-interface AddAllocationModalProps {
-
-}
+export default EditAllocationModal;

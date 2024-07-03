@@ -50,9 +50,8 @@ const Dropdown: React.FC<IDropdownProps> = ({ dropdownList, initValue, placehold
                     }
                     {dropdownOpen ? <Image
                         src={ArrowUp}
-
-                        width="16"
-                        height="16"
+                        width={16}
+                        height={16}
                         alt="Arrow down"
                     /> : <Image
                         src={ArrowDown}
