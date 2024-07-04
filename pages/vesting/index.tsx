@@ -228,17 +228,33 @@ const VESTING: React.FC<IVESTING> = () => {
     useEffect(() => {
         setIsInitialized(true);
 
+        console.log("serverValue =======================================>", serverValue);
+
         if (serverValue) {
             mainAction(serverValue);
             toast.success("Please select report");
         } else {
             toast.success("Please select server");
+
             setFilterFinalVestingReports([]);
+            setFilterMiddleVestingReports([]);
+            setVestingReports([]);
+
             setReportNameDropdownList([]);
+
+            setReportValue(0);
+            setTotalHeld(0);
+            setTotalMint(0);
+            seTtotalBought(0);
+            setTotalSpend(0);
+            setTotalSold(0);
+            setTotalEarned(0);
+            setPassedVesting(0);
         }
     }, [serverValue])
 
     useEffect(() => {
+
         if (serverValue && reportValue) {
             reportAction(reportValue);
         } else {
@@ -253,6 +269,7 @@ const VESTING: React.FC<IVESTING> = () => {
             setPassedVesting(0);
 
             setFilterFinalVestingReports([]);
+            setFilterMiddleVestingReports([]);
         }
     }, [reportValue])
 
