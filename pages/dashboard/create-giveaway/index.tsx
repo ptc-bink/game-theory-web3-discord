@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 
 const CreateGiveaway: React.FC = () => {
 
-    const { setShowCreditCard, setGiveawayCreated, showCreditCard } = useContext(AppContext);
+    const { setShowCreditCard, setGiveawayCreated, showCreditCard, serverID } = useContext(AppContext);
     const [serverList, setServerList] = useState<IServer[]>([])
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
@@ -36,6 +36,7 @@ const CreateGiveaway: React.FC = () => {
     const [expiresHour, setExpiresHour] = useState<any>();
     const [expires, setExpires] = useState<any>();
     const [chain, setChain] = useState<string>("");
+    const [initServerValue, setInitServerValue] = useState<string>("");
     const [quantity, setQuantity] = useState<number>(1);
     const [type, setType] = useState<string>("");
     const [requiredAllRoles, setReqiuredAllRoles] = useState<boolean>(false);
@@ -71,6 +72,22 @@ const CreateGiveaway: React.FC = () => {
                 toast.error("No server role to show")
             }
         }
+
+        const res: any = await getGiveaways(serverID);
+
+        if (res.status == 200) {
+            if (res.data.length > 0) {
+                const tempGiveawayDropdownList: IDropdownListProps[] = res.data.map((item: IGiveaway, index: number) => ({
+                    name: item.type,
+                    id: item.messageID,
+                }))
+                console.log("tempGiveawayDropdownList ----> ", tempGiveawayDropdownList);
+
+                setGiveawayDropdownList(tempGiveawayDropdownList);
+            } else {
+                toast.error("No giveaway to show")
+            }
+        }
     }
 
     const initAction = async () => {
@@ -81,7 +98,7 @@ const CreateGiveaway: React.FC = () => {
                 if (tempServer.data.length > 0) {
 
                     setServerList(tempServer.data);
-                    
+
                     await mainAction(tempServer.data[0].guildID)
 
                     const serverDropdownList: IDropdownListProps[] = tempServer.data?.map((item: IServer, index: number) => {
@@ -89,25 +106,20 @@ const CreateGiveaway: React.FC = () => {
                     })
                     setServerDropdownList(serverDropdownList);
 
-                    const res: any = await getGiveaways(tempServer.data[0].guildID);
-
-                    if (res.status == 200) {
-                        if (res.data.length > 0) {
-                            const tempGiveawayDropdownList: IDropdownListProps[] = res.data.map((item: IGiveaway, index: number) => ({
-                                name: item.type,
-                                id: item.messageID,
-                            }))
-                            setGiveawayDropdownList(tempGiveawayDropdownList);
-                        } else {
-                            toast.error("No giveaway to show")
-                        }
+                    if (serverID) {
+                        setInitServerValue(serverDropdownList.filter(item => item.id === serverID)[0].name);
                     }
+
                 } else {
                     toast.error("No server to show");
                 }
             }
         } else {
             toast.error("Try again")
+        }
+
+        if (serverID) {
+            setServerValue(serverID);
         }
     }
 
@@ -127,7 +139,7 @@ const CreateGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        if ( !expires || title !== "" || description !== "" || !chain || !quantity) {
+        if (!expires || title !== "" || description !== "" || !chain || !quantity) {
             return toast.error("Please input all values");
         }
 
@@ -182,7 +194,16 @@ const CreateGiveaway: React.FC = () => {
     }, [expiresDate, expiresHour]);
 
     useEffect(() => {
-        mainAction(serverValue)
+        if (serverValue) {
+            mainAction(serverValue)
+        } else {
+            toast.success("Select server");
+            setChainDropdownList([]);
+            setServerRoles([]);
+            setTempRequiredRoles([]);
+            setTempRestrictedRoles([]);
+            setGiveawayDropdownList([]);
+        }
     }, [serverValue])
 
     useEffect(() => {
@@ -216,6 +237,7 @@ const CreateGiveaway: React.FC = () => {
                         placeholder="Select server"
                         className="hover:bg-cdark-100 bg-cdark-200"
                         callback={setServerValue}
+                        initValue={initServerValue}
                     />
                 </div>
                 <div className="flex flex-col gap-3 text-cwhite">

@@ -191,33 +191,17 @@ const EditGiveaway: React.FC = () => {
         }
     }
 
-
-    function formatText(text: string) {
-        let formattedText = text;
-
-        // Detect text wrapped with ***
-        formattedText = formattedText.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
-
-        // Detect text wrapped with **
-        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-        // Detect text wrapped with *
-        formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-        return formattedText;
-    }
-
     const handleSubmit = async () => {
 
-        if (!expires || title !== "" || description !== "" || !chain || !quantity) {
+        if (!title || !description || !expires || !chain || !quantity || !type) {
             return toast.error("Please input all values");
         }
 
         const data = {
-            // serverID: serverID,
-            serverID: "1219682506475831446",
-            // giveawayID: selectedGiveawayID,
-            giveawayID: "1243148624808906802",
+            serverID: serverID,
+            // serverID: "1219682506475831446",
+            giveawayID: selectedGiveawayID,
+            // giveawayID: "1243148624808906802",
             expires: Math.floor(new Date(expiresDate).getTime() / 1000),
             title: title,
             description: description,

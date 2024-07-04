@@ -56,7 +56,7 @@ const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholde
                     />}
                 </div>
             </div>
-            {dropdownOpen && <div className="absolute w-full cursor-pointer text-cwhite flex flex-col mt-1 rounded-lg z-10">
+            {dropdownOpen && <div className="absolute w-full cursor-pointer text-cwhite max-h-[200px] overflow-scroll flex flex-col mt-1 rounded-lg z-10">
                 {dropdownList?.map((item, index) => (
                     <div
                         key={index}

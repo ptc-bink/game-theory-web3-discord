@@ -16,7 +16,7 @@ import { baseURL_back } from "@/utils/_config";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin, giveawayCreated, giveawayEdited, setGiveawayEdited, setGiveawayCreated } = useContext(AppContext);
+    const { isAdmin, giveawayCreated, giveawayEdited, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
     const [filterData, setFilterData] = useState<IGiveaway[]>([]);
@@ -100,6 +100,9 @@ const Dashboard: React.FC<IDashboard> = () => {
     }, [searchInput])
 
     useEffect(() =>{
+
+        setServerID(serverValue);
+
         if (serverValue) {
             mainAction(serverValue);
         } else {

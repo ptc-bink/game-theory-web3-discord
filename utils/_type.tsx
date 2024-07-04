@@ -263,7 +263,7 @@ export interface IChannel {
 
 export interface IGiveaway {
     messageID: string,
-    serverData: IGuild,
+    serverData: string,
     expiry: number,
     creator: {
         id: string,
@@ -362,7 +362,8 @@ export interface IServerCardProps {
 }
 
 export interface IGiveawayCardProps {
-    serverData: IGuild;
+    // serverData: IGuild;
+    serverData: string;
     giveawayName: string;
     giveawayID: string;
     title: string;

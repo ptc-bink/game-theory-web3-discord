@@ -28,6 +28,21 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
         return () => clearInterval(intervalId); // Cleanup interval on unmount
     }, []);
 
+    function formatText(text: string) {
+        let formattedText = text;
+
+        // Detect text wrapped with ***
+        formattedText = formattedText.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+
+        // Detect text wrapped with **
+        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // Detect text wrapped with *
+        formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        return formattedText;
+    }
+
     const multiView = (data: IServerRole[]) => {
         return (
             (Array.isArray(data) && data.length > 0)
@@ -69,7 +84,7 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
                 <div className="flex justify-between gap-2">
                     <div className="flex flex-col gap-1 w-full text-cwhite">
                         <p className="text-base font-semibold">{title ? title : "Title"}</p>
-                        <pre className="text-sm leading-[18px] font-normal text-wrap">{description ? description : "Description"}</pre>
+                        <pre className="text-sm leading-[18px] font-normal text-wrap">{formatText(description).replaceAll("'","")}</pre>
                     </div>
                     {userImage ? <img src={userImage} alt="user image" width={48} height={48} className="rounded-lg h-12 w-12" />
                         : <Image

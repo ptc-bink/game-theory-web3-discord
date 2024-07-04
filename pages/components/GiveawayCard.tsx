@@ -20,8 +20,6 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
 
-
-
     const detailItem = (index: number) => {
 
         const isWinner = winners?.includes(bidders[index].id);
@@ -34,8 +32,8 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                     height="16"
                     alt={index + "th cancel"}
                 />
-                {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "#FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
-                <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "#FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p>
+                <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username}(${bidders[index].id})`}</p>
+                {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
             </div>
         )
     }
@@ -69,7 +67,9 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
     const handleEdit = async () => {
         setSelectedGiveawayID(giveawayID);
-        setServerID(serverData.id);
+        console.log("serverData.id  =======> ", serverData);
+        
+        setServerID(serverData);
 
         router.push('/dashboard/edit-giveaway')
     }

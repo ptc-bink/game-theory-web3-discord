@@ -15,6 +15,7 @@ interface ContextType {
   addAllocationModalOpen: boolean;
   permittedUserModalOpen: boolean;
   allocationEdited: boolean;
+  allocationDeleted:boolean;
   giveawayCreated: boolean;
   giveawayEdited: boolean;
   showCreditCard: boolean;
@@ -26,6 +27,7 @@ interface ContextType {
   setAddAllocationModalOpen: (addAllocationModalOpen: boolean) => void,
   setRemoveEntrantModalOpen: (removeEntrantModalOpen: boolean) => void;
   setAllocationEdited: (allocationEdited: boolean) => void;
+  setAllocationDeleted: (allocationDeleted: boolean) => void;
   setRemoveApproval: (removeApproval: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
   setSelectedGiveawayID: (seletedGiveawayID: string) => void;
@@ -54,6 +56,7 @@ const initialValue: ContextType = {
   permittedUserModalOpen: false,
   removeApproval: false,
   allocationEdited: false,
+  allocationDeleted: false,
   giveawayCreated: false,
   giveawayEdited: false,
   showCreditCard: false,
@@ -62,6 +65,7 @@ const initialValue: ContextType = {
   setGiveawayCreated(giveawayCreated) { },
   setGiveawayEdited(giveawayEdited) { },
   setAllocationEdited(allocationEdited) { },
+  setAllocationDeleted(allocationDeleted){},
   setPermittedUserModalOpen(permittedUserModalOpen) { },
   setAddAllocationModalOpen(addAllocationModalOpen) { },
   setRemoveEntrantModalOpen(removeEntrantModalOpen) { },
