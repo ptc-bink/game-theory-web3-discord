@@ -93,7 +93,7 @@ const SmallSidebar = () => {
                 
                 return setSideBar(adminSideBar);
             } else {
-                toast.error("User has no permission.")
+                toast.error("User has no permission")
                 return setSideBar([]);
             }
         }

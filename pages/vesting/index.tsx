@@ -79,36 +79,8 @@ const VESTING: React.FC<IVESTING> = () => {
             }
         }
 
-        let tempTotalHeld = 0;
-        let tempTotalMint = 0;
-        let tempTotalBought = 0;
-        let tempTotalSpend = 0;
-        let tempTotalSold = 0;
-        let tempTotalEarned = 0;
-        let tempPassedVesting = 0;
-
-        for (const tempVestingReport of tempVestingReports) {
-            tempTotalHeld += tempVestingReport.NFTs_held;
-            tempTotalMint += tempVestingReport.NFTs_minted;
-            tempTotalBought += tempVestingReport.NFTs_bought;
-            tempTotalSpend += parseFloat(tempVestingReport.Amount_Spent_NFTs);
-            tempTotalSold += tempVestingReport.NFTs_sold;
-            tempTotalEarned += parseFloat(tempVestingReport.Amount_Earned_NFTs);
-            tempPassedVesting += tempVestingReport.passed_vesting;
-        }
-
-        setTotalHeld(tempTotalHeld);
-        setTotalMint(tempTotalMint);
-        seTtotalBought(tempTotalBought);
-        setTotalSpend(tempTotalSpend);
-        setTotalSold(tempTotalSold);
-        setTotalEarned(tempTotalEarned);
-        setPassedVesting(tempPassedVesting);
-
         setReportNameDropdownList(tempReportNameDropdownList);
         setVestingReports(tempVestingReports);
-        setFilterMiddleVestingReports(tempVestingReports);
-        setFilterFinalVestingReports(tempVestingReports);
         setIsInitialized(false)
     }
 
@@ -132,11 +104,7 @@ const VESTING: React.FC<IVESTING> = () => {
         }
     }
 
-    const filterAction = async () => {
-
-        console.log("searchValue ===>", searchValue);
-        console.log("vestingReports ====>", vestingReports);
-
+    const reportAction = async (reportValue: number) => {
         let tempVestingReports: IVestingReport[] = [];
 
         if (reportValue) {
@@ -145,10 +113,42 @@ const VESTING: React.FC<IVESTING> = () => {
                     filterMiddleVestingReport.reportID == reportValue
                 )
             }
-            setFilterMiddleVestingReports(tempVestingReports);
         } else {
             tempVestingReports = vestingReports;
         }
+
+        let tempTotalHeld = 0;
+        let tempTotalMint = 0;
+        let tempTotalBought = 0;
+        let tempTotalSpend = 0;
+        let tempTotalSold = 0;
+        let tempTotalEarned = 0;
+        let tempPassedVesting = 0;
+
+        for (const tempVestingReport of vestingReports) {
+            tempTotalHeld += tempVestingReport.NFTs_held;
+            tempTotalMint += tempVestingReport.NFTs_minted;
+            tempTotalBought += tempVestingReport.NFTs_bought;
+            tempTotalSpend += parseFloat(tempVestingReport.Amount_Spent_NFTs);
+            tempTotalSold += tempVestingReport.NFTs_sold;
+            tempTotalEarned += parseFloat(tempVestingReport.Amount_Earned_NFTs);
+            tempPassedVesting += tempVestingReport.passed_vesting;
+        }
+
+        setTotalHeld(tempTotalHeld);
+        setTotalMint(tempTotalMint);
+        seTtotalBought(tempTotalBought);
+        setTotalSpend(tempTotalSpend);
+        setTotalSold(tempTotalSold);
+        setTotalEarned(tempTotalEarned);
+        setPassedVesting(tempPassedVesting);
+
+        setFilterMiddleVestingReports(tempVestingReports);
+        setFilterFinalVestingReports(tempVestingReports);
+    }
+
+    const filterAction = async () => {
+        let tempVestingReports: IVestingReport[] = [];
 
         if (searchValue !== "") {
             if (filterMiddleVestingReports.length > 0) {
@@ -174,7 +174,7 @@ const VESTING: React.FC<IVESTING> = () => {
     const tablebody = (item: IVestingReport, index: number) => {
         return (
             <>
-                <tr key={index} onClick={() => handleDetailItem(index)} className={`${detailItemIndex==index && "bg-cgrey-200"} hover:bg-cgrey-100`}>
+                <tr key={index} onClick={() => handleDetailItem(index)} className={`${detailItemIndex == index && "bg-cgrey-200"} hover:bg-cgrey-100`}>
                     <td>{index}</td>
                     <td className="text-left pl-3">{item.username.length > 10 ? item.username.slice(0, 4) + "..." + item.username.slice(-3) : item.username}</td>
                     <td className="text-left">{item.wallet1 ? item.wallet1.slice(0, 4) + "..." + item.wallet1.slice(-3) : "-"}</td>
@@ -223,19 +223,38 @@ const VESTING: React.FC<IVESTING> = () => {
 
         filterAction();
 
-    }, [reportValue, searchValue])
+    }, [searchValue])
 
     useEffect(() => {
         setIsInitialized(true);
 
         if (serverValue) {
             mainAction(serverValue);
+            toast.success("Please select report");
         } else {
-            toast.success("Please select server")
+            toast.success("Please select server");
             setFilterFinalVestingReports([]);
             setReportNameDropdownList([]);
         }
     }, [serverValue])
+
+    useEffect(() => {
+        if (serverValue && reportValue) {
+            reportAction(reportValue);
+        } else {
+            if (serverValue) toast.success("Please select report");
+
+            setTotalHeld(0);
+            setTotalMint(0);
+            seTtotalBought(0);
+            setTotalSpend(0);
+            setTotalSold(0);
+            setTotalEarned(0);
+            setPassedVesting(0);
+
+            setFilterFinalVestingReports([]);
+        }
+    }, [reportValue])
 
     useEffect(() => {
         initAction();
