@@ -173,6 +173,7 @@ const Admin: React.FC<IAdminProps> = () => {
             {filterApprovedServerList.length > 0 ? <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
                 {filterApprovedServerList.map((item: IAdministrationTrustedServers, index: number) => (
                     <ServerCard
+                        key={index}
                         index={index + 1}
                         id={item.id}
                         rediskey={item.data.redisKey}

@@ -354,7 +354,7 @@ export const getAllocation = async (serverID: string, id?: string) => {
     }
 }
 
-export const setAllocation = async (data: ISetAllocation) => {
+export const editAllocation = async (data: ISetAllocation) => {
     try {
         const response = await fetch(`${baseURL_back}/set-allocation`, {
             method: "PUT",

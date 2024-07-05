@@ -216,7 +216,9 @@ const VESTING: React.FC<IVESTING> = () => {
     }
 
     const handlePermiitedBtn = async () => {
-        setPermittedUserModalOpen(true)
+        if (serverValue && reportValue) {
+            setPermittedUserModalOpen(true)
+        }
     }
 
     useEffect(() => {

@@ -10,11 +10,13 @@ import Trash from "@/public/avatar/trash.svg"
 import { IAllocation, IRemoveEntrants } from "@/utils/_type";
 import toast from "react-hot-toast";
 import AppContext from "@/providers/AppContext";
+import EditAllocationModal from "./EditAllocation";
 
 const Table: React.FC<ITable> = ({ allocations }) => {
 
     const { setAllocationEdited } = useContext(AppContext);
     const [isChecked, setIsChecked] = useState<boolean>(false);
+    const [editAllocationID, setAllocationID] = useState<number>(-1);
 
     // Maintain the state of individual checkboxes
     const [checkedState, setCheckedState] = useState<boolean[]>([]);
@@ -28,6 +30,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
     const handleEditBtn = async (index: number) => {
         toast.success("coming soon")
 
+        setAllocationID(index);
         setAllocationEdited(true);
     }
 
@@ -142,6 +145,17 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                     ))}
                 </div>
             </div>
+            {editAllocationID &&
+                <EditAllocationModal
+                    id={allocations[editAllocationID]?.id}
+                    title={allocations[editAllocationID]?.title}
+                    allocation={allocations[editAllocationID]?.allocation}
+                    for_server={allocations[editAllocationID]?.for_server}
+                    role={allocations[editAllocationID]?.role}
+                    contract={allocations[editAllocationID]?.contract}
+                    mint_date={allocations[editAllocationID]?.mint_date}
+                    vesting={allocations[editAllocationID]?.vesting}
+                />}
         </div>
     )
 }

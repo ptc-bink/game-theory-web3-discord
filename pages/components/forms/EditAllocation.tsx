@@ -3,13 +3,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import Image from "next/image";
 
-
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
 import { addAllocation } from "@/hook";
 import { IAllocation } from '../../../utils/_type';
 
-const EditAllocationModal: React.FC<IAllocation> = () => {
+const EditAllocationModal: React.FC<IAllocation> = (data) => {
 
     const { setAddAllocationModalOpen } = useContext(AppContext);
     const [title, setTitle] = useState<string>("");

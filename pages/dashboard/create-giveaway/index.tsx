@@ -139,7 +139,14 @@ const CreateGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
-        if (!expires || title !== "" || description !== "" || !chain || !quantity) {
+        console.log("expires ======>", expires);
+        console.log("title ===>", title);
+        console.log("description =====>", description);
+        console.log("chain ====>", chain);
+        console.log("quantity ===>", quantity);
+
+
+        if (!expires || !title || !description || !chain || !quantity) {
             return toast.error("Please input all values");
         }
 
@@ -160,10 +167,12 @@ const CreateGiveaway: React.FC = () => {
 
         const res = await handleCreateGiveaway(data);
 
-        if (res) {
+        if (res.status === 200) {
             setGiveawayCreated(true);
-            toast.success("Created successfully!")
+            toast.success("Created successfully!");
             router.back();
+        } else {
+            toast.error("Create giveaway Failed");
         }
     }
 

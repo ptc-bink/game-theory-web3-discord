@@ -134,14 +134,14 @@ const Allocation: React.FC<IAllocationProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        <div aria-label="add server" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 hover:cursor-pointer outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
+                        <div aria-label="add allocation" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 hover:cursor-pointer outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
                             <Image
                                 src={Add}
                                 width="16"
                                 height="16"
                                 alt="add button"
                             />
-                            <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Add Server</p>
+                            <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Add Allocation</p>
                         </div>
                     </div>
                 </div>
