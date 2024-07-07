@@ -145,7 +145,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                     ))}
                 </div>
             </div>
-            {editAllocationID &&
+            {/* {editAllocationID &&
                 <EditAllocationModal
                     id={allocations[editAllocationID]?.id}
                     title={allocations[editAllocationID]?.title}
@@ -155,7 +155,8 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                     contract={allocations[editAllocationID]?.contract}
                     mint_date={allocations[editAllocationID]?.mint_date}
                     vesting={allocations[editAllocationID]?.vesting}
-                />}
+                />
+            } */}
         </div>
     )
 }

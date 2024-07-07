@@ -13,12 +13,26 @@ import Cancel from "@/public/avatar/close-circle.svg"
 import { IGiveawayCardProps, IUserInfo } from "@/utils/_type";
 import AppContext from "@/providers/AppContext";
 import { useRouter } from "next/router";
+import { removeEntry } from '../../hook';
+import toast from "react-hot-toast";
 
 const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
 
     const { setSelectedGiveawayID, setServerID, isAdmin } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
+
+    const removeEntryHandle = async (removeUserId: string) => {
+        toast.error("remove entry handle••••••••••••••••••••");
+        const res = await removeEntry({ marketID: giveawayID, serverID: serverData, removeUserID: removeUserId })
+
+        if (res.status === 200) {
+            toast.success("Removed successfully");
+            location.reload();
+        } else {
+            toast.error(res.data);
+        }
+    }
 
     const detailItem = (index: number) => {
 
@@ -31,8 +45,9 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                     width="16"
                     height="16"
                     alt={index + "th cancel"}
+                    onClick={() => removeEntryHandle(bidders[index].id)}
                 />
-                <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username}(${bidders[index].id})`}</p>
+                <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username}(${bidders[index].id})`}</p>
                 {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
             </div>
         )
@@ -68,7 +83,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     const handleEdit = async () => {
         setSelectedGiveawayID(giveawayID);
         console.log("serverData.id  =======> ", serverData);
-        
+
         setServerID(serverData);
 
         router.push('/dashboard/edit-giveaway')

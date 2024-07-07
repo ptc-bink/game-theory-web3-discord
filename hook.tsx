@@ -763,22 +763,24 @@ export const adminCheck = async () => {
 
 export const removeEntry = async ({ marketID, serverID, removeUserID }: { marketID: string, serverID: string, removeUserID: string }) => {
     try {
-        const response = await fetch(`${baseURL_back}/removeentry/:${marketID}/:${serverID}/:${removeUserID}`, {
-            method: 'GET',
+        const response = await fetch(`${baseURL_back}/remove-entry/${marketID}/${serverID}/${removeUserID}`, {
+            method: 'POST',
             credentials: 'include', // Include credentials to get the cookies
         });
 
-        console.log(await response.json());
-
-        if (!response.ok) {
-            throw 'Not invalid request'
-        }
-
         const data = await response.json(); // Parse the response body as JSON
 
-        return data;
+        console.log("remove entry response", data);
+
+        if (response.status === 200) {
+            return { status: 200, data: data };
+        }
+
+        return { status: 401, data: data.error };
     } catch (error) {
-        throw ("Network response error")
+        return {
+            status: 401, data: "No server-roles to show"
+        };
     }
 }
 

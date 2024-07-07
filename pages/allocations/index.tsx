@@ -102,7 +102,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
     }, [searchInput])
 
     useEffect(() => {
-        if ( allocationEdited) {
+        if (allocationEdited) {
             mainAction(serverValue)
             setAllocationEdited(false);
         }
@@ -162,11 +162,11 @@ const Allocation: React.FC<IAllocationProps> = () => {
                 </div>
             </div>
             }
-            {addAllocationModalOpen &&
+            {/* {addAllocationModalOpen &&
                 <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
                     <AddAllocationModal />
-                </div>}
-
+                </div>
+            } */}
         </div>
     );
 }
