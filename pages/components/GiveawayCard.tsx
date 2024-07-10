@@ -21,9 +21,8 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
-    const [bidders_, setBidders] = useState<any>(bidders);
+    const [bidders_, setBidders] = useState<IUserInfo[]>(bidders);
     const [entrants_, setEntrants] = useState<any>(entrants);
-
 
     const removeEntryHandle = async (removeUserId: string) => {
         const res = await removeEntry({ marketID: giveawayID, serverID: serverData, removeUserID: removeUserId })
@@ -33,7 +32,13 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
             toast.success("User is removed");
             //find the index of the user to remove using removeUserId and bidders
 
+            console.log("removeUserId ===> ", removeUserId);
+            toast.success("removeUserId ===> " + removeUserId);
+            
             const updatedBidders = bidders_.filter((bidder: IUserInfo) => bidder.id !== removeUserId);
+
+            console.log("updatedBidders ====> ", updatedBidders);
+            
             setBidders(updatedBidders);
             setEntrants(entrants_ - 1);
 
@@ -55,7 +60,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                     alt={index + "th cancel"}
                     onClick={() => removeEntryHandle(bidders_[index].id)}
                 />
-                <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username}(${bidders[index].id})`}</p>
+                <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index]?.username}(${bidders[index]?.id})`}</p>
                 {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
             </div>
         )
@@ -80,6 +85,9 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                 </div>
             );
         }
+
+        console.log("content ========================================>", content);
+        
 
         return <div className="flex gap-2 md:flex-row flex-col">{content}</div>;
     }
