@@ -21,13 +21,22 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
+    const [bidders_, setBidders] = useState<any>(bidders);
+    const [entrants_, setEntrants] = useState<any>(entrants);
+
 
     const removeEntryHandle = async (removeUserId: string) => {
         const res = await removeEntry({ marketID: giveawayID, serverID: serverData, removeUserID: removeUserId })
 
         if (res.status === 200) {
+
             toast.success("User is removed");
-            setIsRemoveEntry(true);
+            //find the index of the user to remove using removeUserId and bidders
+
+            const updatedBidders = bidders_.filter((bidder: IUserInfo) => bidder.id !== removeUserId);
+            setBidders(updatedBidders);
+            setEntrants(entrants_ - 1);
+
         } else {
             toast.error(res.data);
         }
@@ -35,7 +44,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
     const detailItem = (index: number) => {
 
-        const isWinner = winners?.includes(bidders[index].id);
+        const isWinner = winners?.includes(bidders_[index].id);
 
         return (
             <div key={index} className="flex gap-1 hover:bg-cgrey-200 w-full cursor-pointer px-2 text-clip">
@@ -44,7 +53,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                     width="16"
                     height="16"
                     alt={index + "th cancel"}
-                    onClick={() => removeEntryHandle(bidders[index].id)}
+                    onClick={() => removeEntryHandle(bidders_[index].id)}
                 />
                 <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username}(${bidders[index].id})`}</p>
                 {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
@@ -55,13 +64,13 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     const details = () => {
         let content: any = [];
 
-        for (let i = 0; i < Math.ceil(bidders.length / 10); i++) {
+        for (let i = 0; i < Math.ceil(bidders_.length / 10); i++) {
             content.push(
                 <div className="w-1/4 flex flex-col gap-2" key={i}>
                     {Array.from({ length: 10 }, (_, j) => {
                         const index = i * 10 + j;
                         return (
-                            index < bidders.length && (
+                            index < bidders_.length && (
                                 <div key={index}>
                                     {detailItem(index)}
                                 </div>
@@ -109,7 +118,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                     </div>
                     <div className="flex flex-col gap-1">
                         <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Entrants:</p>
-                        <p className="text-cwhite text-sm font-semibold">{entrants}</p>
+                        <p className="text-cwhite text-sm font-semibold">{entrants_}</p>
                     </div>
                     <div className="flex flex-col gap-1">
                         <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Quantity:</p>
@@ -153,7 +162,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                             height="16"
                             alt="cancel"
                         />
-                        <p className="text-xs leading-[18px] font-medium text-cgrey-900">Not Finished Yet</p>
+                        <p className="text-xs leading-[18px] font-medium text-cgrey-900">Not Finished Yet</p> 
                     </div>}
                 </div >
             }
