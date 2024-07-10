@@ -22,6 +22,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
     const [bidders_, setBidders] = useState(bidders);
+    const [entrants_, setEntrants] = useState(entrants);
 
 
     const removeEntryHandle = async (removeUserId: string) => {
@@ -34,6 +35,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
             const updatedBidders = bidders_.filter((bidder: IUserInfo) => bidder.id !== removeUserId);
             setBidders(updatedBidders);
+            setEntrants(entrants_ - 1);
 
         } else {
             toast.error(res.data);
@@ -116,7 +118,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                     </div>
                     <div className="flex flex-col gap-1">
                         <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Entrants:</p>
-                        <p className="text-cwhite text-sm font-semibold">{entrants}</p>
+                        <p className="text-cwhite text-sm font-semibold">{entrants_}</p>
                     </div>
                     <div className="flex flex-col gap-1">
                         <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Quantity:</p>
