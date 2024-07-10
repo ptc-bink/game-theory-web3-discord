@@ -136,10 +136,6 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                 {harvested ?
                     <div className="grid grid-cols-3">
                         <div className="flex flex-col gap-1">
-                            <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Enter date:</p>
-                            <p className="text-cwhite text-sm font-semibold">{enterDate}</p>
-                        </div>
-                        <div className="flex flex-col gap-1">
                             <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Time remaining:</p>
                             <p className="text-cwhite text-sm font-semibold">Ended</p>
                         </div>
@@ -148,10 +144,6 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         </Link>
                     </div> :
                     <div className="grid grid-cols-3">
-                        <div className="flex flex-col gap-1">
-                            <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Enter date:</p>
-                            <p className="text-cwhite text-sm font-semibold">{enterDate}</p>
-                        </div>
                         <div className="flex flex-col gap-1">
                             <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Time remaining</p>
                             <p className="text-cwhite text-sm font-semibold">{timeRemaining * 1000 < new Date().getTime() ? "Ended" : (Math.floor((timeRemaining * 1000 - new Date().getTime()) / (60 * 60 * 24 * 1000)) === 0 ? "" : Math.floor((timeRemaining * 1000 - new Date().getTime()) / (60 * 60 * 24 * 1000)) + " days  ") + (Math.floor((timeRemaining * 1000 - new Date().getTime()) / (60 * 60 * 1000)) - Math.floor((timeRemaining * 1000 - new Date().getTime()) / (60 * 60 * 24 * 1000)) * 24) + " hours"}</p>
