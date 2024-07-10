@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { removeEntry } from '../hook';
 
 interface ContextType {
   addServerModalOpen: boolean;
@@ -20,6 +21,8 @@ interface ContextType {
   giveawayEdited: boolean;
   showCreditCard: boolean;
   serverID: string;
+  isRemoveEntry:boolean;
+  setIsRemoveEntry:(removeEntry : boolean) => void,
   setShowCreditCard: (showCreditCard: boolean) => void,
   setGiveawayCreated: (giveawayCreated: boolean) => void,
   setGiveawayEdited: (giveawayEdited: boolean) => void,
@@ -61,6 +64,8 @@ const initialValue: ContextType = {
   giveawayEdited: false,
   showCreditCard: false,
   serverID: "",
+  isRemoveEntry: false,
+  setIsRemoveEntry(isRemoveEntry){},
   setShowCreditCard(showCreditCard) { },
   setGiveawayCreated(giveawayCreated) { },
   setGiveawayEdited(giveawayEdited) { },

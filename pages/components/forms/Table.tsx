@@ -4,8 +4,6 @@ import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 
 import Edit from "@/public/avatar/edit.svg"
-import Copy from "@/public/avatar/copy.svg"
-import Trash from "@/public/avatar/trash.svg"
 
 import { IAllocation, IRemoveEntrants } from "@/utils/_type";
 import toast from "react-hot-toast";
@@ -16,7 +14,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
 
     const { setAllocationEdited } = useContext(AppContext);
     const [isChecked, setIsChecked] = useState<boolean>(false);
-    const [editAllocationID, setAllocationID] = useState<number>(-1);
+    const [editAllocationID, setAllocationID] = useState<number>(0);
 
     // Maintain the state of individual checkboxes
     const [checkedState, setCheckedState] = useState<boolean[]>([]);
@@ -145,7 +143,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                     ))}
                 </div>
             </div>
-            {/* {editAllocationID &&
+            {editAllocationID &&
                 <EditAllocationModal
                     id={allocations[editAllocationID]?.id}
                     title={allocations[editAllocationID]?.title}
@@ -156,7 +154,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                     mint_date={allocations[editAllocationID]?.mint_date}
                     vesting={allocations[editAllocationID]?.vesting}
                 />
-            } */}
+            }
         </div>
     )
 }

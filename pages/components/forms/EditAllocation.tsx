@@ -11,16 +11,16 @@ import { IAllocation } from '../../../utils/_type';
 const EditAllocationModal: React.FC<IAllocation> = (data) => {
 
     const { setAddAllocationModalOpen } = useContext(AppContext);
-    const [title, setTitle] = useState<string>("");
+    const [title, setTitle] = useState<string>(data.title);
     const [amount, setAmount] = useState<number>(0);
-    const [allocation, setAllocation] = useState<number>(0);
+    const [allocation, setAllocation] = useState<number>(data.allocation);
     const [mintDate, setMintDate] = useState<Date>();
-    const [mintHoldDays, setMintHoldDays] = useState<number>(0);
-    const [secondaryBuyHoldDays, setSecondaryBuyHoldDays] = useState<number>(0);
-    const [secondaryBuyHoldHours, setSecondaryBuyHoldHours] = useState<number>(0);
-    const [secondaryBuyAmount, setSecondaryBuyAmount] = useState<number>(0);
-    const [priceVoid, setPriceVoid] = useState<number>(0);
-    const [contract, setContract] = useState<string>("");
+    const [mintHoldDays, setMintHoldDays] = useState<number>(data.vesting?.mint_hold_days as number);
+    const [secondaryBuyHoldDays, setSecondaryBuyHoldDays] = useState<number>(data.vesting?.secondary_buy_hold_days as number);
+    const [secondaryBuyHoldHours, setSecondaryBuyHoldHours] = useState<number>(data.vesting?.secondary_buy_hours as number);
+    const [secondaryBuyAmount, setSecondaryBuyAmount] = useState<number>(data.vesting?.secondary_buy_amount as number);
+    const [priceVoid, setPriceVoid] = useState<number>(data.vesting?.price_void as number);
+    const [contract, setContract] = useState<string>(data.contract);
 
     const handleSubmit = async () => {
 
@@ -93,10 +93,10 @@ const EditAllocationModal: React.FC<IAllocation> = (data) => {
                     </div>
                 </div>
                 <div className="grid gap-3">
-                    {/* <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Mint Date</p>
                         <input type="datetime-local" onChange={(e) => setMintDate(e.target.valueAsDate as Date)} placeholder="Choose Amount" value={mintDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
-                    </div> */}
+                    </div>
                 </div>
             </div>
             <button aria-label="submit" className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={handleSubmit}>Submit</button>

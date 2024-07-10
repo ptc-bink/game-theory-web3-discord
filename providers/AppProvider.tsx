@@ -24,6 +24,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [giveawayCreated, setGiveawayCreated] = useState<boolean>(false);
   const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
   const [giveawayEdited, setGiveawayEdited] = useState<boolean>(false);
+  const [isRemoveEntry, setIsRemoveEntry] = useState<boolean>(false);
+
 
   return (
     <AppContext.Provider
@@ -47,6 +49,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         giveawayCreated,
         giveawayEdited,
         showCreditCard,
+        isRemoveEntry,
+        setIsRemoveEntry,
         setShowCreditCard,
         setGiveawayCreated,
         setGiveawayEdited,

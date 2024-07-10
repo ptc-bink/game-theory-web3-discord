@@ -18,17 +18,16 @@ import toast from "react-hot-toast";
 
 const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
 
-    const { setSelectedGiveawayID, setServerID, isAdmin } = useContext(AppContext);
+    const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
 
     const removeEntryHandle = async (removeUserId: string) => {
-        toast.error("remove entry handle••••••••••••••••••••");
         const res = await removeEntry({ marketID: giveawayID, serverID: serverData, removeUserID: removeUserId })
 
         if (res.status === 200) {
-            toast.success("Removed successfully");
-            location.reload();
+            toast.success("User is removed");
+            setIsRemoveEntry(true);
         } else {
             toast.error(res.data);
         }
@@ -147,7 +146,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                     <div className="grid md:grid-rows-10 md:grid-flow-col max-h-[270px] overflow-scroll grid-flow-row gap-y-[1.5px] border border-cgrey-200 rounded-t-lg px-1 py-[10px] bg-cdark-50">
                         {details()}
                     </div>
-                    {harvested || <div className="flex justify-center items-center bg-cgrey-200 gap-1 px-4 py-2 rounded-b-lg">
+                    {timeRemaining * 1000 < new Date().getTime() || <div className="flex justify-center items-center bg-cgrey-200 gap-1 px-4 py-2 rounded-b-lg">
                         <Image
                             src={Cancel}
                             width="16"

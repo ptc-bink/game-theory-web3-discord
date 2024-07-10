@@ -16,7 +16,7 @@ import { baseURL_back } from "@/utils/_config";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin, giveawayCreated, giveawayEdited, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
+    const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
     const [filterData, setFilterData] = useState<IGiveaway[]>([]);
@@ -29,6 +29,8 @@ const Dashboard: React.FC<IDashboard> = () => {
         let tempGiveaways: IGiveaway[] = [];
 
         const res: any = await getGiveaways(serverID);
+
+        console.log("giveaways ====> ", giveaways);
 
         if (res.data !== undefined) {
             if (res.data.length > 0) {
@@ -99,7 +101,15 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     }, [searchInput])
 
-    useEffect(() =>{
+    useEffect(() => {
+        if (isRemoveEntry) {
+            console.log("isRemoveEntry ===============>", isRemoveEntry);
+            mainAction(serverValue);
+            setIsRemoveEntry(false);
+        }
+    }, [isRemoveEntry])
+
+    useEffect(() => {
 
         setServerID(serverValue);
 
@@ -109,7 +119,7 @@ const Dashboard: React.FC<IDashboard> = () => {
             setFilterData([]);
             toast.success("Please select server")
         }
-    },[serverValue])
+    }, [serverValue])
 
     useEffect(() => {
         if (giveawayCreated || giveawayEdited) {
