@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { removeEntry } from '../hook';
+import { removeEntry, getUserGlobalPermission } from '../hook';
 
 interface ContextType {
   addServerModalOpen: boolean;
@@ -16,13 +16,15 @@ interface ContextType {
   addAllocationModalOpen: boolean;
   permittedUserModalOpen: boolean;
   allocationEdited: boolean;
-  allocationDeleted:boolean;
+  allocationDeleted: boolean;
   giveawayCreated: boolean;
   giveawayEdited: boolean;
   showCreditCard: boolean;
   serverID: string;
-  isRemoveEntry:boolean;
-  setIsRemoveEntry:(removeEntry : boolean) => void,
+  isRemoveEntry: boolean;
+  userGlobalPermission: any;
+  setUserGlobalPermission: (userGlobalPermission: any) => void,
+  setIsRemoveEntry: (removeEntry: boolean) => void,
   setShowCreditCard: (showCreditCard: boolean) => void,
   setGiveawayCreated: (giveawayCreated: boolean) => void,
   setGiveawayEdited: (giveawayEdited: boolean) => void,
@@ -65,12 +67,14 @@ const initialValue: ContextType = {
   showCreditCard: false,
   serverID: "",
   isRemoveEntry: false,
-  setIsRemoveEntry(isRemoveEntry){},
+  userGlobalPermission: {},
+  setUserGlobalPermission(getUserGlobalPermission) { },
+  setIsRemoveEntry(isRemoveEntry) { },
   setShowCreditCard(showCreditCard) { },
   setGiveawayCreated(giveawayCreated) { },
   setGiveawayEdited(giveawayEdited) { },
   setAllocationEdited(allocationEdited) { },
-  setAllocationDeleted(allocationDeleted){},
+  setAllocationDeleted(allocationDeleted) { },
   setPermittedUserModalOpen(permittedUserModalOpen) { },
   setAddAllocationModalOpen(addAllocationModalOpen) { },
   setRemoveEntrantModalOpen(removeEntrantModalOpen) { },

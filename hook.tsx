@@ -680,7 +680,7 @@ export const getUserGlobalPermission = async () => {
 
         const data = await response.json(); // Parse the response body as JSON
 
-        console.log("get user get global permissions", data);
+        console.log("get user global permissions", data);
 
         if (response.status === 200) {
             return {

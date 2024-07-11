@@ -228,6 +228,13 @@ export interface IUserInfo {
     avatar: string;
 }
 
+export interface IUserGlobalPermission {
+    isMember: Array<string>,
+    isAdmin: Array<string>,
+    isSuperAdmin: Array<string>,
+    canViewVesting: Array<string>,
+}
+
 export interface IDropdownListProps {
     name: string,
     id: string

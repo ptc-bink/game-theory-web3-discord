@@ -17,7 +17,7 @@ import Arrowleft from "@/public/avatar/arrow-up.svg"
 
 const Layout = ({ children }: { children: ReactNode }) => {
 
-    const { setUserImage, setUsername, setUserID, setIsAdmin } = useContext(AppContext);
+    const { setUserImage, setUsername, setUserID, setIsAdmin, setUserGlobalPermission } = useContext(AppContext);
     const topRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const path = usePathname()
@@ -41,7 +41,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
             setUsername(tempUser.data.username);
 
             if (tempPermission.status === 200) {
-                if (tempPermission.data.isAdmin.includes(tempUser.data.id) || tempPermission.data.isSuperAdmin.includes(tempUser.data.id)) {
+                setUserGlobalPermission(tempPermission.data);
+
+                if (tempPermission.data.isAdmin > 0 || tempPermission.data.isSuperAdmin > 0) {
                     setIsAdmin(true);
                 } else setIsAdmin(false);
             }
