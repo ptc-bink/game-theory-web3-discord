@@ -95,7 +95,7 @@ const EditAllocationModal: React.FC<IAllocation> = (data) => {
                 <div className="grid gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Mint Date</p>
-                        <input type="datetime-local" onChange={(e) => setMintDate(e.target.valueAsDate as Date)} placeholder="Choose Amount" value={mintDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        {/* <input type="datetime-local" onChange={(e) => setMintDate(e.target.valueAsDate as Date)} placeholder="Choose Amount" value={mintDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" /> */}
                     </div>
                 </div>
             </div>

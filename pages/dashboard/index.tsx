@@ -24,6 +24,7 @@ const Dashboard: React.FC<IDashboard> = () => {
     const [serverValue, setServerValue] = useState<string>("");
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
+    const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
     const topRef = useRef<HTMLDivElement>(null);
 
     async function checkUserPermissionsToServer(serverID: string) {
