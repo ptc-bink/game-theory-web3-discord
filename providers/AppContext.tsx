@@ -68,7 +68,7 @@ const initialValue: ContextType = {
   serverID: "",
   isRemoveEntry: false,
   userGlobalPermission: {},
-  setUserGlobalPermission(getUserGlobalPermission) { },
+  setUserGlobalPermission(userGlobalPermission) { },
   setIsRemoveEntry(isRemoveEntry) { },
   setShowCreditCard(showCreditCard) { },
   setGiveawayCreated(giveawayCreated) { },

@@ -72,13 +72,11 @@ const Dashboard: React.FC<IDashboard> = () => {
     const initPermissions = async () => {
         if (!userGlobalPermission) {
             let tempUserGlobalPermission = await getUserGlobalPermission()
-            tempUserGlobalPermission = tempUserGlobalPermission.data;
             setUserGlobalPermissons(tempUserGlobalPermission.data);
-            setUserGlobalPermission(tempUserGlobalPermission.data);
             console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
-            const adminOf = tempUserGlobalPermission.isAdmin;
-            const superAdminOf = tempUserGlobalPermission.isSuperAdmin;
-            const memberOf = tempUserGlobalPermission.isMember;
+            const adminOf = tempUserGlobalPermission.data.isAdmin;
+            const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
+            const memberOf = tempUserGlobalPermission.data.isMember;
 
             const allServers = [...adminOf, ...superAdminOf, ...memberOf];
             const uniqueServers = Array.from(new Set(allServers));
@@ -87,7 +85,7 @@ const Dashboard: React.FC<IDashboard> = () => {
             console.log("uniqueServers ===> ", uniqueServers)
 
             return uniqueServers;
-        }else{
+        } else {
             const adminOf = userGlobalPermission?.isAdmin;
             const superAdminOf = userGlobalPermission?.isSuperAdmin;
             const memberOf = userGlobalPermission?.isMember;
@@ -110,7 +108,7 @@ const Dashboard: React.FC<IDashboard> = () => {
         setUserGlobalPermissons(tempUserGlobalPermission.data);
         setUserGlobalPermission(tempUserGlobalPermission.data);
         console.log("tempServer.data ===> ", tempServer.data);
-        
+
         const uniqueServers = await initPermissions();
         if (tempServer.status == 200) {
             if (Array.isArray(tempServer.data)) {

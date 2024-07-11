@@ -23,7 +23,6 @@ interface SideDataProps {
 
 const BigSidebar = () => {
 
-    const { userGlobalPermission } = useContext(AppContext);
     const [selectedItem, setSelectedItem] = useState<string>("");
     const path = usePathname();
 
@@ -85,37 +84,40 @@ const BigSidebar = () => {
     ]
 
     const [sideBar, setSideBar] = useState<any[]>(adminSideBar.filter(item => item.userIn === true));
-    // const initActionCalled = useRef(false);
+    const initActionCalled = useRef(false);
 
     const initAction = async () => {
-        // if (initActionCalled.current) return; // Prevents initAction from running more than once
-        // initActionCalled.current = true;
+        if (initActionCalled.current) return; // Prevents initAction from running more than once
+        initActionCalled.current = true;
 
-        console.log("get useruuouoiuoiuoiu global permission data =====> ", userGlobalPermission);
+        const res = await getUserGlobalPermission();
+        console.log("get bigsidebar global permission data =====> ", res.data);
 
-        if (userGlobalPermission?.isMember.length > 0 && userGlobalPermission?.isSuperAdmin.length === 0 && userGlobalPermission?.isAdmin.length === 0) {
+        if (res.status === 200) {
+            if (res.data.isMember.length > 0 && res.data.isSuperAdmin.length === 0 && res.data.isAdmin.length === 0) {
 
-            if (userGlobalPermission?.canViewVesting.length > 0) {
-                toast.success("user is member with vesting rights");
-                return setSideBar(adminSideBar.filter(item => item.permittedIn === true || item.userIn === true))
-            } else {
-                toast.success("user is standard member");
-                return setSideBar(adminSideBar.filter(item => item.userIn === true))
-            }
+                if (res.data.canViewVesting.length > 0) {
+                    toast.success("user is member with vesting rights");
+                    return setSideBar(adminSideBar.filter(item => item.permittedIn === true || item.userIn === true))
+                } else {
+                    toast.success("user is standard member");
+                    return setSideBar(adminSideBar.filter(item => item.userIn === true))
+                }
 
-        } else if (userGlobalPermission?.isSuperAdmin.length > 0 || userGlobalPermission?.isAdmin.length > 0) {
-            toast.success("User is superadmin or admin");
+            } else if (res.data.isSuperAdmin.length > 0 || res.data.isAdmin.length > 0) {
+                toast.success("User is superadmin or admin");
 
-            return setSideBar(adminSideBar);
-        } else if (userGlobalPermission?.canViewVesting.length > 0) {
-            toast.success("User can view vesting ONLY");
+                return setSideBar(adminSideBar);
+            } else if (res.data.canViewVesting.length > 0) {
+                toast.success("User can view vesting ONLY");
 
-            if (userGlobalPermission?.canViewVesting.length > 0) {
-                toast.success("user is member with vesting rights");
-                return setSideBar(adminSideBar.filter(item => item.permittedIn === true || item.userIn === true))
-            } else {
-                toast.success("user is standard member");
-                return setSideBar(adminSideBar.filter(item => item.userIn === true))
+                if (res.data.canViewVesting.length > 0) {
+                    toast.success("user is member with vesting rights");
+                    return setSideBar(adminSideBar.filter(item => item.permittedIn === true || item.userIn === true))
+                } else {
+                    toast.success("user is standard member");
+                    return setSideBar(adminSideBar.filter(item => item.userIn === true))
+                }
             }
         }
     }

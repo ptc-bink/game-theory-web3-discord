@@ -95,10 +95,10 @@ const SmallSidebar = () => {
             if (res.data.isMember.length > 0 && res.data.isSuperAdmin.length === 0 && res.data.isAdmin.length === 0) {
 
                 if (res.data.canViewVesting.length > 0) {
-                    toast.success("user is member with vesting rights");
+                    // toast.success("user is member with vesting rights");
                     return setSideBar(adminSideBar.filter(item => item.permittedIn === true || item.userIn === true))
                 } else {
-                    toast.success("user is standard member");
+                    // toast.success("user is standard member");
                     return setSideBar(adminSideBar.filter(item => item.userIn === true))
                 }
             } else if (res.data.isSuperAdmin.length > 0 || res.data.isAdmin.length > 0) {
@@ -106,12 +106,12 @@ const SmallSidebar = () => {
 
                 return setSideBar(adminSideBar);
             } else if (res.data.canViewVesting.length > 0) {
-                toast.success("User can view vesting ONLY");
+                // toast.success("User can view vesting ONLY");
 
                 return setSideBar(adminSideBar.filter(item => item.permittedIn === true))
 
             } else {
-                toast.error("User has no permission")
+                // toast.error("User has no permission")
                 return setSideBar([]);
             }
         }
