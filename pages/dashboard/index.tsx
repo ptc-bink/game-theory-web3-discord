@@ -12,13 +12,11 @@ import AppContext from "@/providers/AppContext";
 
 import { IGiveaway, IServer, IDropdownListProps } from "@/utils/_type";
 import { getGiveaways, getServers, getUserGlobalPermission } from "@/hook";
-import { baseURL_back } from "@/utils/_config";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
+    const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
-    const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
     const [visibleServers, setVisibleServers] = useState<string[]>([]);
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
@@ -73,21 +71,15 @@ const Dashboard: React.FC<IDashboard> = () => {
     }
 
     const initPermissions = async () => {   
-        const userPermission = await getUserGlobalPermission();
-        if (userPermission.status === 200) {
-            setUserGlobalPermissons(userPermission.data);
-            const adminOf = userPermission.data.isAdmin;
-            const superAdminOf = userPermission.data.isSuperAdmin;
-            const memberOf = userPermission.data.isMember;
+            const adminOf = userGlobalPermission.isAdmin;
+            const superAdminOf = userGlobalPermission.isSuperAdmin;
+            const memberOf = userGlobalPermission.isMember;
 
             const allServers = [...adminOf, ...superAdminOf, ...memberOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
             return uniqueServers;
-        } else {
-            toast.error("Error Getting globalPermissons")
-        }
 
     }
 
@@ -97,7 +89,6 @@ const Dashboard: React.FC<IDashboard> = () => {
         if (tempServer.status == 200) {
             if (Array.isArray(tempServer.data)) {
                 if (tempServer.data.length > 0) {
-
                     const tempServerDropdownList: IDropdownListProps[] = tempServer.data
                         .filter((item: IServer) => uniqueServers?.includes(item.guild.id))
                         .map((item: IServer, index: number) => {
@@ -129,6 +120,11 @@ const Dashboard: React.FC<IDashboard> = () => {
             setFilterData(tempFilterData);
         }
     }
+
+    const Setup = async () => {
+        await initPermissions();
+        await initAction();
+    };
 
     useEffect(() => {
 
@@ -164,13 +160,7 @@ const Dashboard: React.FC<IDashboard> = () => {
     }, [serverValue])
 
     useEffect(() => {
-        if (giveawayCreated || giveawayEdited) {
-            
-            const Setup = async () => {
-                await initPermissions();
-                await initAction();
-            };
-    
+        if (giveawayCreated || giveawayEdited) {    
             Setup();
             setGiveawayCreated(false);
             setGiveawayEdited(false);

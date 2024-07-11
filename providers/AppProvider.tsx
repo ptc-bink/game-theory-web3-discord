@@ -2,7 +2,7 @@
 
 import React, { ReactNode, useState } from "react";
 import AppContext from "./AppContext";
-import { IChannel, IServer } from "../utils/_type";
+import { IChannel, IServer, IUserGlobalPermission } from "../utils/_type";
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [addServerModalOpen, setAddServerModalOpen] = useState<boolean>(false);
@@ -25,7 +25,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [showCreditCard, setShowCreditCard] = useState<boolean>(false);
   const [giveawayEdited, setGiveawayEdited] = useState<boolean>(false);
   const [isRemoveEntry, setIsRemoveEntry] = useState<boolean>(false);
-
+  const [userGlobalPermission,  setUserGlobalPermission] = useState<IUserGlobalPermission>();
 
   return (
     <AppContext.Provider
@@ -50,6 +50,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         giveawayEdited,
         showCreditCard,
         isRemoveEntry,
+        userGlobalPermission,
+        setUserGlobalPermission,
         setIsRemoveEntry,
         setShowCreditCard,
         setGiveawayCreated,
