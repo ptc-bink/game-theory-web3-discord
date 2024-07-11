@@ -52,7 +52,7 @@ const initialValue: ContextType = {
   userID: "",
   userImage: "",
   username: "",
-  isAdmin: true,
+  isAdmin: false,
   selectedGiveawayID: "",
   isLoading: false,
   addAllocationModalOpen: false,

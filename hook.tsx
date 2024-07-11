@@ -733,9 +733,10 @@ export const getServerRoles = async (serverID: string) => {
         console.log("get server response", data);
 
         if (response.status === 200) {
+            console.log("Status 200", data);
             return { status: 200, data: data };
         }
-
+        console.log("Status 401", data);
         return { status: 401, data: data };
     } catch (error) {
         return {

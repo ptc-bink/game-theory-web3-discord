@@ -125,17 +125,21 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({  giveawayName, giveawayID,
     }
 
     const handleEdit = async () => {
-        setSelectedGiveawayID(giveawayID);
-        console.log("serverData.id  =======> ", serverData);
+        console.log("isAdmin ====> ", isAdmin);
+        if (!isAdmin){
+            toast.error("You are not an admin - You Cannot Edit this giveaway");
+            return;
+        }else{
+            setSelectedGiveawayID(giveawayID);
+            console.log("serverData.id  =======> ", serverData);
+    
+            setServerID(serverData);
+    
+            router.push('/dashboard/edit-giveaway')
+        }
 
-        setServerID(serverData);
-
-        router.push('/dashboard/edit-giveaway')
     }
-    const handleEnter = async () => {
 
-        console.log(`entered`)
-    }
 
     return (
         <div className="flex flex-col p-6 gap-6 rounded-2xl border border-cgrey-200">

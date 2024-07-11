@@ -14,11 +14,12 @@ import BackBtn from "@/pages/components/BackBtn";
 import { getChainList, getGiveaways, getServerRoles, getServers, handleEditGiveaway } from "@/hook";
 import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/utils/_type";
 import { useRouter } from "next/router";
+
 import toast from "react-hot-toast";
 
 const EditGiveaway: React.FC = () => {
 
-    const { setShowCreditCard, setGiveawayCreated, showCreditCard, serverID, selectedGiveawayID } = useContext(AppContext);
+    const { setShowCreditCard, setGiveawayCreated, showCreditCard, serverID, selectedGiveawayID, isAdmin } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [initRestrictedRoles, setInitRestrictedRoles] = useState<any>();
@@ -45,7 +46,10 @@ const EditGiveaway: React.FC = () => {
     const router = useRouter();
 
     const initAction = async () => {
-
+        console.log("isAdmin ====> ", isAdmin)
+        if (!isAdmin) {
+            return router.push("/dashboard");
+        }
         const tempServer: any = await getServers();
 
         // Get server list
@@ -93,6 +97,21 @@ const EditGiveaway: React.FC = () => {
 
         // Get server roles
         const tempServerRoles: any = await getServerRoles(serverID);
+        if (tempServerRoles.status == 200) {
+            if (tempServerRoles.data.length > 0) {
+                setServerRoles(tempServerRoles.data);
+                setTempRequiredRoles(tempServerRoles.data);
+                setTempRestrictedRoles(tempServerRoles.data);
+            } else {
+                toast.error(`No server role to show - ${tempServerRoles.data.message}`)
+                //return the user to dashboard
+                return router.push("/dashboard")
+            }
+        }else{
+            toast.error(`No server role to show - ${tempServerRoles.data.message}`)
+            //return the user to dashboard
+            return router.push("/dashboard")
+        }
 
         // Get giveaway list
         const res: any = await getGiveaways(serverID);
@@ -114,7 +133,7 @@ const EditGiveaway: React.FC = () => {
                     setReqiuredAllRoles(tempEditableGiveaway.requireAllRoles);
                     console.log("tempEditableGiveaway.required ====> ", tempEditableGiveaway.required);
                     console.log("serverRoles ====> ", tempServerRoles.data);
-
+                    
                     const tempRequiredRoles = tempServerRoles.data?.filter((item: IServerRole) => {
                         return tempEditableGiveaway.required.includes(item.id)
                     })
