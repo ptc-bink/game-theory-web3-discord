@@ -97,7 +97,15 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({  giveawayName, giveawayID,
         console.log("serverData.id  =======> ", serverData);
         console.log("giveawayID  =======> ", giveawayID);
         console.log("userID  =======> ", userID);
+        if (timeRemaining * 1000 < new Date().getTime()) {
+            toast.error("Giveaway has ended");
+            return;
+        }
 
+        if(bidders_.find((bidder: IUserInfo) => bidder.id === userID)){
+            toast.error("You have already entered the giveaway");
+            return;
+        }
 
         const res = await enterGiveaway( serverData, giveawayID, userID);
         console.log(res)
@@ -108,7 +116,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({  giveawayName, giveawayID,
             setBidders(res.data.giveaway.bidders);
             setEntrants(res.data.giveaway.bidders.length);
         } else {
-            toast.error(res.data);
+            toast.error(`Entry Failed: ${res.data.message}`);
         }
     }
 

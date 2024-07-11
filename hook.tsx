@@ -315,6 +315,9 @@ export const enterGiveaway = async (serverID: string, giveAwayID: string, userID
 
 
         if (!response.ok) {
+            const data = await response.json(); // Parse the response body as JSON
+            console.log("enter giveaway data ====>", data);
+            return { status: 401, data: data };
             throw 'Invalid request'
         }
 
