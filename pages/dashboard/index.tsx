@@ -18,6 +18,7 @@ const Dashboard: React.FC<IDashboard> = () => {
     const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
+    const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
     const [visibleServers, setVisibleServers] = useState<string[]>([]);
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
     const [filterData, setFilterData] = useState<IGiveaway[]>([]);
