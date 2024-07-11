@@ -82,7 +82,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                 if (tempServer.data.length > 0) {
 
                     const tempServerDropdownList: IDropdownListProps[] = tempServer.data
-                        .filter((item: IServer) => uniqueServers.includes(item.guild.id))
+                        .filter((item: IServer) => uniqueServers?.includes(item.guild.id))
                         .map((item: IServer, index: number) => {
                             return { name: item.guild.name, id: item.guild.id };
                         });

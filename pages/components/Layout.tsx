@@ -11,13 +11,13 @@ import AppContext from '../../providers/AppContext';
 import SmallSidebar from './SmallSidebar';
 import BigSidebar from './BigSidebar';
 import Navbar from './Navbar';
-import { getUser } from '@/hook';
+import { getUser, getUserGlobalPermission } from '@/hook';
 
 import Arrowleft from "@/public/avatar/arrow-up.svg"
 
 const Layout = ({ children }: { children: ReactNode }) => {
 
-    const { setUserImage, setUsername, setUserID } = useContext(AppContext);
+    const { setUserImage, setUsername, setUserID, setIsAdmin } = useContext(AppContext);
     const topRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const path = usePathname()
@@ -25,8 +25,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
     const initAction = async () => {
 
         const tempUser: any = await getUser();
+        const tempPermission: any = await getUserGlobalPermission();
 
         console.log("tempUser ====>", tempUser);
+        console.log("tempPermission =====> ", tempPermission);
 
         if (tempUser.status === 401) {
             if (path !== "/") {
@@ -37,11 +39,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
             setUserID(tempUser.data.id);
             setUserImage(tempUser.data.avatar);
             setUsername(tempUser.data.username);
-        }
-    }
 
-    const scrollToTop = () => {
-        topRef.current?.scrollIntoView({ behavior: 'smooth' });
+            if (tempPermission.status === 200) {
+                if (tempPermission.data.isAdmin.includes(tempUser.data.id) || tempPermission.data.isSuperAdmin.includes(tempUser.data.id)) {
+                    setIsAdmin(true);
+                } else setIsAdmin(false);
+            }
+        }
     }
 
     useEffect(() => {
@@ -59,7 +63,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                         <BigSidebar />
                     </div>
                     <div ref={topRef} className="w-full bg-cdark-100 h-[calc(100vh-88px)] overflow-scroll">
-                    {/* <div className="w-full bg-cdark-100 overflow-scroll"> */}
+                        {/* <div className="w-full bg-cdark-100 overflow-scroll"> */}
                         {children}
                     </div>
                 </div>

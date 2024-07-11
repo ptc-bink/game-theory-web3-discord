@@ -186,6 +186,8 @@ export const getGiveaways = async (serverId: string) => {
 export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
     try {
 
+        console.log("handle create giveaway handler data ====> ", data);
+        
         const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
         } = data;
 

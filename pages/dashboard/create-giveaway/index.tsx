@@ -144,8 +144,8 @@ const CreateGiveaway: React.FC = () => {
         console.log("description =====>", description);
         console.log("chain ====>", chain);
         console.log("quantity ===>", quantity);
-
-
+        console.log("expiresDate ===>", Math.floor(new Date(expiresDate).getTime() / 1000));
+        
         if (!expires || !title || !description || !chain || !quantity) {
             return toast.error("Please input all values");
         }
