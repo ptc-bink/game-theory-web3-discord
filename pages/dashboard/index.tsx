@@ -11,13 +11,15 @@ import SearchBtn from "@/pages/components/forms/SearchBtn";
 import AppContext from "@/providers/AppContext";
 
 import { IGiveaway, IServer, IDropdownListProps } from "@/utils/_type";
-import { getGiveaways, getServers } from "@/hook";
+import { getGiveaways, getServers, getUserGlobalPermission } from "@/hook";
 import { baseURL_back } from "@/utils/_config";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
     const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
+    const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
+    const [visibleServers, setVisibleServers] = useState<string[]>([]);
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
     const [filterData, setFilterData] = useState<IGiveaway[]>([]);
     const [serverValue, setServerValue] = useState<string>("");
@@ -55,14 +57,34 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     const initAction = async () => {
         const tempServer: any = await getServers();
+        const userPermission = await getUserGlobalPermission();
+        if (userPermission.status === 200) {
+            const adminOf = userPermission.data.isAdmin;
+            const superAdminOf = userPermission.data.isSuperAdmin;
+            const memberOf = userPermission.data.isMember;
+
+            //we now need to concat all the servers the user is admin/superadmin/member of Removing any duplicates
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const uniqueServers = Array.from(new Set(allServers));
+            setVisibleServers(uniqueServers);
+            
+            setUserGlobalPermissons(userPermission.data);
+
+        } else {
+            toast.error("Error Getting globalPermissons")
+        }
+
+
 
         if (tempServer.status == 200) {
             if (Array.isArray(tempServer.data)) {
                 if (tempServer.data.length > 0) {
 
-                    const tempServerDropdownList: IDropdownListProps[] = tempServer.data.map((item: IServer, index: number) => {
-                        return { name: item.guild.name, id: item.guild.id }
-                    })
+                    const tempServerDropdownList: IDropdownListProps[] = tempServer.data
+                        .filter((item: IServer) => visibleServers.includes(item.guild.id))
+                        .map((item: IServer, index: number) => {
+                            return { name: item.guild.name, id: item.guild.id };
+                        });
 
                     setServerDropdownList(tempServerDropdownList);
                 } else {
