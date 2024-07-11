@@ -18,6 +18,7 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
+    const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
     const [visibleServers, setVisibleServers] = useState<string[]>([]);
     const [giveaways, setGiveaways] = useState<IGiveaway[]>([]);
@@ -27,11 +28,27 @@ const Dashboard: React.FC<IDashboard> = () => {
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
     const topRef = useRef<HTMLDivElement>(null);
 
+    async function checkUserPermissionsToServer(serverID: string) {
+      
+
+        const adminOf = userGlobalPermissons.isAdmin;
+        const superAdminOf = userGlobalPermissons.isSuperAdmin;
+
+        if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
+            setIsAdminOfSelectedServer(true);
+        }else{
+            setIsAdminOfSelectedServer(false);
+        }
+
+    }
+
+
+
     const mainAction = async (serverID: string) => {
         let tempGiveaways: IGiveaway[] = [];
 
         const res: any = await getGiveaways(serverID);
-
+        checkUserPermissionsToServer(serverID);
         console.log("giveaways ====> ", giveaways);
 
         if (res.data !== undefined) {
@@ -181,7 +198,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        {isAdmin && <Link href="/dashboard/create-giveaway" className="flex justify-between bg-cwhite w-fit items-center rounded-lg outline-none border border-[#EEEEEE] px-[10px] py-3">
+                        {isAdminOfSelectedServer && <Link href="/dashboard/create-giveaway" className="flex justify-between bg-cwhite w-fit items-center rounded-lg outline-none border border-[#EEEEEE] px-[10px] py-3">
                             <Image
                                 src={Add}
                                 width="16"
@@ -212,6 +229,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                                 harvested={item.harvested}
                                 bidders={item.bidders}
                                 winners={item.winners}
+                                adminOfServer={isAdminOfSelectedServer}
                             />
                         ))}
                     </div> :

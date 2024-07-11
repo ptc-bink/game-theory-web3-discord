@@ -380,7 +380,11 @@ export interface IGiveawayCardProps {
         avatar: string
     }[];
     winners?: string[];
+    adminOfServer: boolean;
 }
+
+
+
 
 export interface IPreviewCardProps {
     title: string,
