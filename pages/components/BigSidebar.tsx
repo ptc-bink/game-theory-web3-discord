@@ -104,8 +104,8 @@ const BigSidebar = () => {
                     toast.success("user is standard member");
                     return setSideBar(adminSideBar.filter(item => item.userIn === true))
                 }
-                // } else if (res.data.isSuperAdmin.length > 0 || res.data.isAdmin.length > 0) {
-            } else if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
+        
+            } else if (res.data.isSuperAdmin.length > 0 || res.data.isAdmin.length > 0) {
                 toast.success("User is superadmin or admin");
 
                 return setSideBar(adminSideBar);
