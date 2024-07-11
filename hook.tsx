@@ -84,7 +84,7 @@ export const editUserProfile = async (serverID: string, data: IProfileEdit) => {
         console.log("serverID ====>", serverID);
         console.log("data ====>", data);
 
-        const response = await fetch(`${baseURL_back}/user-profile-edit&serverID=${serverID}`, {
+        const response = await fetch(`${baseURL_back}/user-profile-edit?serverID=${serverID}`, {
             method: 'PUT',
             credentials: 'include', // Include credentials to get the cookies
             body: JSON.stringify(data)
