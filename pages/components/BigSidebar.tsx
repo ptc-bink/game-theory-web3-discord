@@ -92,30 +92,7 @@ const BigSidebar = () => {
 
         console.log("get user global permission data =====> ", userGlobalPermission);
 
-<<<<<<< HEAD
         if (userGlobalPermission.isMember.length > 0 && userGlobalPermission.isSuperAdmin.length === 0 && userGlobalPermission.isAdmin.length === 0) {
-=======
-            console.log("get user global permission data =====> ", res.data);
-
-            if (res.data.isMember.length > 0 && res.data.isSuperAdmin.length === 0 && res.data.isAdmin.length === 0) {
-
-                if (res.data.canViewVesting.length > 0) {
-                    toast.success("user is member with vesting rights");
-                    return setSideBar(adminSideBar.filter(item => item.permittedIn === true || item.userIn === true))
-                } else {
-                    toast.success("user is standard member");
-                    return setSideBar(adminSideBar.filter(item => item.userIn === true))
-                }
-        
-            } else if (res.data.isSuperAdmin.length > 0 || res.data.isAdmin.length > 0) {
-                toast.success("User is superadmin or admin");
-
-                return setSideBar(adminSideBar);
-            } else if (res.data.canViewVesting.length > 0) {
-                toast.success("User can view vesting ONLY");
-
-                return setSideBar(adminSideBar.filter(item => item.permittedIn === true))
->>>>>>> efc45eef74459118b198260ae3aa1643f5142783
 
             if (userGlobalPermission.canViewVesting.length > 0) {
                 toast.success("user is member with vesting rights");
