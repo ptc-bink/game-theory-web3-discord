@@ -70,20 +70,43 @@ const Dashboard: React.FC<IDashboard> = () => {
     }
 
     const initPermissions = async () => {
-        const adminOf = userGlobalPermission?.isAdmin;
-        const superAdminOf = userGlobalPermission?.isSuperAdmin;
-        const memberOf = userGlobalPermission?.isMember;
+        if (!userGlobalPermission) {
+            let tempUserGlobalPermission = await getUserGlobalPermission()
+            tempUserGlobalPermission = tempUserGlobalPermission.data;
+            setUserGlobalPermissons(tempUserGlobalPermission.data);
+            console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
+            const adminOf = tempUserGlobalPermission.isAdmin;
+            const superAdminOf = tempUserGlobalPermission.isSuperAdmin;
+            const memberOf = tempUserGlobalPermission.isMember;
 
-        const allServers = [adminOf, superAdminOf, memberOf];
-        const uniqueServers = Array.from(new Set(allServers));
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const uniqueServers = Array.from(new Set(allServers));
 
-        setVisibleServers(uniqueServers);
-        return uniqueServers;
+            setVisibleServers(uniqueServers);
+            console.log("uniqueServers ===> ", uniqueServers)
+
+            return uniqueServers;
+        }else{
+            const adminOf = userGlobalPermission?.isAdmin;
+            const superAdminOf = userGlobalPermission?.isSuperAdmin;
+            const memberOf = userGlobalPermission?.isMember;
+
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const uniqueServers = Array.from(new Set(allServers));
+
+            setVisibleServers(uniqueServers);
+            console.log("uniqueServers ===> ", uniqueServers)
+
+
+            return uniqueServers;
+        }
 
     }
 
     const initAction = async () => {
         const tempServer: any = await getServers();
+        const tempUserGlobalPermission = await getUserGlobalPermission();
+        setUserGlobalPermissons(tempUserGlobalPermission);
         console.log("tempServer.data ===> ", tempServer.data);
         
         const uniqueServers = await initPermissions();
