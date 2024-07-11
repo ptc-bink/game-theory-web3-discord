@@ -15,7 +15,7 @@ import { getGiveaways, getServers, getUserGlobalPermission } from "@/hook";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID } = useContext(AppContext);
+    const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID, setUserGlobalPermission } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
     const [visibleServers, setVisibleServers] = useState<string[]>([]);
@@ -74,6 +74,7 @@ const Dashboard: React.FC<IDashboard> = () => {
             let tempUserGlobalPermission = await getUserGlobalPermission()
             tempUserGlobalPermission = tempUserGlobalPermission.data;
             setUserGlobalPermissons(tempUserGlobalPermission.data);
+            setUserGlobalPermission(tempUserGlobalPermission.data);
             console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
             const adminOf = tempUserGlobalPermission.isAdmin;
             const superAdminOf = tempUserGlobalPermission.isSuperAdmin;
@@ -106,7 +107,8 @@ const Dashboard: React.FC<IDashboard> = () => {
     const initAction = async () => {
         const tempServer: any = await getServers();
         const tempUserGlobalPermission = await getUserGlobalPermission();
-        setUserGlobalPermissons(tempUserGlobalPermission);
+        setUserGlobalPermissons(tempUserGlobalPermission.data);
+        setUserGlobalPermission(tempUserGlobalPermission.data);
         console.log("tempServer.data ===> ", tempServer.data);
         
         const uniqueServers = await initPermissions();
