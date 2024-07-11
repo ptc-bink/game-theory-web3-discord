@@ -91,7 +91,9 @@ const BigSidebar = () => {
         initActionCalled.current = true;
 
         console.log("get user global permission data =====> ", userGlobalPermission);
-
+        if (userGlobalPermission === undefined){
+            return setSideBar([]);
+        }
         if (userGlobalPermission.isMember.length > 0 && userGlobalPermission.isSuperAdmin.length === 0 && userGlobalPermission.isAdmin.length === 0) {
 
             if (userGlobalPermission.canViewVesting.length > 0) {
