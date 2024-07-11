@@ -55,10 +55,10 @@ const Dashboard: React.FC<IDashboard> = () => {
         setFilterData(tempGiveaways);
     }
 
-    const initAction = async () => {
-        const tempServer: any = await getServers();
+    const initPermissions = async () => {   
         const userPermission = await getUserGlobalPermission();
         if (userPermission.status === 200) {
+            setUserGlobalPermissons(userPermission.data);
             const adminOf = userPermission.data.isAdmin;
             const superAdminOf = userPermission.data.isSuperAdmin;
             const memberOf = userPermission.data.isMember;
@@ -66,26 +66,29 @@ const Dashboard: React.FC<IDashboard> = () => {
             //we now need to concat all the servers the user is admin/superadmin/member of Removing any duplicates
             const allServers = [...adminOf, ...superAdminOf, ...memberOf];
             const uniqueServers = Array.from(new Set(allServers));
+            console.log("uniqueServers ====> ", uniqueServers)
             setVisibleServers(uniqueServers);
-            
-            setUserGlobalPermissons(userPermission.data);
-
+            return uniqueServers;
         } else {
             toast.error("Error Getting globalPermissons")
         }
+        console.log(`==========USER PERMISSIONS SET ===========`)
+    }
 
-
-
+    const initAction = async () => {
+        const tempServer: any = await getServers();
+        const uniqueServers = await initPermissions();
         if (tempServer.status == 200) {
             if (Array.isArray(tempServer.data)) {
                 if (tempServer.data.length > 0) {
 
                     const tempServerDropdownList: IDropdownListProps[] = tempServer.data
-                        .filter((item: IServer) => visibleServers.includes(item.guild.id))
+                        .filter((item: IServer) => uniqueServers.includes(item.guild.id))
                         .map((item: IServer, index: number) => {
                             return { name: item.guild.name, id: item.guild.id };
                         });
-
+                    console.log("visibleServers ====> ", uniqueServers)
+                    console.log("tempServerDropdownList ====> ", tempServerDropdownList)
                     setServerDropdownList(tempServerDropdownList);
                 } else {
                     toast.error("No server to show")
@@ -94,6 +97,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                 toast.error("Try again later")
             }
         }
+        console.log(`==========SERVERS SET ===========`)
     }
 
     const filterAction = async () => {
@@ -113,9 +117,12 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     useEffect(() => {
 
-        initAction();
+             initPermissions();
 
-    }, [])
+             initAction();
+
+
+    }, []);
 
     useEffect(() => {
 
@@ -145,7 +152,13 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     useEffect(() => {
         if (giveawayCreated || giveawayEdited) {
-            initAction();
+            
+            const Setup = async () => {
+                await initPermissions();
+                await initAction();
+            };
+    
+            Setup();
             setGiveawayCreated(false);
             setGiveawayEdited(false);
         }
