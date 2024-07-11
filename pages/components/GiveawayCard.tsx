@@ -17,7 +17,7 @@ import { removeEntry } from '../../hook';
 import { enterGiveaway } from "../../hook";
 import toast from "react-hot-toast";
 
-const GiveawayCard: React.FC<IGiveawayCardProps> = ({  giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
+const GiveawayCard: React.FC<IGiveawayCardProps> = ({  giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners, adminOfServer }) => {
 
     const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
@@ -49,22 +49,30 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({  giveawayName, giveawayID,
     }
 
     const detailItem = (index: number) => {
-
+        //Now Displays remove button for all users for Admin OR only on the users Entry if not Admin
         const isWinner = winners?.includes(bidders_[index].id);
-
-        return (
-            <div key={index} className="flex gap-1 hover:bg-cgrey-200 w-full cursor-pointer px-2 text-clip">
-                <Image
-                    src={Cancel}
-                    width="16"
-                    height="16"
-                    alt={index + "th cancel"}
-                    onClick={() => removeEntryHandle(bidders_[index].id)}
-                />
-                <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index]?.username}(${bidders[index]?.id})`}</p>
-                {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
-            </div>
-        )
+        if(adminOfServer || bidders_[index].id === userID){
+            return (
+                <div key={index} className="flex gap-1 hover:bg-cgrey-200 w-full cursor-pointer px-2 text-clip">
+                    <Image
+                        src={Cancel}
+                        width="16"
+                        height="16"
+                        alt={index + "th cancel"}
+                        onClick={() => removeEntryHandle(bidders_[index].id)}
+                    />
+                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index]?.username}(${bidders[index]?.id})`}</p>
+                    {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
+                </div>
+            )
+        }else{
+            return (
+                <div key={index} className="flex gap-1 w-full px-2 text-clip">
+                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index]?.username}(${bidders[index]?.id})`}</p>
+                    {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
+                </div>
+            )
+        }
     }
 
     const details = () => {
@@ -225,7 +233,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({  giveawayName, giveawayID,
                             />
                         </button>
                     )}
-                {isAdmin && <button aria-label="edit" onClick={() => handleEdit()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
+                {adminOfServer && <button aria-label="edit" onClick={() => handleEdit()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
                     <p className="text-cwhite text-sm font-normal hidden md:block">Edit</p>
                     <Image
                         src={Edit}
