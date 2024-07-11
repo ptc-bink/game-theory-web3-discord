@@ -63,16 +63,15 @@ const Dashboard: React.FC<IDashboard> = () => {
             const superAdminOf = userPermission.data.isSuperAdmin;
             const memberOf = userPermission.data.isMember;
 
-            //we now need to concat all the servers the user is admin/superadmin/member of Removing any duplicates
             const allServers = [...adminOf, ...superAdminOf, ...memberOf];
             const uniqueServers = Array.from(new Set(allServers));
-            console.log("uniqueServers ====> ", uniqueServers)
+
             setVisibleServers(uniqueServers);
             return uniqueServers;
         } else {
             toast.error("Error Getting globalPermissons")
         }
-        console.log(`==========USER PERMISSIONS SET ===========`)
+
     }
 
     const initAction = async () => {
@@ -87,8 +86,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                         .map((item: IServer, index: number) => {
                             return { name: item.guild.name, id: item.guild.id };
                         });
-                    console.log("visibleServers ====> ", uniqueServers)
-                    console.log("tempServerDropdownList ====> ", tempServerDropdownList)
+
                     setServerDropdownList(tempServerDropdownList);
                 } else {
                     toast.error("No server to show")
@@ -117,10 +115,8 @@ const Dashboard: React.FC<IDashboard> = () => {
 
     useEffect(() => {
 
-             initPermissions();
-
-             initAction();
-
+        initPermissions();
+        initAction();
 
     }, []);
 
