@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link"
 
@@ -35,6 +35,7 @@ const BigSidebar = () => {
                 fill={selectedItem}
             />,
             userIn: true,
+            permittedIn: false
         },
         {
             label: "Projects",
@@ -42,7 +43,8 @@ const BigSidebar = () => {
             image: <Projects
                 fill={selectedItem}
             />,
-            userIn: false
+            userIn: false,
+            permittedIn: false
         },
         {
             label: "Allocations",
@@ -50,7 +52,8 @@ const BigSidebar = () => {
             image: <Allocation
                 fill={selectedItem}
             />,
-            userIn: false
+            userIn: false,
+            permittedIn: false
         },
         {
             label: "Admin",
@@ -58,7 +61,8 @@ const BigSidebar = () => {
             image: <Admin
                 fill={selectedItem}
             />,
-            userIn: false
+            userIn: false,
+            permittedIn: false
         },
         {
             label: "Vesting",
@@ -66,7 +70,8 @@ const BigSidebar = () => {
             image: <Allocation
                 fill={selectedItem}
             />,
-            userIn: false
+            userIn: false,
+            permittedIn: true
         },
         {
             label: "Bot",
@@ -74,33 +79,47 @@ const BigSidebar = () => {
             image: <Bot
                 fill={selectedItem}
             />,
-            userIn: true
+            userIn: true,
+            permittedIn: true
         },
     ]
 
-    const [sideBar, setSideBar] = useState<any[]>(adminSideBar);
-
+    const [sideBar, setSideBar] = useState<any[]>(adminSideBar.filter(item => item.userIn === true));
+    const initActionCalled = useRef(false);
     const initAction = async () => {
+        if (initActionCalled.current) return; // Prevents initAction from running more than once
+        initActionCalled.current = true;
         const res = await getUserGlobalPermission();
 
         if (res.status === 200) {
-            if (res.data.isMember.includes(userID)) {
-                console.log("user is member");
-                return setSideBar(adminSideBar.filter(item => item.userIn === true))
-            } else if (res.data.isSuperAdmin.includes(userID) || res.data.isAdmin.includes(userID)) {
-                console.log("user is superadmin or admin");
-
+            if (res.data.isMember.length > 0 && res.data.isSuperAdmin.length === 0 && res.data.isAdmin.length === 0) {
+                
+                if (res.data.canViewVesting.length > 0) {
+                    toast.success("user is member with vesting rights");
+                    return setSideBar(adminSideBar.filter(item => item.permittedIn === true || item.userIn === true))
+                }else{
+                    toast.success("user is standard member");
+                    return setSideBar(adminSideBar.filter(item => item.userIn === true))
+                }
+            }            else if (res.data.isSuperAdmin.length > 0 || res.data.isAdmin.length > 0) {
+                toast.success("User is superadmin or admin");
+                
                 return setSideBar(adminSideBar);
+            } else if (res.data.canViewVesting.length > 0 ) {
+                toast.success("User can view vesting ONLY");
+                
+                return setSideBar(adminSideBar.filter(item => item.permittedIn === true))
+                
+            } else {
+                toast.error("User has no permission")
+                return setSideBar([]);
             }
-            // else {
-            //     toast.error("User has no permission")
-            //     return setpSideBar([]);
-            // }
         }
     }
 
     useEffect(() => {
         initAction();
+
     }, [])
 
     return (

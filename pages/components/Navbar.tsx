@@ -46,7 +46,7 @@ const Navbar = () => {
                     <Logo />
                     <div className="flex items-center">
                         <p className="pl-4 text-2xl leading-8 font-semibold text-cwhite text-center items-center">
-                            Bot GIB
+                            Giveaway Bot - Game Theory
                         </p>
                     </div>
                 </div>
