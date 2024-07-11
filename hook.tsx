@@ -52,6 +52,7 @@ export const getHarvestWinners = async () => {
     }
 }
 
+
 export const getUserDetails = async (serverID: string) => {
     try {
         // const response = await fetch(`${baseURL_back}/get-user-details?serverID=${serverID}&userID=${userID}`, {
@@ -314,13 +315,13 @@ export const enterGiveaway = async (serverID: string, giveAwayID: string, userID
 
 
         if (!response.ok) {
-            throw 'Not invalid request'
+            throw 'Invalid request'
         }
 
         const data = await response.json(); // Parse the response body as JSON
         console.log("enter giveaway data ====>", data);
 
-        return data;
+        return { status: 200, data: data };
 
     } catch (error) {
 

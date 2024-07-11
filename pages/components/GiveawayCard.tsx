@@ -14,11 +14,12 @@ import { IGiveawayCardProps, IUserInfo } from "@/utils/_type";
 import AppContext from "@/providers/AppContext";
 import { useRouter } from "next/router";
 import { removeEntry } from '../../hook';
+import { enterGiveaway } from "../../hook";
 import toast from "react-hot-toast";
 
-const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
+const GiveawayCard: React.FC<IGiveawayCardProps> = ({  giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners }) => {
 
-    const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin } = useContext(AppContext);
+    const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const router = useRouter();
     const [bidders_, setBidders] = useState<IUserInfo[]>(bidders);
@@ -92,6 +93,25 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
         return <div className="flex gap-2 md:flex-row flex-col">{content}</div>;
     }
 
+    const handleEntry = async () => {
+        console.log("serverData.id  =======> ", serverData);
+        console.log("giveawayID  =======> ", giveawayID);
+        console.log("userID  =======> ", userID);
+
+
+        const res = await enterGiveaway( serverData, giveawayID, userID);
+        console.log(res)
+        if (res.status === 200) {
+            toast.success("You have entered the giveaway");
+            console.log("res.data.giveaway.bidders ====> ", res.data.giveaway.bidders);
+            
+            setBidders(res.data.giveaway.bidders);
+            setEntrants(res.data.giveaway.bidders.length);
+        } else {
+            toast.error(res.data);
+        }
+    }
+
     const handleDetailOpen = () => {
         setDetailOpen(!detailOpen);
     }
@@ -103,6 +123,10 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
         setServerID(serverData);
 
         router.push('/dashboard/edit-giveaway')
+    }
+    const handleEnter = async () => {
+
+        console.log(`entered`)
     }
 
     return (
@@ -196,6 +220,15 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         width="16"
                         height="16"
                         alt="edit"
+                    />
+                </button>}
+                {<button aria-label="Enter Giveaway" onClick={() => handleEntry()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
+                    <p className="text-cwhite text-sm font-normal hidden md:block">Enter Giveaway</p>
+                    <Image
+                        src={Edit}
+                        width="16"
+                        height="16"
+                        alt="enter"
                     />
                 </button>}
             </div >
