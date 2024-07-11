@@ -28,20 +28,18 @@ const Dashboard: React.FC<IDashboard> = () => {
     const topRef = useRef<HTMLDivElement>(null);
 
     async function checkUserPermissionsToServer(serverID: string) {
-      
+
 
         const adminOf = userGlobalPermissons.isAdmin;
         const superAdminOf = userGlobalPermissons.isSuperAdmin;
 
         if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
             setIsAdminOfSelectedServer(true);
-        }else{
+        } else {
             setIsAdminOfSelectedServer(false);
         }
 
     }
-
-
 
     const mainAction = async (serverID: string) => {
         let tempGiveaways: IGiveaway[] = [];
@@ -71,21 +69,23 @@ const Dashboard: React.FC<IDashboard> = () => {
         setFilterData(tempGiveaways);
     }
 
-    const initPermissions = async () => {   
-            const adminOf = userGlobalPermission.isAdmin;
-            const superAdminOf = userGlobalPermission.isSuperAdmin;
-            const memberOf = userGlobalPermission.isMember;
+    const initPermissions = async () => {
+        const adminOf = userGlobalPermission?.isAdmin;
+        const superAdminOf = userGlobalPermission?.isSuperAdmin;
+        const memberOf = userGlobalPermission?.isMember;
 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
-            const uniqueServers = Array.from(new Set(allServers));
+        const allServers = [adminOf, superAdminOf, memberOf];
+        const uniqueServers = Array.from(new Set(allServers));
 
-            setVisibleServers(uniqueServers);
-            return uniqueServers;
+        setVisibleServers(uniqueServers);
+        return uniqueServers;
 
     }
 
     const initAction = async () => {
         const tempServer: any = await getServers();
+        console.log("tempServer.data ===> ", tempServer.data);
+        
         const uniqueServers = await initPermissions();
         if (tempServer.status == 200) {
             if (Array.isArray(tempServer.data)) {
@@ -161,7 +161,7 @@ const Dashboard: React.FC<IDashboard> = () => {
     }, [serverValue])
 
     useEffect(() => {
-        if (giveawayCreated || giveawayEdited) {    
+        if (giveawayCreated || giveawayEdited) {
             Setup();
             setGiveawayCreated(false);
             setGiveawayEdited(false);
