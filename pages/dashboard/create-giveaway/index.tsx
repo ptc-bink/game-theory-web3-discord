@@ -152,7 +152,7 @@ const CreateGiveaway: React.FC = () => {
 
         const data = {
             serverID: serverValue,
-            Expiry: Math.floor(new Date(expiresDate).getTime() / 1000),
+            expires: Math.floor(new Date(expiresDate).getTime() / 1000),
             title: title,
             description: description,
             chain: chain,
@@ -214,6 +214,13 @@ const CreateGiveaway: React.FC = () => {
             setGiveawayDropdownList([]);
         }
     }, [serverValue])
+
+    const typeDropdownList: IDropdownListProps[] = [
+        { name: "raffle-free", id: "raffle-free" },
+        { name: "shop", id: "shop" },
+        { name: "not used", id: "nan" },
+    ]
+
 
     useEffect(() => {
         const tRequiredRoles = serverRoles.filter(item => !restrictedRoles.includes(item));
@@ -289,7 +296,7 @@ const CreateGiveaway: React.FC = () => {
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Type*</p>
                             <Dropdown
-                                dropdownList={giveawayDropdownList}
+                                dropdownList={typeDropdownList}
                                 placeholder="Select giveaway"
                                 className="hover:bg-cdark-200 bg-cdark-100"
                                 callback={setType}

@@ -188,14 +188,17 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
 
         console.log("handle create giveaway handler data ====> ", data);
         
-        const { serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
+        const { serverID, expires, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
         } = data;
 
         const response = await fetch(`${baseURL_back}/create-giveaway`, {
             method: 'post',
             credentials: 'include', // Include credentials to get the cookies
+            headers: {
+                'Content-Type': 'application/json', // Specify that the body content is JSON
+            },
             body: JSON.stringify({
-                serverID, Expiry, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
+                serverID, expires, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
             }),
         });
 

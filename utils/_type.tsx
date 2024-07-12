@@ -135,7 +135,7 @@ export interface IVestingReport {
 
 export interface ICreateGiveaway {
     serverID: string
-    Expiry: any
+    expires: any
     title: string
     description: string
     chain: string
