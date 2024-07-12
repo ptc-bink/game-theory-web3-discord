@@ -21,6 +21,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
     const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
+    const [userGiveawayIn, setUserGiveawayIn] = useState<boolean>(false);
     const router = useRouter();
     const [bidders_, setBidders] = useState<IUserInfo[]>(bidders);
     const [entrants_, setEntrants] = useState<any>(entrants);
@@ -148,6 +149,10 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
     useEffect(() => {
         setBidders(bidders)
+
+        if (bidders.find((item: IUserInfo) => item.id == userID)) {
+            setUserGiveawayIn(true);
+        } else setUserGiveawayIn(false);
     }, [bidders])
 
     return (
@@ -261,7 +266,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         alt="edit"
                     />
                 </button>}
-                {timeRemaining * 1000 > new Date().getTime() && <button aria-label="Enter Giveaway" onClick={() => handleEntry()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
+                {timeRemaining * 1000 > new Date().getTime() && !userGiveawayIn && <button aria-label="Enter Giveaway" onClick={() => handleEntry()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
                     <p className="text-cwhite text-sm font-normal hidden md:block">Enter Giveaway</p>
                     <Image
                         src={Edit}
