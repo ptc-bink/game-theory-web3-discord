@@ -145,9 +145,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
             router.push('/dashboard/edit-giveaway')
         }
-
     }
-
 
     return (
         <div className="flex flex-col p-6 gap-6 rounded-2xl border border-cgrey-200">
@@ -177,7 +175,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         <p className="text-cwhite text-sm font-semibold">{quantity}</p>
                     </div>
                 </div>
-                {Math.floor(timeRemaining * 1000 - new Date().getTime()) === 0 ?
+                {Math.floor(timeRemaining * 1000 - new Date().getTime()) <= 0 ?
                     <div className="grid grid-cols-3">
                         <div className="flex flex-col gap-1">
                             <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Time remaining:</p>

@@ -28,8 +28,6 @@ const Dashboard: React.FC<IDashboard> = () => {
     const topRef = useRef<HTMLDivElement>(null);
 
     async function checkUserPermissionsToServer(serverID: string) {
-
-
         const adminOf = userGlobalPermissons.isAdmin;
         const superAdminOf = userGlobalPermissons.isSuperAdmin;
 
@@ -46,7 +44,7 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         const res: any = await getGiveaways(serverID);
         checkUserPermissionsToServer(serverID);
-        console.log("giveaways ====> ", giveaways);
+        console.log("giveaways ====> ", res.data);
 
         if (res.data !== undefined) {
             if (res.data.length > 0) {
@@ -231,7 +229,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                             < GiveawayCard
                                 key={index}
                                 serverData={item.serverData}
-                                giveawayName={item.title}
+                                giveawayName={item.description}
                                 giveawayID={item.messageID}
                                 chain={item.chain}
                                 avatar={item?.creator?.avatar}
