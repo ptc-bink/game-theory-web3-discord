@@ -189,9 +189,12 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                             <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Time remaining:</p>
                             <p className="text-cwhite text-sm font-semibold">Ended</p>
                         </div>
+                        {adminOfServer ? 
                         <Link href="/dashboard/harvest-winners" onClick={() => setSelectedGiveawayID(giveawayID)} className="flex text-cwhite text-sm font-normal gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-cdark-50 outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
                             Harvest Winners
-                        </Link>
+                        </Link> : <></>
+                        }
+                        
                     </div> :
                     <div className="grid grid-cols-3">
                         <div className="flex flex-col gap-1">
