@@ -28,10 +28,24 @@ const Allocation: React.FC<IAllocationProps> = () => {
     const [filterAllocations, setFilterAllocations] = useState<IAllocation[]>([]);
     const [filterMiddleAllocations, setFilterMiddleAllocations] = useState<IAllocation[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
+    const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
 
+
+    async function checkUserPermissionsToServer(serverID: string) {
+        const adminOf = userGlobalPermissons.isAdmin;
+        const superAdminOf = userGlobalPermissons.isSuperAdmin;
+
+        if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
+            setIsAdminOfSelectedServer(true);
+        } else {
+            setIsAdminOfSelectedServer(false);
+        }
+
+    }
     const mainAction = async (serverID: string) => {
+        checkUserPermissionsToServer(serverID);
         let tempAllocations: IAllocation[] = [];
-
+        checkUserPermissionsToServer(serverID);
         const res: any = await getAllocation(serverID);
 
         if (res.status === 200 && Array.isArray(res.data) && res.data.length > 0) {
@@ -82,6 +96,9 @@ const Allocation: React.FC<IAllocationProps> = () => {
     const initAction = async () => {
 
         const tempServer: any = await getServers();
+        const tempUserGlobalPermission = await getUserGlobalPermission();
+        setUserGlobalPermissons(tempUserGlobalPermission.data);
+        setUserGlobalPermission(tempUserGlobalPermission.data);
 
 
         console.log("tempServer.data ===> ", tempServer.data);
@@ -182,6 +199,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
+                        {isAdminOfSelectedServer?
                         <div aria-label="add allocation" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 hover:cursor-pointer outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
                             <Image
                                 src={Add}
@@ -191,6 +209,8 @@ const Allocation: React.FC<IAllocationProps> = () => {
                             />
                             <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Add Allocation</p>
                         </div>
+                        :<> </>
+                        }
                     </div>
                 </div>
             </div>
