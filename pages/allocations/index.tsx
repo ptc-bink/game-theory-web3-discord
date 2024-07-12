@@ -64,10 +64,10 @@ const Allocation: React.FC<IAllocationProps> = () => {
             console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
             const adminOf = tempUserGlobalPermission.data.isAdmin;
             const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
-            const memberOf = tempUserGlobalPermission.data.isMember;
+
 
             //stop changing this please it needs to combine arrays. 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const allServers = [...adminOf, ...superAdminOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
@@ -77,9 +77,9 @@ const Allocation: React.FC<IAllocationProps> = () => {
         } else {
             const adminOf = userGlobalPermission?.isAdmin;
             const superAdminOf = userGlobalPermission?.isSuperAdmin;
-            const memberOf = userGlobalPermission?.isMember;
 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+
+            const allServers = [...adminOf, ...superAdminOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);

@@ -114,10 +114,10 @@ const VESTING: React.FC<IVESTING> = () => {
             console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
             const adminOf = tempUserGlobalPermission.data.isAdmin;
             const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
-            const memberOf = tempUserGlobalPermission.data.isMember;
+            const canViewVestings = tempUserGlobalPermission.data.canViewVesting;
 
             //stop changing this please it needs to combine arrays. 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const allServers = [...adminOf, ...superAdminOf, ...canViewVestings];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
@@ -127,9 +127,9 @@ const VESTING: React.FC<IVESTING> = () => {
         } else {
             const adminOf = userGlobalPermission?.isAdmin;
             const superAdminOf = userGlobalPermission?.isSuperAdmin;
-            const memberOf = userGlobalPermission?.isMember;
+            const canViewVestings = userGlobalPermission?.canViewVesting;
 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const allServers = [...adminOf, ...superAdminOf, ...canViewVestings];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
