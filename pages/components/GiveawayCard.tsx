@@ -97,7 +97,6 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
         console.log("content ========================================>", content);
 
-
         return <div className="flex gap-2 md:flex-row flex-col">{content}</div>;
     }
 
@@ -147,6 +146,10 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
         }
     }
 
+    useEffect(() => {
+        setBidders(bidders)
+    }, [bidders])
+
     return (
         <div className="flex flex-col p-6 gap-6 rounded-2xl border border-cgrey-200">
             <div className="flex items-center gap-4">
@@ -175,7 +178,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         <p className="text-cwhite text-sm font-semibold">{quantity}</p>
                     </div>
                 </div>
-                {Math.floor(timeRemaining * 1000 - new Date().getTime()) <= 0 ?
+                {timeRemaining * 1000 <= new Date().getTime() ?
                     <div className="grid grid-cols-3">
                         <div className="flex flex-col gap-1">
                             <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Time remaining:</p>
@@ -249,7 +252,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                             />
                         </button>
                     )}
-                {adminOfServer && <button aria-label="edit" onClick={() => handleEdit()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
+                {adminOfServer && timeRemaining * 1000 > new Date().getTime() && <button aria-label="edit" onClick={() => handleEdit()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
                     <p className="text-cwhite text-sm font-normal hidden md:block">Edit</p>
                     <Image
                         src={Edit}
@@ -258,7 +261,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         alt="edit"
                     />
                 </button>}
-                {<button aria-label="Enter Giveaway" onClick={() => handleEntry()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
+                {timeRemaining * 1000 > new Date().getTime() && <button aria-label="Enter Giveaway" onClick={() => handleEntry()} className="flex gap-2 justify-center items-center hover:bg-cdark-200 bg-cdark-50 outline-none border border-cgrey-200 rounded-lg py-[10px] px-6 w-fit">
                     <p className="text-cwhite text-sm font-normal hidden md:block">Enter Giveaway</p>
                     <Image
                         src={Edit}

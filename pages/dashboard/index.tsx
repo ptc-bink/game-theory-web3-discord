@@ -44,8 +44,7 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         const res: any = await getGiveaways(serverID);
         checkUserPermissionsToServer(serverID);
-        console.log("giveaways ====> ", res.data);
-
+        
         if (res.data !== undefined) {
             if (res.data.length > 0) {
                 for (const giveaway of res.data) {
@@ -58,7 +57,8 @@ const Dashboard: React.FC<IDashboard> = () => {
         } else {
             return toast.error("Sever error");
         }
-
+        console.log("giveaways ========================================> ", tempGiveaways);
+        
         tempGiveaways.sort((a, b) => a.expiry - b.expiry);
         tempGiveaways.reverse();
 
