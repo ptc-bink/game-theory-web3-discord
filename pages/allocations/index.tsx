@@ -10,7 +10,7 @@ import Add from "@/public/avatar/add.svg"
 import SearchBtn from "@/pages/components/forms/SearchBtn";
 import Dropdown from "../components/forms/Dropdown";
 import Table from "@/pages/components/forms/Table";
-import { getAllocation, getServers } from "@/hook";
+import { getAllocation, getServers, getUserGlobalPermission } from "@/hook";
 import { IAllocation, IDropdownListProps, IServer } from "@/utils/_type";
 import AppContext from "@/providers/AppContext";
 import BackBtn from "../components/BackBtn";
@@ -19,9 +19,11 @@ import AddAllocationModal from "../components/forms/AddAllocation";
 
 const Allocation: React.FC<IAllocationProps> = () => {
 
-    const { addAllocationModalOpen, allocationEdited, setAllocationEdited, setAddAllocationModalOpen } = useContext(AppContext)
+    const { addAllocationModalOpen, allocationEdited, userGlobalPermission, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
+    const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
+    const [visibleServers, setVisibleServers] = useState<string[]>([]);
     const [allocations, setAllocations] = useState<IAllocation[]>([]);
     const [filterAllocations, setFilterAllocations] = useState<IAllocation[]>([]);
     const [filterMiddleAllocations, setFilterMiddleAllocations] = useState<IAllocation[]>([]);
@@ -41,22 +43,68 @@ const Allocation: React.FC<IAllocationProps> = () => {
         setFilterMiddleAllocations(tempAllocations)
     }
 
+    const initPermissions = async () => {
+        if (!userGlobalPermission) {
+            let tempUserGlobalPermission = await getUserGlobalPermission()
+            setUserGlobalPermissons(tempUserGlobalPermission.data);
+            console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
+            const adminOf = tempUserGlobalPermission.data.isAdmin;
+            const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
+            const memberOf = tempUserGlobalPermission.data.isMember;
+
+            //stop changing this please it needs to combine arrays. 
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const uniqueServers = Array.from(new Set(allServers));
+
+            setVisibleServers(uniqueServers);
+            console.log("uniqueServers ===> ", uniqueServers)
+
+            return uniqueServers;
+        } else {
+            const adminOf = userGlobalPermission?.isAdmin;
+            const superAdminOf = userGlobalPermission?.isSuperAdmin;
+            const memberOf = userGlobalPermission?.isMember;
+
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const uniqueServers = Array.from(new Set(allServers));
+
+            setVisibleServers(uniqueServers);
+            console.log("uniqueServers ===> ", uniqueServers)
+
+
+            return uniqueServers;
+        }
+
+    }
+
+
+
     const initAction = async () => {
-        const tempServerList: any = await getServers();
 
-        if (tempServerList.status === 200) {
-            if (tempServerList.data.length > 0) {
+        const tempServer: any = await getServers();
 
-                const tempServerDropdownList: IDropdownListProps[] = tempServerList.data.map((item: IServer, index: number) => {
-                    return { name: item.guild.name, id: item.guild.id }
-                })
 
-                setServerDropdownList(tempServerDropdownList);
+        console.log("tempServer.data ===> ", tempServer.data);
 
+        const uniqueServers = await initPermissions();
+        if (tempServer.status == 200) {
+            if (Array.isArray(tempServer.data)) {
+                if (tempServer.data.length > 0) {
+                    const tempServerDropdownList: IDropdownListProps[] = tempServer.data
+                        .filter((item: IServer) => uniqueServers?.includes(item.guild.id))
+                        .map((item: IServer, index: number) => {
+                            return { name: item.guild.name, id: item.guild.id };
+                        });
+
+                    setServerDropdownList(tempServerDropdownList);
+                } else {
+                    toast.error("No server to show")
+                }
             } else {
-                toast.error("No server to show");
+                toast.error("Try again later")
             }
         }
+        console.log(`==========SERVERS SET ===========`)
     }
 
     const searchFilterAction = async () => {

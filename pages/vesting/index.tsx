@@ -17,13 +17,16 @@ import SearchBtn from "@/pages/components/forms/SearchBtn";
 import Dropdown from "@/pages/components/forms/Dropdown";
 import AppContext from "@/providers/AppContext";
 
-import { getVestingReportsList, getServers, getVestingReportData } from "@/hook";
+import { getVestingReportsList, getServers, getVestingReportData, getUserGlobalPermission } from "@/hook";
 import { IDropdownListProps, IVestingReport, IServer, IVestingReportListItem } from "@/utils/_type";
 
 const VESTING: React.FC<IVESTING> = () => {
 
-    const { permittedUserModalOpen, setPermittedUserModalOpen } = useContext(AppContext);
+    const { permittedUserModalOpen, userGlobalPermission, setPermittedUserModalOpen, setUserGlobalPermission } = useContext(AppContext);
     const [vestingReports, setVestingReports] = useState<IVestingReport[]>([]);
+    const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
+    const [visibleServers, setVisibleServers] = useState<string[]>([]);
+
     const [filterMiddleVestingReports, setFilterMiddleVestingReports] = useState<IVestingReport[]>([]);
     const [filterFinalVestingReports, setFilterFinalVestingReports] = useState<IVestingReport[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
@@ -84,24 +87,71 @@ const VESTING: React.FC<IVESTING> = () => {
         setIsInitialized(false)
     }
 
+
+
+
+    const initPermissions = async () => {
+        if (!userGlobalPermission) {
+            let tempUserGlobalPermission = await getUserGlobalPermission()
+            setUserGlobalPermissons(tempUserGlobalPermission.data);
+            console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
+            const adminOf = tempUserGlobalPermission.data.isAdmin;
+            const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
+            const memberOf = tempUserGlobalPermission.data.isMember;
+
+            //stop changing this please it needs to combine arrays. 
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const uniqueServers = Array.from(new Set(allServers));
+
+            setVisibleServers(uniqueServers);
+            console.log("uniqueServers ===> ", uniqueServers)
+
+            return uniqueServers;
+        } else {
+            const adminOf = userGlobalPermission?.isAdmin;
+            const superAdminOf = userGlobalPermission?.isSuperAdmin;
+            const memberOf = userGlobalPermission?.isMember;
+
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const uniqueServers = Array.from(new Set(allServers));
+
+            setVisibleServers(uniqueServers);
+            console.log("uniqueServers ===> ", uniqueServers)
+
+
+            return uniqueServers;
+        }
+
+    }
+
+
+
     const initAction = async () => {
-        const tempServerList: any = await getServers();
 
-        if (tempServerList.status == 200) {
-            if (tempServerList.data.length > 0) {
+        const tempServer: any = await getServers();
 
-                const tempServerDropdownList: IDropdownListProps[] = tempServerList.data.map((item: IServer, index: number) => {
-                    return { name: item.guild.name, id: item.guild.id }
-                })
 
-                // setServerValue(tempServerList.data[0].guildID)
-                setServerDropdownList(tempServerDropdownList);
-                // mainAction(tempServerList.data[0].guildID)
+        console.log("tempServer.data ===> ", tempServer.data);
 
+        const uniqueServers = await initPermissions();
+        if (tempServer.status == 200) {
+            if (Array.isArray(tempServer.data)) {
+                if (tempServer.data.length > 0) {
+                    const tempServerDropdownList: IDropdownListProps[] = tempServer.data
+                        .filter((item: IServer) => uniqueServers?.includes(item.guild.id))
+                        .map((item: IServer, index: number) => {
+                            return { name: item.guild.name, id: item.guild.id };
+                        });
+
+                    setServerDropdownList(tempServerDropdownList);
+                } else {
+                    toast.error("No server to show")
+                }
             } else {
-                toast.error("No server to show")
+                toast.error("Try again later")
             }
         }
+        console.log(`==========SERVERS SET ===========`)
     }
 
     const reportAction = async (reportValue: number) => {
