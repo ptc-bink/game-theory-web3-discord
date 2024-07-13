@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 
 const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners, adminOfServer }) => {
 
-    const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID } = useContext(AppContext);
+    const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID, isAdminOfSelectedServer_app } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const [userGiveawayIn, setUserGiveawayIn] = useState<boolean>(false);
     const router = useRouter();
@@ -133,8 +133,8 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     }
 
     const handleEdit = async () => {
-        console.log("isAdmin ====> ", isAdmin);
-        if (!isAdmin) {
+        console.log("isAdmin ====> ", adminOfServer);
+        if (!adminOfServer) {
             toast.error("You are not an admin - You Cannot Edit this giveaway");
             return;
         } else {

@@ -15,7 +15,7 @@ import { getGiveaways, getServers, getUserGlobalPermission } from "@/hook";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const { isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID, setUserGlobalPermission } = useContext(AppContext);
+    const {isAdminOfSelectedServer_app, isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID, setUserGlobalPermission, setIsAdminOfSelectedServer_app } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
     const [visibleServers, setVisibleServers] = useState<string[]>([]);
@@ -34,8 +34,10 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
             setIsAdminOfSelectedServer(true);
+            setIsAdminOfSelectedServer_app(true);
         } else {
             setIsAdminOfSelectedServer(false);
+            setIsAdminOfSelectedServer_app(false);
         }
 
     }

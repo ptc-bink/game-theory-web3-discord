@@ -19,7 +19,7 @@ import AddAllocationModal from "../components/forms/AddAllocation";
 
 const Allocation: React.FC<IAllocationProps> = () => {
 
-    const { addAllocationModalOpen, allocationEdited, userGlobalPermission, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
+    const { isAdminOfSelectedServer_app,addAllocationModalOpen, allocationEdited, userGlobalPermission, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
