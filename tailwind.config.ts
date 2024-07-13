@@ -28,5 +28,6 @@ module.exports = {
       "cblue-500": "#5865F2",
     }
   },
+  darkMode: "class",
   plugins: [nextui()],
 };

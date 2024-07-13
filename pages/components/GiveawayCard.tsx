@@ -13,8 +13,7 @@ import Cancel from "@/public/avatar/close-circle.svg"
 import { IGiveawayCardProps, IUserInfo } from "@/utils/_type";
 import AppContext from "@/providers/AppContext";
 import { useRouter } from "next/router";
-import { removeEntry } from '../../hook';
-import { enterGiveaway } from "../../hook";
+import { removeEntry, enterGiveaway } from '../../hook';
 import toast from "react-hot-toast";
 
 const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners, adminOfServer }) => {
@@ -22,9 +21,10 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const [userGiveawayIn, setUserGiveawayIn] = useState<boolean>(false);
-    const router = useRouter();
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [bidders_, setBidders] = useState<IUserInfo[]>(bidders);
     const [entrants_, setEntrants] = useState<any>(entrants);
+    const router = useRouter();
 
     const removeEntryHandle = async (removeUserId: string) => {
         const res = await removeEntry({ marketID: giveawayID, serverID: serverData, removeUserID: removeUserId })
@@ -147,6 +147,10 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
         }
     }
 
+    const handleExpand = () => {
+        setIsExpanded(!isExpanded);
+    }
+
     useEffect(() => {
         setBidders(bidders)
 
@@ -155,17 +159,21 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
         } else setUserGiveawayIn(false);
     }, [bidders])
 
+    useEffect(() => {
+        setEntrants(entrants);
+    }, [entrants])
+
     return (
         <div className="flex flex-col p-6 gap-6 rounded-2xl border border-cgrey-200">
-            <div className="flex items-center gap-4">
+            <div className="flex items-start gap-4">
                 <div className="bg-cdark-200 border border-cgrey-200 rounded-lg">
                     {avatar ?
                         <img src={avatar} alt="creator avatar" width={48} height={48} className="rounded-lg" />
                         : <CardLogo />}
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 w-full">
                     <p className="text-cwhite text-base font-normal">{title}</p>
-                    <p className="text-cgrey-900 text-xs leading-[18px] font-normal">{giveawayName}</p>
+                    <pre onClick={handleExpand} className={`text-cgrey-900 text-xs overflow-hidden text-wrap hover:cursor-pointer leading-[18px] font-normal ${isExpanded || "max-h-[55px]"}`}>{giveawayName}</pre>
                 </div>
             </div>
             <div className="grid md:grid-cols-2 grid-row-2 gap-3">
@@ -189,12 +197,12 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                             <p className="text-cgrey-900 text-xs leading-[18px] font-normal">Time remaining:</p>
                             <p className="text-cwhite text-sm font-semibold">Ended</p>
                         </div>
-                        {adminOfServer ? 
-                        <Link href="/dashboard/harvest-winners" onClick={() => setSelectedGiveawayID(giveawayID)} className="flex text-cwhite text-sm font-normal gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-cdark-50 outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
-                            Harvest Winners
-                        </Link> : <></>
+                        {adminOfServer ?
+                            <Link href="/dashboard/harvest-winners" onClick={() => setSelectedGiveawayID(giveawayID)} className="flex text-cwhite text-sm font-normal gap-2 hover:bg-cdark-200 transition-all justify-center items-center bg-cdark-50 outline-none border border-cgrey-200 rounded-lg px-[10px] py-4 w-full" >
+                                Harvest Winners
+                            </Link> : <></>
                         }
-                        
+
                     </div> :
                     <div className="grid grid-cols-3">
                         <div className="flex flex-col gap-1">
