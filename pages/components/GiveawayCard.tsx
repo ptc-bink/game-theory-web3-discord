@@ -52,6 +52,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
     const detailItem = (index: number) => {
         //Now Displays remove button for all users for Admin OR only on the users Entry if not Admin
+        console.log("bidders_[index] ====> ", bidders_[index]);
         const isWinner = winners?.includes(bidders_[index].id);
         if (adminOfServer || bidders_[index].id === userID) {
             return (
@@ -63,14 +64,14 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         alt={index + "th cancel"}
                         onClick={() => removeEntryHandle(bidders_[index].id)}
                     />
-                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index]?.username}(${bidders[index]?.id})`}</p>
+                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders_[index]?.username}(${bidders_[index]?.id})`}</p>
                     {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
                 </div>
             )
         } else {
             return (
                 <div key={index} className="flex gap-1 w-full px-2 text-clip">
-                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index]?.username}(${bidders[index]?.id})`}</p>
+                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders_[index]?.username}(${bidders_[index]?.id})`}</p>
                     {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
                 </div>
             )
