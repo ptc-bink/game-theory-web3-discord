@@ -43,6 +43,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
             setBidders(updatedBidders);
             setEntrants(entrants_ - 1);
+            if (removeUserId === userID) setUserGiveawayIn(false);
 
         } else {
             toast.error(res.data);
@@ -123,6 +124,11 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
             setBidders(res.data.giveaway.bidders);
             setEntrants(res.data.giveaway.bidders.length);
+            if (res.data.giveaway.bidders.find((bidder: IUserInfo) => bidder.id === userID)) {
+                setUserGiveawayIn(true);
+            }else{
+                setUserGiveawayIn(false);
+            }
         } else {
             toast.error(`Entry Failed: ${res.data.message}`);
         }
@@ -150,7 +156,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     useEffect(() => {
         setBidders(bidders)
 
-        if (bidders.find((item: IUserInfo) => item.id == userID)) {
+        if (bidders_.find((item: IUserInfo) => item.id == userID)) {
             setUserGiveawayIn(true);
         } else setUserGiveawayIn(false);
     }, [bidders])

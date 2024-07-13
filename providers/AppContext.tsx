@@ -69,7 +69,7 @@ const initialValue: ContextType = {
   showCreditCard: false,
   serverID: "",
   isRemoveEntry: false,
-  userGlobalPermission: {},
+  userGlobalPermission: {isAdmin:[], isSuperAdmin:[], canViewVesting:[], isMember:[]},
   isAdminOfSelectedServer_app: false,
   setUserGlobalPermission(userGlobalPermission) { },
   setIsRemoveEntry(isRemoveEntry) { },
