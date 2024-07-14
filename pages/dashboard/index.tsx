@@ -15,7 +15,7 @@ import { getGiveaways, getServers, getUserGlobalPermission } from "@/hook";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const {isAdminOfSelectedServer_app, isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID, setUserGlobalPermission, setIsAdminOfSelectedServer_app } = useContext(AppContext);
+    const {isAdminOfSelectedServer_app, isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID, setUserGlobalPermission, setIsAdminOfSelectedServer_app, setIsAdmin } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
     const [visibleServers, setVisibleServers] = useState<string[]>([]);
@@ -34,9 +34,11 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
             setIsAdminOfSelectedServer(true);
+           
             setIsAdminOfSelectedServer_app(true);
         } else {
             setIsAdminOfSelectedServer(false);
+      
             setIsAdminOfSelectedServer_app(false);
         }
 
@@ -78,7 +80,11 @@ const Dashboard: React.FC<IDashboard> = () => {
             const adminOf = tempUserGlobalPermission.data.isAdmin;
             const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
             const memberOf = tempUserGlobalPermission.data.isMember;
-
+            if (adminOf.length > 0 || superAdminOf.length > 0) {
+                setIsAdmin(true);
+            } else {
+                setIsAdmin(false);
+            }
             //stop changing this please it needs to combine arrays. 
             const allServers = [...adminOf, ...superAdminOf, ...memberOf];
             const uniqueServers = Array.from(new Set(allServers));
@@ -92,6 +98,11 @@ const Dashboard: React.FC<IDashboard> = () => {
             const superAdminOf = userGlobalPermission?.isSuperAdmin;
             const memberOf = userGlobalPermission?.isMember;
 
+            if (adminOf.length > 0 || superAdminOf.length > 0) {
+                setIsAdmin(true);
+            } else {
+                setIsAdmin(false);
+            }
             const allServers = [...adminOf, ...superAdminOf, ...memberOf];
             const uniqueServers = Array.from(new Set(allServers));
 
