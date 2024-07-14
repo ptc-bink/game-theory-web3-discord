@@ -40,52 +40,72 @@ const Admin: React.FC<IAdminProps> = () => {
 
     const mainAction = async (serverID: string) => {
 
-        const res: any = await administrationChannellist(serverID);
-        let tempChannelList: IChannel[] = [];
 
-        if (res.status == 200) {
-            if (res.data.length > 0) {
-                tempChannelList = res.data;
-            }
-        }
 
-        const tempData: any = await getAdministrationTrustedServers(serverID);
+
+    }
+
+    const initAction = async () => {
+
+        
+        
+            
+
+        const tempData: any = await getAdministrationTrustedServers();
         let tempTrustedServers: IAdministrationTrustedServers[] = [];
-
+        console.log("tempData (main) ====> ", tempData)
         if (tempData.status == 200) {
             tempTrustedServers = Object.keys(tempData.data).map((key) => {
                 return {
                     id: key,
-                    serverID: serverID,
+                    serverID: key,
                     data: tempData.data[key],
-                    channelList: tempChannelList
+                    channelList: []
                 }
             })
         }
+        tempTrustedServers.forEach(async server => {
+            const res: any = await administrationChannellist(server.id);
+            let tempChannelList: IChannel[] = [];
+    
+            if (res.status == 200) {
+                if (res.data.length > 0) {
+                    tempChannelList = res.data;
+                }
+            }else{
+                toast.error(`No channel to show for ${server.data.name} server`);
+            }
+            server.channelList = tempChannelList;
+            
+        });
 
 
         console.log("tempTrustedServers ====> ", tempTrustedServers);
 
         setApprovedServerList(tempTrustedServers);
         setFilterApprovedServerList(tempTrustedServers);
-    }
 
-    const initAction = async () => {
         const tempServerList: any = await getServers();
-
+        console.log("tempServerList ====> ", tempServerList)
         if (tempServerList.status === 200) {
             if (tempServerList.data.length > 0) {
 
-                const tempServerDropdownList: IDropdownListProps[] = tempServerList.data.map((item: IServer, index: number) => {
-                    return { name: item.guild.name, id: item.guild.id }
-                })
+                const tempServerDropdownList: IDropdownListProps[] = tempServerList.data
+                    .filter((item: IServer) => !tempTrustedServers.some(server => server.serverID === item.guild.id))
+                    .map((item: IServer, index: number) => {
+                        return { name: item.guild.name, id: item.guild.id };
+                    });
 
                 setServerDropdownList(tempServerDropdownList);
-
+                toast.success(`You have ${tempServerDropdownList.length} server(s) waiting to be added to the trusted server list`)
             } else {
                 toast.error("No server to show");
             }
+        
+        
         }
+
+
     }
 
     const filterAction = () => {

@@ -580,9 +580,9 @@ export const getAllocationpermittedusers = async (serverID: string, vestingRepor
 }
 
 
-export const getAdministrationTrustedServers = async (serverID: string) => {
+export const getAdministrationTrustedServers = async () => {
     try {
-        const response = await fetch(`${baseURL_back}/administration-trusted-servers?serverId=${serverID}`, {
+        const response = await fetch(`${baseURL_back}/administration-trusted-servers`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });
