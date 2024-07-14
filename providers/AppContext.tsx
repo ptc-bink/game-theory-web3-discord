@@ -23,6 +23,7 @@ interface ContextType {
   serverID: string;
   isRemoveEntry: boolean;
   userGlobalPermission: any;
+  isAdminOfSelectedServer_app: boolean;
   setUserGlobalPermission: (userGlobalPermission: any) => void,
   setIsRemoveEntry: (removeEntry: boolean) => void,
   setShowCreditCard: (showCreditCard: boolean) => void,
@@ -44,6 +45,7 @@ interface ContextType {
   setUsername: (username: string) => void;
   setUserImage: (userImage: string) => void;
   setServerID: (serverID: string) => void;
+  setIsAdminOfSelectedServer_app: (isAdminOfSelectedServer_app: boolean) => void;
 }
 
 const initialValue: ContextType = {
@@ -67,7 +69,8 @@ const initialValue: ContextType = {
   showCreditCard: false,
   serverID: "",
   isRemoveEntry: false,
-  userGlobalPermission: {},
+  userGlobalPermission: {isAdmin:[], isSuperAdmin:[], canViewVesting:[], isMember:[]},
+  isAdminOfSelectedServer_app: false,
   setUserGlobalPermission(userGlobalPermission) { },
   setIsRemoveEntry(isRemoveEntry) { },
   setShowCreditCard(showCreditCard) { },
@@ -89,6 +92,7 @@ const initialValue: ContextType = {
   setAddServerModalOpen: (addServerModalOpen) => { },
   setEditServerModalID: (editServerModalID) => { },
   setProfileModalOpen: (profileModalOpen) => { },
+  setIsAdminOfSelectedServer_app: (isAdminOfSelectedServer_app) => { },
 };
 
 const AppContext = createContext(initialValue);

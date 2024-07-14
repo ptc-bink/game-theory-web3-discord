@@ -19,7 +19,7 @@ import AddAllocationModal from "../components/forms/AddAllocation";
 
 const Allocation: React.FC<IAllocationProps> = () => {
 
-    const { addAllocationModalOpen, allocationEdited, userGlobalPermission, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
+    const { isAdminOfSelectedServer_app,addAllocationModalOpen, allocationEdited, userGlobalPermission, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
@@ -28,10 +28,24 @@ const Allocation: React.FC<IAllocationProps> = () => {
     const [filterAllocations, setFilterAllocations] = useState<IAllocation[]>([]);
     const [filterMiddleAllocations, setFilterMiddleAllocations] = useState<IAllocation[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
+    const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
 
+
+    async function checkUserPermissionsToServer(serverID: string) {
+        const adminOf = userGlobalPermissons.isAdmin;
+        const superAdminOf = userGlobalPermissons.isSuperAdmin;
+
+        if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
+            setIsAdminOfSelectedServer(true);
+        } else {
+            setIsAdminOfSelectedServer(false);
+        }
+
+    }
     const mainAction = async (serverID: string) => {
+        checkUserPermissionsToServer(serverID);
         let tempAllocations: IAllocation[] = [];
-
+        checkUserPermissionsToServer(serverID);
         const res: any = await getAllocation(serverID);
 
         if (res.status === 200 && Array.isArray(res.data) && res.data.length > 0) {
@@ -50,10 +64,10 @@ const Allocation: React.FC<IAllocationProps> = () => {
             console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
             const adminOf = tempUserGlobalPermission.data.isAdmin;
             const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
-            const memberOf = tempUserGlobalPermission.data.isMember;
+
 
             //stop changing this please it needs to combine arrays. 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const allServers = [...adminOf, ...superAdminOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
@@ -63,9 +77,9 @@ const Allocation: React.FC<IAllocationProps> = () => {
         } else {
             const adminOf = userGlobalPermission?.isAdmin;
             const superAdminOf = userGlobalPermission?.isSuperAdmin;
-            const memberOf = userGlobalPermission?.isMember;
 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+
+            const allServers = [...adminOf, ...superAdminOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
@@ -82,6 +96,9 @@ const Allocation: React.FC<IAllocationProps> = () => {
     const initAction = async () => {
 
         const tempServer: any = await getServers();
+        const tempUserGlobalPermission = await getUserGlobalPermission();
+        setUserGlobalPermissons(tempUserGlobalPermission.data);
+        setUserGlobalPermission(tempUserGlobalPermission.data);
 
 
         console.log("tempServer.data ===> ", tempServer.data);
@@ -182,6 +199,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
+                        {isAdminOfSelectedServer?
                         <div aria-label="add allocation" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 hover:cursor-pointer outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
                             <Image
                                 src={Add}
@@ -191,6 +209,8 @@ const Allocation: React.FC<IAllocationProps> = () => {
                             />
                             <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Add Allocation</p>
                         </div>
+                        :<> </>
+                        }
                     </div>
                 </div>
             </div>

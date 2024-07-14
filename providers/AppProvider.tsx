@@ -26,7 +26,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [giveawayEdited, setGiveawayEdited] = useState<boolean>(false);
   const [isRemoveEntry, setIsRemoveEntry] = useState<boolean>(false);
   const [userGlobalPermission,  setUserGlobalPermission] = useState<IUserGlobalPermission>();
-
+  const [isAdminOfSelectedServer_app, setIsAdminOfSelectedServer_app] = useState<boolean>(false);
   return (
     <AppContext.Provider
       value={{
@@ -51,6 +51,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         showCreditCard,
         isRemoveEntry,
         userGlobalPermission,
+        isAdminOfSelectedServer_app,
         setUserGlobalPermission,
         setIsRemoveEntry,
         setShowCreditCard,
@@ -72,6 +73,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         setAddServerModalOpen,
         setEditServerModalID,
         setProfileModalOpen,
+        setIsAdminOfSelectedServer_app,
       }}
     >
       {children}

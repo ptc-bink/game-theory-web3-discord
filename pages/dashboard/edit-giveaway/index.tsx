@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 
 const EditGiveaway: React.FC = () => {
 
-    const { setShowCreditCard, setGiveawayCreated, showCreditCard, serverID, selectedGiveawayID, isAdmin } = useContext(AppContext);
+    const { setShowCreditCard, setGiveawayCreated,isAdminOfSelectedServer_app, showCreditCard, serverID, selectedGiveawayID, isAdmin } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [initRestrictedRoles, setInitRestrictedRoles] = useState<any>();
@@ -46,8 +46,8 @@ const EditGiveaway: React.FC = () => {
     const router = useRouter();
 
     const initAction = async () => {
-        console.log("isAdmin ====> ", isAdmin)
-        if (!isAdmin) {
+        console.log("isAdmin (EDIT GIVEAWAY) ====> ", isAdminOfSelectedServer_app)
+        if (!isAdminOfSelectedServer_app) {
             return router.push("/dashboard");
         }
         const tempServer: any = await getServers();

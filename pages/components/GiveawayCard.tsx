@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 
 const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners, adminOfServer }) => {
 
-    const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID } = useContext(AppContext);
+    const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID, isAdminOfSelectedServer_app } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
     const [userGiveawayIn, setUserGiveawayIn] = useState<boolean>(false);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -30,19 +30,16 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
         const res = await removeEntry({ marketID: giveawayID, serverID: serverData, removeUserID: removeUserId })
 
         if (res.status === 200) {
-
-            toast.success("User is removed");
-            //find the index of the user to remove using removeUserId and bidders
-
-            console.log("removeUserId ===> ", removeUserId);
-            toast.success("removeUserId ===> " + removeUserId);
-
             const updatedBidders = bidders_.filter((bidder: IUserInfo) => bidder.id !== removeUserId);
-
-            console.log("updatedBidders ====> ", updatedBidders);
 
             setBidders(updatedBidders);
             setEntrants(entrants_ - 1);
+            if (removeUserId === userID) {
+                setUserGiveawayIn(false);
+                toast.success("You have been removed from the giveaway");
+            }else{
+                toast.success("User has been removed from the giveaway");
+            }
 
         } else {
             toast.error(res.data);
@@ -51,6 +48,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
     const detailItem = (index: number) => {
         //Now Displays remove button for all users for Admin OR only on the users Entry if not Admin
+
         const isWinner = winners?.includes(bidders_[index].id);
         if (adminOfServer || bidders_[index].id === userID) {
             return (
@@ -62,14 +60,14 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                         alt={index + "th cancel"}
                         onClick={() => removeEntryHandle(bidders_[index].id)}
                     />
-                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index]?.username}(${bidders[index]?.id})`}</p>
+                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders_[index]?.username}(${bidders_[index]?.id})`}</p>
                     {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
                 </div>
             )
         } else {
             return (
                 <div key={index} className="flex gap-1 w-full px-2 text-clip">
-                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index]?.username}(${bidders[index]?.id})`}</p>
+                    <p className={`text-sm w-full leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "black" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders_[index]?.username}(${bidders_[index]?.id})`}</p>
                     {/* <p className={`text-sm leading-[18px] font-medium text-nowrap`} style={{ color: `${isWinner ? "FFD105" : "#939393"}`, backgroundColor: `${isWinner && "green"}` }}>{`${index + 1}.${bidders[index].username.length > 7 ? bidders[index].username.slice(0, 3) + ".." + bidders[index].username.slice(-2) : bidders[index].username}(${bidders[index].id})`}</p> */}
                 </div>
             )
@@ -96,15 +94,10 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
             );
         }
 
-        console.log("content ========================================>", content);
-
         return <div className="flex gap-2 md:flex-row flex-col">{content}</div>;
     }
 
     const handleEntry = async () => {
-        console.log("serverData.id  =======> ", serverData);
-        console.log("giveawayID  =======> ", giveawayID);
-        console.log("userID  =======> ", userID);
         if (timeRemaining * 1000 < new Date().getTime()) {
             toast.error("Giveaway has ended");
             return;
@@ -119,10 +112,14 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
         console.log(res)
         if (res.status === 200) {
             toast.success("You have entered the giveaway");
-            console.log("res.data.giveaway.bidders ====> ", res.data.giveaway.bidders);
 
             setBidders(res.data.giveaway.bidders);
             setEntrants(res.data.giveaway.bidders.length);
+            if (res.data.giveaway.bidders.find((bidder: IUserInfo) => bidder.id === userID)) {
+                setUserGiveawayIn(true);
+            }else{
+                setUserGiveawayIn(false);
+            }
         } else {
             toast.error(`Entry Failed: ${res.data.message}`);
         }
@@ -133,14 +130,12 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     }
 
     const handleEdit = async () => {
-        console.log("isAdmin ====> ", isAdmin);
-        if (!isAdmin) {
+        console.log("isAdmin ====> ", adminOfServer);
+        if (!adminOfServer) {
             toast.error("You are not an admin - You Cannot Edit this giveaway");
             return;
         } else {
             setSelectedGiveawayID(giveawayID);
-            console.log("serverData.id  =======> ", serverData);
-
             setServerID(serverData);
 
             router.push('/dashboard/edit-giveaway')
@@ -154,7 +149,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
     useEffect(() => {
         setBidders(bidders)
 
-        if (bidders.find((item: IUserInfo) => item.id == userID)) {
+        if (bidders_.find((item: IUserInfo) => item.id == userID)) {
             setUserGiveawayIn(true);
         } else setUserGiveawayIn(false);
     }, [bidders])

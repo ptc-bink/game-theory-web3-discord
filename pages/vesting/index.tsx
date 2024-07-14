@@ -43,10 +43,27 @@ const VESTING: React.FC<IVESTING> = () => {
     const [reportValue, setReportValue] = useState<number>();
     const [isInitialized, setIsInitialized] = useState<boolean>(false);
     const [detailItemIndex, setDetailItemIndex] = useState<number>(0);
+    const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
+
+
+    async function checkUserPermissionsToServer(serverID: string) {
+        const adminOf = userGlobalPermissons.isAdmin;
+        const superAdminOf = userGlobalPermissons.isSuperAdmin;
+
+        if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
+            setIsAdminOfSelectedServer(true);
+        } else {
+            setIsAdminOfSelectedServer(false);
+        }
+
+    }
+
+
 
     const mainAction = async (serverID: string) => {
+        
         const res: any = await getVestingReportsList(serverID);
-
+        checkUserPermissionsToServer(serverID);
         let tempVestingReportList: IVestingReportListItem[] = [];
         let tempVestingReports: IVestingReport[] = [];
         let tempReportNameDropdownList: IDropdownListProps[] = [];
@@ -97,10 +114,10 @@ const VESTING: React.FC<IVESTING> = () => {
             console.log("tempUserGlobalPermission ===> ", tempUserGlobalPermission.data)
             const adminOf = tempUserGlobalPermission.data.isAdmin;
             const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
-            const memberOf = tempUserGlobalPermission.data.isMember;
+            const canViewVestings = tempUserGlobalPermission.data.canViewVesting;
 
             //stop changing this please it needs to combine arrays. 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const allServers = [...adminOf, ...superAdminOf, ...canViewVestings];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
@@ -110,9 +127,9 @@ const VESTING: React.FC<IVESTING> = () => {
         } else {
             const adminOf = userGlobalPermission?.isAdmin;
             const superAdminOf = userGlobalPermission?.isSuperAdmin;
-            const memberOf = userGlobalPermission?.isMember;
+            const canViewVestings = userGlobalPermission?.canViewVesting;
 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const allServers = [...adminOf, ...superAdminOf, ...canViewVestings];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
@@ -129,7 +146,10 @@ const VESTING: React.FC<IVESTING> = () => {
     const initAction = async () => {
 
         const tempServer: any = await getServers();
-
+        const tempUserGlobalPermission = await getUserGlobalPermission();
+        setUserGlobalPermissons(tempUserGlobalPermission.data);
+        setUserGlobalPermission(tempUserGlobalPermission.data);
+        console.log("tempServer.data ===> ", tempServer.data);
 
         console.log("tempServer.data ===> ", tempServer.data);
 
