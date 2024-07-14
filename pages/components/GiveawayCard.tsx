@@ -81,7 +81,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
         for (let i = 0; i < Math.ceil(bidders_.length / 10); i++) {
             content.push(
-                <div className="w-1/4 flex flex-col gap-2" key={i}>
+                <div className=" flex flex-col gap-2" key={i}>
                     {Array.from({ length: 10 }, (_, j) => {
                         const index = i * 10 + j;
                         return (
