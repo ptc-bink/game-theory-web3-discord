@@ -15,6 +15,8 @@ import { getChainList, getGiveaways, getServerRoles, getServers, handleCreateGiv
 import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/utils/_type";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import { debug } from "console";
+import { isObject } from "react18-json-view/dist/utils";
 
 const CreateGiveaway: React.FC = () => {
 
@@ -44,6 +46,7 @@ const CreateGiveaway: React.FC = () => {
     const [links, setLinks] = useState<string>("");
     const [requirements, setRequirements] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
+    const [canHavePrice, setCanHavePrice] = useState<boolean>(false);
     const router = useRouter();
 
     const mainAction = async (serverID: string) => {
@@ -178,6 +181,70 @@ const CreateGiveaway: React.FC = () => {
 
     const handleCreditCard = () => {
         setShowCreditCard(!showCreditCard);
+    
+    }
+
+    const handleTypeChange = (value: any) => {
+        console.log("value ===>", value)
+        setType(value);
+        if(value === "raffle-free") {
+            setPrice(0.00);
+            setCanHavePrice(false);
+        } else {
+            setCanHavePrice(true);
+        }
+        
+    }
+
+    function handleKeyDown(e: any) {
+        if (e.ctrlKey && (e.key === 'b' || e.key === 'i' || e.key === 'u')) {
+            e.preventDefault();
+            const textarea = e.target;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+    
+            const wrapper = () => {
+                switch (e.key) {
+                    case 'b':
+                        return '**';
+                    case 'i':
+                        return '*';
+                    case 'u':
+                        return '__';
+                    default:
+                        return '';
+                }
+            };
+    
+            if (start === end) { // No text is selected
+                const before = textarea.value.substring(0, start);
+                const after = textarea.value.substring(end, textarea.value.length);
+    
+                // Update the value with the markdown syntax inserted
+                const newValue = `${before}${wrapper()}${wrapper()}${after}`;
+                setDescription(newValue); // Assuming setDescription updates the textarea value
+    
+                // Use a timeout to ensure the state update has been applied
+                setTimeout(() => {
+                    // Directly set the cursor position to be inside the markdown syntax
+                    textarea.selectionStart = start + wrapper().length;
+                    textarea.selectionEnd = start + wrapper().length;
+                    textarea.focus(); // Re-focus on the textarea
+                }, 0);
+            } else {
+                // Handle the case where text is selected
+                const selectedText = textarea.value.substring(start, end);
+                const newValue = `${textarea.value.substring(0, start)}${wrapper()}${selectedText}${wrapper()}${textarea.value.substring(end)}`;
+                setDescription(newValue);
+    
+                setTimeout(() => {
+                    const newCursorPos = start + wrapper().length + selectedText.length + wrapper().length;
+                    textarea.selectionStart = newCursorPos;
+                    textarea.selectionEnd = newCursorPos;
+                    textarea.focus();
+                }, 0);
+            }
+        }
     }
 
     useEffect(() => {
@@ -214,6 +281,8 @@ const CreateGiveaway: React.FC = () => {
             setGiveawayDropdownList([]);
         }
     }, [serverValue])
+
+
 
     const typeDropdownList: IDropdownListProps[] = [
         { name: "raffle-free", id: "raffle-free" },
@@ -265,7 +334,13 @@ const CreateGiveaway: React.FC = () => {
                     {/* Description */}
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Description*</p>
-                        <textarea placeholder="Description" onChange={(e) => setDescription(e.target.value)} value={description} className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <textarea 
+                        placeholder="Description" 
+                        onChange={(e) => setDescription(e.target.value)} 
+                        value={description} 
+                        className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" 
+                        onKeyDown={handleKeyDown}
+                        />
                     </div>
                     {/* Expires */}
                     <div className="flex flex-col gap-2">
@@ -297,9 +372,10 @@ const CreateGiveaway: React.FC = () => {
                             <p className="text-sm font-normal text-cwhite">Type*</p>
                             <Dropdown
                                 dropdownList={typeDropdownList}
-                                placeholder="Select giveaway"
+                                placeholder="Select type"
                                 className="hover:bg-cdark-200 bg-cdark-100"
-                                callback={setType}
+                                callback={handleTypeChange}
+                                initValue={type? type : "raffle-free"}
                             />
                         </div>
                         <div className="flex flex-col gap-2">
@@ -412,10 +488,22 @@ const CreateGiveaway: React.FC = () => {
                         <p className="text-sm font-normal">Required all roles</p>
                     </div>
                     {/* Price */}
-                    <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Price*</p>
-                        <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" />
-                    </div>
+                    {canHavePrice ? (
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-normal text-cwhite">Price*</p>
+                            <input
+                                type="number"
+                    
+                                placeholder="0.00001"
+                                min="0.00001"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.valueAsNumber)}
+                                className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
+                            />
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                     {/* Links & Requirements */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">

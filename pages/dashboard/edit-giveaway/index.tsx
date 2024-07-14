@@ -43,6 +43,7 @@ const EditGiveaway: React.FC = () => {
     const [price, setPrice] = useState<number>();
     const [links, setLinks] = useState<string>("");
     const [requirements, setRequirements] = useState<string>("");
+    const [canHavePrice, setCanHavePrice] = useState<boolean>(false);
     const router = useRouter();
 
     const initAction = async () => {
@@ -265,6 +266,12 @@ const EditGiveaway: React.FC = () => {
         }
 
         setExpires(expiresDate + " " + expiresHour);
+
+        if (editableGiveaway?.type === "raffle-free")
+            setCanHavePrice(false);
+        else
+            setCanHavePrice(true);
+
     }, [expiresDate, expiresHour]);
 
     useEffect(() => {
@@ -450,8 +457,9 @@ const EditGiveaway: React.FC = () => {
                         </div>
                         {/* Price */}
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm font-normal text-cwhite">Price*</p>
-                            <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" />
+                            <p className="text-sm font-normal text-cwhite ">Price*</p>
+                            {canHavePrice && <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" />}
+                            {!canHavePrice && <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md dissabled" />}
                         </div>
                     </div>
                     {/* Required all roles */}
