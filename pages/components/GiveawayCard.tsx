@@ -17,6 +17,14 @@ import { removeEntry, enterGiveaway } from '../../hook';
 import toast from "react-hot-toast";
 
 const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners, adminOfServer }) => {
+    const giveawayName_Edited = giveawayName
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/__(.*?)__/g, "<u>$1</u>")
+        .replace(/\*(.*?)\*/g, "<em>$1</em>")
+        .replace(/\n/g, "<br>");
+
+
+
 
     const { setSelectedGiveawayID, setServerID, setIsRemoveEntry, isAdmin, userID, isAdminOfSelectedServer_app } = useContext(AppContext);
     const [detailOpen, setDetailOpen] = useState<boolean>(false);
@@ -76,12 +84,11 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
 
     const details = () => {
         let content: any = [];
-
-        for (let i = 0; i < Math.ceil(bidders_.length / 10); i++) {
+        for (let i = 0; i < Math.ceil(bidders_.length / 15); i++) {
             content.push(
                 <div className=" flex flex-col gap-2" key={i}>
-                    {Array.from({ length: 10 }, (_, j) => {
-                        const index = i * 10 + j;
+                    {Array.from({ length: 15 }, (_, j) => {
+                        const index = i * 15 + j;
                         return (
                             index < bidders_.length && (
                                 <div key={index}>
@@ -168,7 +175,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
                 </div>
                 <div className="flex flex-col gap-1 w-full">
                     <p className="text-cwhite text-base font-normal">{title}</p>
-                    <pre onClick={handleExpand} className={`text-cgrey-900 text-xs overflow-hidden text-wrap hover:cursor-pointer leading-[18px] font-normal ${isExpanded || "max-h-[55px]"}`}>{giveawayName}</pre>
+                    <pre onClick={handleExpand} className={`select-none text-cgrey-900 text-xs overflow-hidden text-wrap hover:cursor-pointer leading-[18px] font-normal ${isExpanded || "max-h-[55px]"}`}dangerouslySetInnerHTML={{ __html: giveawayName_Edited }}></pre>
                 </div>
             </div>
             <div className="grid md:grid-cols-2 grid-row-2 gap-3">
@@ -226,7 +233,7 @@ const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, 
             </div>
             {detailOpen &&
                 <div className="flex flex-col rounded-lg">
-                    <div className="grid md:grid-rows-10 md:grid-flow-col max-h-[270px] overflow-scroll grid-flow-row gap-y-[1.5px] border border-cgrey-200 rounded-t-lg px-1 py-[10px] bg-cdark-50">
+                    <div className="grid md:grid-rows-15 md:grid-flow-col max-h-[400px] overflow-scroll grid-flow-row gap-y-[1.5px] border border-cgrey-200 rounded-t-lg px-1 py-[10px] bg-cdark-50">
                         {details()}
                     </div>
                     {timeRemaining * 1000 < new Date().getTime() || <div className="flex justify-center items-center bg-cgrey-200 gap-1 px-4 py-2 rounded-b-lg">
