@@ -796,9 +796,10 @@ export const removeEntry = async ({ marketID, serverID, removeUserID }: { market
 
 export const addServer = async (data: IAddserverInfo) => {
     try {
-        const response = await fetch(`${baseURL_back}/create-giveaway`, {
-            method: 'POST',
+        const response = await fetch(`${baseURL_back}/administration-trusted-servers`, {
+            method: 'PUT',
             credentials: 'include', // Include credentials to get the cookies
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ data }),
         });
 

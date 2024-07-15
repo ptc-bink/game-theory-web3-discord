@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 
 const EditGiveaway: React.FC = () => {
 
-    const { setShowCreditCard, setGiveawayCreated,isAdminOfSelectedServer_app, showCreditCard, serverID, selectedGiveawayID, isAdmin } = useContext(AppContext);
+    const { setShowCreditCard, setGiveawayCreated, isAdminOfSelectedServer_app, showCreditCard, serverID, selectedGiveawayID, isAdmin } = useContext(AppContext);
     const [serverRoles, setServerRoles] = useState<IServerRole[]>([]);
     const [restrictedRoles, setRestrictedRoles] = useState<IServerRole[]>([]);
     const [initRestrictedRoles, setInitRestrictedRoles] = useState<any>();
@@ -108,7 +108,7 @@ const EditGiveaway: React.FC = () => {
                 //return the user to dashboard
                 return router.push("/dashboard")
             }
-        }else{
+        } else {
             toast.error(`No server role to show - ${tempServerRoles.data.message}`)
             //return the user to dashboard
             return router.push("/dashboard")
@@ -134,7 +134,7 @@ const EditGiveaway: React.FC = () => {
                     setReqiuredAllRoles(tempEditableGiveaway.requireAllRoles);
                     console.log("tempEditableGiveaway.required ====> ", tempEditableGiveaway.required);
                     console.log("serverRoles ====> ", tempServerRoles.data);
-                    
+
                     const tempRequiredRoles = tempServerRoles.data?.filter((item: IServerRole) => {
                         return tempEditableGiveaway.required.includes(item.id)
                     })
@@ -316,7 +316,7 @@ const EditGiveaway: React.FC = () => {
                             onChange={(e) => setDescription(e.target.value)}
                             value={description}
                             onKeyDown={handleKeyDown}
-                            className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                            className="text-cwhite text-start text-sm h-[75px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     {/* Expires */}
                     <div className="flex flex-col gap-2">
@@ -459,7 +459,7 @@ const EditGiveaway: React.FC = () => {
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite ">Price*</p>
                             {canHavePrice && <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" />}
-                            {!canHavePrice && <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md dissabled" />}
+                            {!canHavePrice && <input type="number" disabled step="0.00001" placeholder="0.00001" min="0.00001" value={price} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md dissabled" />}
                         </div>
                     </div>
                     {/* Required all roles */}
@@ -481,7 +481,7 @@ const EditGiveaway: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex w-full justify-end">
-                    <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-cwhite hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-cwhite text-sm leading-4 font-medium">submit</div>
+                    <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-cwhite hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-cwhite text-cdark-100 text-sm leading-4 font-medium">submit</div>
                 </div>
             </div>
             {

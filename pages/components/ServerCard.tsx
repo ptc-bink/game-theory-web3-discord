@@ -87,14 +87,14 @@ const ServerCard: React.FC<IServerCardProps> = ({ index, id, rediskey, name, ser
       
             <div key={index} className="w-full flex flex-col rounded gap-4 hover:border hover:border-cwhite p-4 border border-cgrey-200">
                 <div className="flex gap-4 rounded">
-                    <div className="flex justify-center items-center p-3 border border-cgrey-200 bg-cdark-200 rounded-lg">
+                    <div className="flex justify-center items-start border border-cgrey-200 bg-cdark-200 rounded-lg">
                         {
                             serverImg ?
-                                <img src={serverImg} width={24} height={24} alt="server image" className="rounded-lg" />
+                                <img src={serverImg} width={48} height={48} alt="server image" className="rounded-lg" />
                                 : <Image
                                     src={Driver}
-                                    width="24"
-                                    height="24"
+                                    width="48"
+                                    height="48"
                                     alt="server mark"
                                 />
                         }

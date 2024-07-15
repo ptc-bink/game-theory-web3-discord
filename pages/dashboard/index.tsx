@@ -80,7 +80,7 @@ const Dashboard: React.FC<IDashboard> = () => {
             const adminOf = tempUserGlobalPermission.data.isAdmin;
             const superAdminOf = tempUserGlobalPermission.data.isSuperAdmin;
             const memberOf = tempUserGlobalPermission.data.isMember;
-            if (adminOf.length > 0 || superAdminOf.length > 0) {
+            if (adminOf?.length > 0 || superAdminOf?.length > 0) {
                 setIsAdmin(true);
             } else {
                 setIsAdmin(false);

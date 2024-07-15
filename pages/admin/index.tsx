@@ -23,33 +23,25 @@ const Admin: React.FC<IAdminProps> = () => {
 
     const { addServerModalOpen, isAdmin, setServerID, setAddServerModalOpen, } = useContext(AppContext);
     const [searchInput, setSearchInput] = useState<string>("");
-    const [server, setServer] = useState<string>("");
+    const [serverValue, setServerValue] = useState<string>("");
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [approvedServerList, setApprovedServerList] = useState<IAdministrationTrustedServers[]>([]);
     const [filterApprovedServerList, setFilterApprovedServerList] = useState<IAdministrationTrustedServers[]>([]);
     const router = useRouter();
 
     const handleAddBtn = async () => {
-        if (server == "") {
+        if (serverValue == "") {
             return toast.error("Please select server")
         }
 
-        setServerID(server);
+        setServerID(serverValue);
         setAddServerModalOpen(true);
     }
 
     const mainAction = async (serverID: string) => {
-
-
-
-
     }
 
     const initAction = async () => {
-
-        
-        
-            
 
         const tempData: any = await getAdministrationTrustedServers();
         let tempTrustedServers: IAdministrationTrustedServers[] = [];
@@ -68,21 +60,20 @@ const Admin: React.FC<IAdminProps> = () => {
             if (server.data.owner) {
                 const res: any = await administrationChannellist(server.id);
                 let tempChannelList: IChannel[] = [];
-        
+
                 if (res.status == 200) {
                     if (res.data.length > 0) {
                         tempChannelList = res.data;
                     }
-                }else{
+                } else {
                     toast.error(`No channel to show for ${server.data.name} server`);
                 }
                 server.channelList = tempChannelList;
-            }else{
+            } else {
                 toast.error(`No owner to show for ${server.data.name} server`);
             }
-            
-        });
 
+        });
 
         console.log("tempTrustedServers ====> ", tempTrustedServers);
 
@@ -105,15 +96,10 @@ const Admin: React.FC<IAdminProps> = () => {
             } else {
                 toast.error("No server to show");
             }
-        
-        
         }
-
-
     }
 
     const filterAction = () => {
-
         if (searchInput !== undefined && approvedServerList.length > 0) {
             {
                 const tempFilterApprovedServerList = approvedServerList.filter(item =>
@@ -128,18 +114,17 @@ const Admin: React.FC<IAdminProps> = () => {
 
     useEffect(() => {
         filterAction();
-
     }, [searchInput])
 
     useEffect(() => {
-        if (server) {
-            mainAction(server);
+        if (serverValue) {
+            mainAction(serverValue);
         } else {
             setApprovedServerList([]);
             setFilterApprovedServerList([])
             toast.success("Please select server")
         }
-    }, [server])
+    }, [serverValue])
 
     useEffect(() => {
         if (!isAdmin) {
@@ -163,7 +148,7 @@ const Admin: React.FC<IAdminProps> = () => {
                         dropdownList={serverDropdownList}
                         placeholder="Select server"
                         className="hover:bg-cdark-100 bg-cdark-200"
-                        callback={setServer}
+                        callback={setServerValue}
                     // initValue={}
                     />
                     <div className="flex w-full text-sm font-normal gap-2">

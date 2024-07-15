@@ -14,12 +14,12 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
 
     const { setAddServerModalOpen, serverID } = useContext(AppContext);
     const [channelDropdownList, setChannelDropdownList] = useState<IDropdownListProps[]>([])
-    const [marketChannelID, setMarketChannelId] = useState<string>();
-    const [generalChannelID, setGeneralChannelId] = useState<string>();
-    const [submitWalletID, setSubmitWalletId] = useState<string>();
-    const [vestingChannelID, setVestingChannelId] = useState<string>();
-    const [reminderChannelID, setReminderChannelId] = useState<string>();
-    const [winnersChannelID, setWinnersChannelId] = useState<string>();
+    const [marketChannelID, setMarketChannelId] = useState<string>("");
+    const [generalChannelID, setGeneralChannelId] = useState<string>("");
+    const [submitWalletID, setSubmitWalletId] = useState<string>("");
+    const [vestingChannelID, setVestingChannelId] = useState<string>("");
+    const [reminderChannelID, setReminderChannelId] = useState<string>("");
+    const [winnersChannelID, setWinnersChannelId] = useState<string>("");
     const [date, setDate] = useState<string>("");
     const [redisKey, setRediskey] = useState<string>("");
 
@@ -47,12 +47,14 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
     }, [])
 
     const handleSave = async () => {
-        if (!redisKey || !marketChannelID || !generalChannelID) {
+        if (!redisKey || !serverID) {
             return toast.error("Please insert all values")
         }
 
         const data = {
             rediskey: redisKey,
+            serverID: serverID,
+            // name: name,
             marketChannelID: marketChannelID,
             generalChannelID: generalChannelID,
             Submit_Wallet_ID: submitWalletID,
@@ -121,7 +123,7 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
                     <input type="date" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) => setDate(e.target.valueAsDate ? (e.target.valueAsDate.getTime() / 1000).toString() : "")} />
                 </div>
             </div>
-            <div className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={() => handleSave()}>Save</div>
+            <div className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-cdark-100 text-sm leading-4 text-center font-medium" onClick={() => handleSave()}>Save</div>
         </div>
     )
 }

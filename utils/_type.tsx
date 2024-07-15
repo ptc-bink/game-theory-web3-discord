@@ -11,7 +11,7 @@ export interface IAdministrationTrustedServers {
         default_Required_Role_ID: string,
         serverImage?: string,
         adminImage?: string,
-        owner:{
+        owner: {
             avatar: string,
             id: string,
             username: string
@@ -220,6 +220,8 @@ export interface IEditserverInfo {
 
 export interface IAddserverInfo {
     Submit_Wallet_ID?: string,
+    serverID: string,
+    // name?: string,
     Vesting_Channel_ID?: string,
     Reminder_Channel_ID?: string,
     Winners_Channel_ID?: string,
