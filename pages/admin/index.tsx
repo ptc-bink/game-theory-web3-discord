@@ -65,17 +65,21 @@ const Admin: React.FC<IAdminProps> = () => {
             })
         }
         tempTrustedServers.forEach(async server => {
-            const res: any = await administrationChannellist(server.id);
-            let tempChannelList: IChannel[] = [];
-    
-            if (res.status == 200) {
-                if (res.data.length > 0) {
-                    tempChannelList = res.data;
+            if (server.data.owner) {
+                const res: any = await administrationChannellist(server.id);
+                let tempChannelList: IChannel[] = [];
+        
+                if (res.status == 200) {
+                    if (res.data.length > 0) {
+                        tempChannelList = res.data;
+                    }
+                }else{
+                    toast.error(`No channel to show for ${server.data.name} server`);
                 }
+                server.channelList = tempChannelList;
             }else{
-                toast.error(`No channel to show for ${server.data.name} server`);
+                toast.error(`No owner to show for ${server.data.name} server`);
             }
-            server.channelList = tempChannelList;
             
         });
 
@@ -198,9 +202,9 @@ const Admin: React.FC<IAdminProps> = () => {
                         id={item.id}
                         rediskey={item.data.redisKey}
                         name={item.data.name}
-                        createdBy={item.data.admin.username}
+                        createdBy={item.data.owner?.displayName}
                         serverImg={item.data.serverImage}
-                        adminImg={item.data.admin.avatar}
+                        adminImg={item.data.owner?.displayAvatarURL}
                         paymentExpires={item.data.paymentExpires}
                         marketChannel={item.data.Market_Channel_ID}
                         submitWallet={item.data.Submit_Wallet_ID}

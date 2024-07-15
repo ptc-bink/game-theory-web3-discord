@@ -11,6 +11,13 @@ export interface IAdministrationTrustedServers {
         default_Required_Role_ID: string,
         serverImage?: string,
         adminImage?: string,
+        owner:{
+            avatar: string,
+            id: string,
+            username: string
+            displayAvatarURL: string
+            displayName: string
+        }
         redisKey: string,
         paymentExpires: number,
         Market_Channel_ID: string,
