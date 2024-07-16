@@ -10,7 +10,7 @@ import { addServer, administrationChannellist, getChainList } from "@/hook";
 import { IChannel, IDropdownListProps } from "@/utils/_type";
 import toast from "react-hot-toast";
 
-const AddServerModal: React.FC<AddServerModalProps> = () => {
+const AddServerModal: React.FC<AddServerModalProps> = ({servername}) => {
 
     const { setAddServerModalOpen, serverID } = useContext(AppContext);
     const [channelDropdownList, setChannelDropdownList] = useState<IDropdownListProps[]>([])
@@ -73,7 +73,7 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
     return (
         <div className="flex flex-col w-[450px] rounded-md p-6 max-h-[calc(100vh-50px)] overflow-scroll gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4 items-center">
-                <p className="text-base text-cwhite font-semibold">Add Server</p>
+                <p className="text-base text-cwhite font-semibold">Add {servername} to Trusted Servers</p>
                 <div onClick={() => setAddServerModalOpen(false)} className="cursor-pointer hover:bg-cdark-100 p-1 rounded-full">
                     <Image
                         src={Cancel}
@@ -131,5 +131,5 @@ const AddServerModal: React.FC<AddServerModalProps> = () => {
 export default AddServerModal;
 
 interface AddServerModalProps {
-
+    servername: string;
 }

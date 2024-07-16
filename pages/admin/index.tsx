@@ -24,6 +24,7 @@ const Admin: React.FC<IAdminProps> = () => {
     const { addServerModalOpen, isAdmin, setServerID, setAddServerModalOpen, } = useContext(AppContext);
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
+    const [serverName, setServerName] = useState<string>("");
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [approvedServerList, setApprovedServerList] = useState<IAdministrationTrustedServers[]>([]);
     const [filterApprovedServerList, setFilterApprovedServerList] = useState<IAdministrationTrustedServers[]>([]);
@@ -35,6 +36,7 @@ const Admin: React.FC<IAdminProps> = () => {
         }
 
         setServerID(serverValue);
+        console.log("serverValue ====> ", serverValue)
         setAddServerModalOpen(true);
     }
 
@@ -99,6 +101,15 @@ const Admin: React.FC<IAdminProps> = () => {
         }
     }
 
+    const handleSelectServer = (serverID: string) => {
+        console.log("serverID ====> ", serverID)
+        setServerValue(serverID);
+        const selectedServer = serverDropdownList.find(item => item.id === serverID);
+        if (selectedServer) {
+            setServerName(selectedServer.name);
+        }
+    }
+
     const filterAction = () => {
         if (searchInput !== undefined && approvedServerList.length > 0) {
             {
@@ -148,7 +159,7 @@ const Admin: React.FC<IAdminProps> = () => {
                         dropdownList={serverDropdownList}
                         placeholder="Select server"
                         className="hover:bg-cdark-100 bg-cdark-200"
-                        callback={setServerValue}
+                        callback={handleSelectServer}
                     // initValue={}
                     />
                     <div className="flex w-full text-sm font-normal gap-2">
@@ -171,7 +182,9 @@ const Admin: React.FC<IAdminProps> = () => {
                     </div>
                     {addServerModalOpen && (
                         <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
-                            <AddServerModal />
+                            <AddServerModal 
+                            servername={serverName}
+                            />
                         </div>
                     )}
                     {addServerModalOpen && (
@@ -215,7 +228,9 @@ const Admin: React.FC<IAdminProps> = () => {
             }
             {addServerModalOpen && (
                 <div className="z-[60] flex fixed top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
-                    <AddServerModal />
+                    <AddServerModal 
+                    servername={serverName}
+                    />
                 </div>
             )}
 
