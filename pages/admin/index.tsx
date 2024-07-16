@@ -20,7 +20,7 @@ import BackBtn from "../components/BackBtn";
 
 
 const Admin: React.FC<IAdminProps> = () => {
-
+    const [loading, setLoading] = useState(true);
     const { addServerModalOpen, isAdmin, setServerID, setAddServerModalOpen, } = useContext(AppContext);
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
@@ -44,7 +44,7 @@ const Admin: React.FC<IAdminProps> = () => {
     }
 
     const initAction = async () => {
-
+        setLoading(true);
         const tempData: any = await getAdministrationTrustedServers();
         let tempTrustedServers: IAdministrationTrustedServers[] = [];
         console.log("tempData (main) ====> ", tempData)
@@ -57,27 +57,33 @@ const Admin: React.FC<IAdminProps> = () => {
                     channelList: []
                 }
             })
+
         }
-        tempTrustedServers.forEach(async server => {
+
+        const channelListPromises = tempTrustedServers.map(async (server) => {
             if (server.data.owner) {
                 const res: any = await administrationChannellist(server.id);
-                let tempChannelList: IChannel[] = [];
-
-                if (res.status == 200) {
-                    if (res.data.length > 0) {
-                        tempChannelList = res.data;
-                    }
+                if (res.status == 200 && res.data.length > 0) {
+                    return { serverID: server.id, channelList: res.data };
                 } else {
                     toast.error(`No channel to show for ${server.data.name} server`);
                 }
-                server.channelList = tempChannelList;
             } else {
                 toast.error(`No owner to show for ${server.data.name} server`);
             }
-
+            return { serverID: server.id, channelList: [] };
         });
+    
+        // Wait for all channel list fetch operations to complete
+        const channelLists = await Promise.all(channelListPromises);
 
-        console.log("tempTrustedServers ====> ", tempTrustedServers);
+
+        tempTrustedServers.forEach(server => {
+            const channelData = channelLists.find(c => c.serverID === server.id);
+            if (channelData) {
+                server.channelList = channelData.channelList;
+            }
+        });
 
         setApprovedServerList(tempTrustedServers);
         setFilterApprovedServerList(tempTrustedServers);
@@ -99,6 +105,8 @@ const Admin: React.FC<IAdminProps> = () => {
                 toast.error("No server to show");
             }
         }
+
+        setLoading(false); 
     }
 
     const handleSelectServer = (serverID: string) => {
@@ -144,6 +152,21 @@ const Admin: React.FC<IAdminProps> = () => {
         }
         initAction();
     }, [])
+
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center w-screen h-screen">
+                <Image
+                    src={Driver}
+                    width="32"
+                    height="32"
+                    alt="loading"
+                />
+            </div>
+        )
+    }
+
 
     return (
         <div className="flex flex-col gap-4 p-8 bg-cdark-100">
@@ -192,8 +215,8 @@ const Admin: React.FC<IAdminProps> = () => {
                     )}
                 </div>
             </div>
-            {filterApprovedServerList.length > 0 ? <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-                {filterApprovedServerList.map((item: IAdministrationTrustedServers, index: number) => (
+            {approvedServerList.length > 0 ? <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
+                {approvedServerList.map((item: IAdministrationTrustedServers, index: number) => (
                     <ServerCard
                         key={index}
                         index={index + 1}

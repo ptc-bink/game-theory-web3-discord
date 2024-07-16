@@ -41,9 +41,11 @@ const ServerCard: React.FC<IServerCardProps> = ({ index, id, rediskey, name, ser
                 setVestingChannelName(tempVestingChannelName);
                 setReminderChannelName(tempReminderChannelName);
                 setWinnersChannelName(tempWinnersChannelName);
+            }else {
+                console.log("channelList is empty")
             }
         }else{
-            console.log("channelList is empty")
+            console.log(`--------------SERVER CARD-----------------`)
         }
     }
 
