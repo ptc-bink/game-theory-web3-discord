@@ -343,6 +343,7 @@ export interface IServer {
 export interface IGuild {
     id: string,
     name: string,
+    members: Array<any>,
     iconURL: string,
     memberCount: number
 }

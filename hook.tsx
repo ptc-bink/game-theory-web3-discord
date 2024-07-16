@@ -52,7 +52,6 @@ export const getHarvestWinners = async () => {
     }
 }
 
-
 export const getUserDetails = async (serverID: string) => {
     try {
         // const response = await fetch(`${baseURL_back}/get-user-details?serverID=${serverID}&userID=${userID}`, {

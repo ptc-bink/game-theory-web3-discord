@@ -86,7 +86,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                 setIsAdmin(false);
             }
             //stop changing this please it needs to combine arrays. 
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const allServers = [adminOf, superAdminOf, memberOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
@@ -103,7 +103,7 @@ const Dashboard: React.FC<IDashboard> = () => {
             } else {
                 setIsAdmin(false);
             }
-            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
+            const allServers = [adminOf, superAdminOf, memberOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);

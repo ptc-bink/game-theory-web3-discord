@@ -45,7 +45,6 @@ const VESTING: React.FC<IVESTING> = () => {
     const [detailItemIndex, setDetailItemIndex] = useState<number>(0);
     const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
 
-
     async function checkUserPermissionsToServer(serverID: string) {
         const adminOf = userGlobalPermissons.isAdmin;
         const superAdminOf = userGlobalPermissons.isSuperAdmin;
@@ -57,8 +56,6 @@ const VESTING: React.FC<IVESTING> = () => {
         }
 
     }
-
-
 
     const mainAction = async (serverID: string) => {
         
@@ -104,9 +101,6 @@ const VESTING: React.FC<IVESTING> = () => {
         setIsInitialized(false)
     }
 
-
-
-
     const initPermissions = async () => {
         if (!userGlobalPermission) {
             let tempUserGlobalPermission = await getUserGlobalPermission()
@@ -140,8 +134,6 @@ const VESTING: React.FC<IVESTING> = () => {
         }
 
     }
-
-
 
     const initAction = async () => {
 
