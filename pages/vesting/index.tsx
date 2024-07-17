@@ -187,7 +187,7 @@ const VESTING: React.FC<IVESTING> = () => {
         let tempTotalEarned = 0;
         let tempPassedVesting = 0;
 
-        for (const tempVestingReport of vestingReports) {
+        for (const tempVestingReport of tempVestingReports) {
             tempTotalHeld += tempVestingReport.NFTs_held;
             tempTotalMint += tempVestingReport.NFTs_minted;
             tempTotalBought += tempVestingReport.NFTs_bought;

@@ -437,8 +437,8 @@ export const getAllocationReadyForVesting = async (serverId: string) => {
 
 export const getVestingReportData = async (serverId: string, allocationNumber: string) => {
     try {
-        const response = await fetch(`${baseURL_back}/test/get-vesting-report`, {
-            // const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=${allocationNumber}`, {
+        //const response = await fetch(`${baseURL_back}/test/get-vesting-report`, {
+             const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=${allocationNumber}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });
