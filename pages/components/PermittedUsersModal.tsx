@@ -35,16 +35,29 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
     }
 
     const handlePopButton = () => {
+
         setPermittedusers(permittedUsers.filter(user => !popingData.includes(user)));
-        setServerMembers([...popingData, ...serverMembers]);
+
+        //if a user does not exist in the server we dont want to add them back into the server members.
+        setPopingData(popingData.filter(user => user.username !== undefined));
+        
+        if (popingData.filter(user => user.username !== undefined).length !== 0) {
+            setServerMembers([...popingData, ...serverMembers]);
+            setServerFilterMembers([...popingData, ...serverMembers]);
+        }
         setPermittedUserFlags([false]);
         setPopingData([]);
+
     }
 
     const initAction = async () => {
-        if (!serverValue || !reportValue) {
+        if (!serverValue ) {
             setPermittedUserModalOpen(false);
             return toast.error("No server selected")
+        }
+        if (!reportValue) {
+            setPermittedUserModalOpen(false);
+            return toast.error("No report selected")
         }
 
         const tempServer = await getServers();
@@ -53,8 +66,8 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
 
         if (tempServer.status == 200) {
             const temp: IServer = tempServer.data.find((item: IServer) => item.guildID == serverValue);
-            setServerMembers(temp.guild.members);
-            setServerFilterMembers(temp.guild.members);
+            setServerMembers(temp.guild.members.sort((a, b) => a.username.localeCompare(b.username)));
+            setServerFilterMembers(temp.guild.members.sort((a, b) => a.username.localeCompare(b.username)));
         }
 
         const res = await getAllocationpermittedusers(serverValue, reportValue);
@@ -159,8 +172,8 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
                                             alt="user avatar"
                                             className="rounded-full border-[1.5px] border-cgrey-200"
                                         />}
-                                    <p>{item.username}</p>
-                                    <p className="truncate">{item.id}</p>
+                                    <p className="select-none">{item.username}</p>
+                                    <p className="select-none truncate">({item.id})</p>
                                 </div>
                             ))}
                         </div>
@@ -184,8 +197,8 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
                                             alt="user avatar"
                                             className="rounded-full border-[1.5px] border-cgrey-200"
                                         />}
-                                    <p>{item.username ? item.username : `unknown `}</p>
-                                    <p className="truncate">{item.id}</p>
+                                    <p className="select-none">{item.username ? item.username : `unknown `}</p>
+                                    <p className="select-none truncate">({item.id})</p>
                                 </div>
                             ))}
                         </div>
