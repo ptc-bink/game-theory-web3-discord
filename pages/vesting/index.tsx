@@ -49,7 +49,7 @@ const VESTING: React.FC<IVESTING> = () => {
         const adminOf = userGlobalPermissons.isAdmin;
         const superAdminOf = userGlobalPermissons.isSuperAdmin;
 
-        if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
+        if (adminOf?.includes(serverID) || superAdminOf?.includes(serverID)) {
             setIsAdminOfSelectedServer(true);
         } else {
             setIsAdminOfSelectedServer(false);
@@ -280,6 +280,8 @@ const VESTING: React.FC<IVESTING> = () => {
     const handlePermiitedBtn = async () => {
         if (serverValue && reportValue) {
             setPermittedUserModalOpen(true)
+        } else {
+            toast.error("Select server")
         }
     }
 
@@ -450,7 +452,7 @@ const VESTING: React.FC<IVESTING> = () => {
                     <div className="text-cwhite text-2xl leading-8 font-medium text-center w-full">No vesting report to Show</div>
                 </div>
             }
-            {permittedUserModalOpen && serverValue !== "" && <PermittedUsersModal data={vestingReports} />}
+            {permittedUserModalOpen && serverValue && reportValue && <PermittedUsersModal serverValue={serverValue} reportValue={reportValue} />}
         </div>
     );
 }

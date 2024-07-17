@@ -15,7 +15,7 @@ import { getGiveaways, getServers, getUserGlobalPermission } from "@/hook";
 
 const Dashboard: React.FC<IDashboard> = () => {
 
-    const {isAdminOfSelectedServer_app, isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID, setUserGlobalPermission, setIsAdminOfSelectedServer_app, setIsAdmin } = useContext(AppContext);
+    const { isAdminOfSelectedServer_app, isAdmin, giveawayCreated, giveawayEdited, isRemoveEntry, userGlobalPermission, setIsRemoveEntry, setGiveawayEdited, setGiveawayCreated, setServerID, setUserGlobalPermission, setIsAdminOfSelectedServer_app, setIsAdmin } = useContext(AppContext);
     const [middleGiveaways, setMiddleGiveaways] = useState<IGiveaway[]>([]);
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
     const [visibleServers, setVisibleServers] = useState<string[]>([]);
@@ -26,7 +26,7 @@ const Dashboard: React.FC<IDashboard> = () => {
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([])
     const topRef = useRef<HTMLDivElement>(null);
     const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
-    
+
 
     async function checkUserPermissionsToServer(serverID: string) {
         const adminOf = userGlobalPermissons.isAdmin;
@@ -34,11 +34,11 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         if (adminOf.includes(serverID) || superAdminOf.includes(serverID)) {
             setIsAdminOfSelectedServer(true);
-           
+
             setIsAdminOfSelectedServer_app(true);
         } else {
             setIsAdminOfSelectedServer(false);
-      
+
             setIsAdminOfSelectedServer_app(false);
         }
 
@@ -49,7 +49,7 @@ const Dashboard: React.FC<IDashboard> = () => {
 
         const res: any = await getGiveaways(serverID);
         checkUserPermissionsToServer(serverID);
-        
+
         if (res.data !== undefined) {
             if (res.data.length > 0) {
                 for (const giveaway of res.data) {
@@ -63,7 +63,7 @@ const Dashboard: React.FC<IDashboard> = () => {
             return toast.error("Sever error");
         }
         console.log("giveaways ========================================> ", tempGiveaways);
-        
+
         tempGiveaways.sort((a, b) => a.expiry - b.expiry);
         tempGiveaways.reverse();
 
@@ -86,7 +86,7 @@ const Dashboard: React.FC<IDashboard> = () => {
                 setIsAdmin(false);
             }
             //stop changing this please it needs to combine arrays. 
-            const allServers = [adminOf, superAdminOf, memberOf];
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);
@@ -98,12 +98,12 @@ const Dashboard: React.FC<IDashboard> = () => {
             const superAdminOf = userGlobalPermission?.isSuperAdmin;
             const memberOf = userGlobalPermission?.isMember;
 
-            if (adminOf.length > 0 || superAdminOf.length > 0) {
+            if (adminOf?.length > 0 || superAdminOf?.length > 0) {
                 setIsAdmin(true);
             } else {
                 setIsAdmin(false);
             }
-            const allServers = [adminOf, superAdminOf, memberOf];
+            const allServers = [...adminOf, ...superAdminOf, ...memberOf];
             const uniqueServers = Array.from(new Set(allServers));
 
             setVisibleServers(uniqueServers);

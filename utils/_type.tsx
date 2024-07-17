@@ -3,11 +3,7 @@ export interface IAdministrationTrustedServers {
     serverID: string;
     data: {
         name: string,
-        admin: {
-            avatar: string,
-            id: string,
-            username: string
-        },
+        admin: IUserInfo,
         default_Required_Role_ID: string,
         serverImage?: string,
         adminImage?: string,
@@ -186,11 +182,7 @@ export interface IAdminof {
         SQLID: number,
         messageID: string,
         expiry: number,
-        creator: {
-            avatar: string,
-            id: string,
-            username: string,
-        },
+        creator: IUserInfo,
         bidEntryTimes: string[],
         bidderWallets: string[],
         bidders: string[],
@@ -281,11 +273,7 @@ export interface IGiveaway {
     messageID: string,
     serverData: string,
     expiry: number,
-    creator: {
-        id: string,
-        username: string,
-        avatar: string
-    },
+    creator: IUserInfo,
     title: string,
     description: string,
     chain: string,
@@ -301,11 +289,7 @@ export interface IGiveaway {
     sealedBids: number,
     entrants: number,
     bids: string[],
-    bidders: {
-        id: string,
-        username: string,
-        avatar: string
-    }[],
+    bidders: IUserInfo[],
     bidderWallets: string[],
     bidEntryTimes: number[],
     SQLID: number,
@@ -391,11 +375,7 @@ export interface IGiveawayCardProps {
     enterDate?: string;
     timeRemaining: number;
     harvested: boolean;
-    bidders: {
-        id: string,
-        username: string,
-        avatar: string
-    }[];
+    bidders: IUserInfo[];
     winners?: string[];
     adminOfServer: boolean;
 }
