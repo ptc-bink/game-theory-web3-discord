@@ -9,6 +9,7 @@ import { FaUpLong } from "react-icons/fa6";
 import { FaDownLong } from "react-icons/fa6";
 
 import Cancel from "@/public/avatar/close.svg"
+import User from "@/public/avatar/user.svg"
 import { getServers, getAllocationpermittedusers } from "@/hook";
 import AppContext from "@/providers/AppContext";
 import { IPermittedUser, IServer, IUserInfo, IVestingReport } from "@/utils/_type";
@@ -18,14 +19,17 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
     const { setPermittedUserModalOpen } = useContext(AppContext);
     const [permittedUsers, setPermittedusers] = useState<IUserInfo[]>([]);
     const [serverMembers, setServerMembers] = useState<IUserInfo[]>([]);
+    const [serverFilterMembers, setServerFilterMembers] = useState<IUserInfo[]>([]);
     const [popingData, setPopingData] = useState<IUserInfo[]>([]);
     const [pushingData, setPushingData] = useState<IUserInfo[]>([]);
     const [serverMemberFlags, setServerMemberFlags] = useState<boolean[]>([false]);
     const [permittedUserFlags, setPermittedUserFlags] = useState<boolean[]>([false]);
+    const [searchValue, setSearchValue] = useState<string>("");
 
     const handlePushButton = () => {
         setPermittedusers([...pushingData, ...permittedUsers]);
         setServerMembers(serverMembers.filter(member => !pushingData.includes(member)))
+        setServerFilterMembers(serverMembers.filter(member => !pushingData.includes(member)))
         setServerMemberFlags([false]);
         setPushingData([])
     }
@@ -50,6 +54,7 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
         if (tempServer.status == 200) {
             const temp: IServer = tempServer.data.find((item: IServer) => item.guildID == serverValue);
             setServerMembers(temp.guild.members);
+            setServerFilterMembers(temp.guild.members);
         }
 
         const res = await getAllocationpermittedusers(serverValue, reportValue);
@@ -83,6 +88,20 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
         }
     }
 
+    const handleSearchChange = (input: string) => {
+        if (input) {
+            const tempServerMembers = serverMembers.filter(item => item.id.includes(input) || item.username.includes(input))
+
+            setServerFilterMembers(tempServerMembers);
+            setSearchValue(input)
+        } else {
+            setServerFilterMembers(serverMembers);
+            setSearchValue("");
+        }
+
+        setServerMemberFlags([false]);
+    }
+
     const handleSetPopingUser = (user: IUserInfo, index: number) => {
         setPermittedUserFlags(prevFlags => {
             const newFlags = [...prevFlags];
@@ -114,7 +133,7 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
 
     return (
         <div className="flex flex-col fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
-            <div className="flex flex-col rounded-md p-6 gap-6 border md:h-[450px] h-5/6 lg:w-3/5 md:w-4/5 w-5/6 border-cgrey-200 overflow-scroll bg-cgrey-100">
+            <div className="flex flex-col rounded-2xl p-6 gap-6 border md:h-[450px] h-5/6 lg:w-3/5 md:w-4/5 w-5/6 border-cgrey-200 overflow-scroll bg-cgrey-100">
                 <div className="flex justify-between gap-4">
                     <p className="text-base text-cwhite font-semibold">Permitted Users</p>
                     <Image
@@ -128,17 +147,24 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
                 </div>
                 <div className="grid md:grid-cols-9 grid-cols-none gap-3 w-full">
                     <div className="col-span-4 gap-2 flex flex-col">
-                        <input type="string" placeholder="Search members" className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                        <input type="string" placeholder="Search members" value={searchValue} onChange={(e) => handleSearchChange(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                         <div className="flex flex-col px-5 py-3 gap-[6px] rounded-lg bg-cdark-50 border overflow-y-auto  border-cgrey-200 overflow-scroll h-[235px]">
-                            {serverMembers.map((item, index) => (
+                            {serverFilterMembers.map((item, index) => (
                                 <div key={index} className={`flex items-center text-sm gap-2 cursor-pointer leading-[18px] font-medium hover:text-cwhite hover:bg-cgrey-100 text-cgrey-900 ${serverMemberFlags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetPushingUser(item, index)}>
-                                    <img src={item.avatar} width={24} height={24} alt="user modal" />
+                                    {item.avatar ? <img src={item.avatar} width={24} height={24} alt="user modal" className="rounded-full" /> :
+                                        <Image
+                                            src={User}
+                                            width={24}
+                                            height={24}
+                                            alt="user avatar"
+                                            className="rounded-full border-[1.5px] border-cgrey-200"
+                                        />}
                                     <p>{item.username}</p>
-                                    <p>{item.id}</p>
+                                    <p className="truncate">{item.id}</p>
                                 </div>
                             ))}
                         </div>
-                        {/* <input type="string" placeholder="Manual ID input" className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" /> */}
+                        <input type="string" placeholder="Manual ID input" className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="md:col-span-1 col-span-4 flex md:flex-col flex-row gap-8 justify-center text-center items-center">
                         <button onClick={handlePushButton} className="md:block hidden"><FaRightLong className="h-8 w-8 text-cwhite hover:text-cblue-500" /></button>
@@ -149,10 +175,17 @@ const PermittedUsersModal: React.FC<IPermittedUsersModal> = ({ serverValue, repo
                     <div className="col-span-4 flex flex-col gap-2">
                         <div className="col-span-4 flex flex-col px-5 py-3 gap-[6px] rounded-lg bg-cdark-50 border overflow-scroll border-cgrey-200 h-[285px]">
                             {permittedUsers.map((item, index) => (
-                                <div key={index} className={`flex text-sm items-center cursor-pointer leading-[18px] font-medium hover:text-cwhite hover:bg-cgrey-100 text-cgrey-900 ${permittedUserFlags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetPopingUser(item, index)}>
-                                    <img src={item.avatar} width={24} height={24} alt="user modal" />
+                                <div key={index} className={`flex text-sm items-center cursor-pointer leading-[18px] font-medium hover:text-cwhite hover:bg-cgrey-100 text-cgrey-900 gap-2 ${permittedUserFlags[index] ? "bg-cgrey-100" : ""}`} onClick={() => handleSetPopingUser(item, index)}>
+                                    {item.avatar ? <img src={item.avatar} width={24} height={24} className="rounded-full" alt="user modal" /> :
+                                        <Image
+                                            src={User}
+                                            width={24}
+                                            height={24}
+                                            alt="user avatar"
+                                            className="rounded-full border-[1.5px] border-cgrey-200"
+                                        />}
                                     <p>{item.username ? item.username : `unknown `}</p>
-                                    <p>{` (${item.id})`}</p>
+                                    <p className="truncate">{item.id}</p>
                                 </div>
                             ))}
                         </div>
