@@ -99,7 +99,7 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                     </div> */}
                 </div>
             </div>
-            <button aria-label="submit" className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={handleSubmit}>Submit</button>
+            <button aria-label="submit" className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-cgrey-100 text-sm leading-4 text-center font-medium" onClick={handleSubmit}>Submit</button>
         </div>
     )
 }

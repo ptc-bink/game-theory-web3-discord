@@ -130,8 +130,8 @@ const EditGiveaway: React.FC = () => {
                     setReqiuredAllRoles(tempEditableGiveaway.requireAllRoles);
                     setType(tempEditableGiveaway.type);
 
-                    setExpiresDate(moment(tempEditableGiveaway.expiry*1000).format("YYYY-MM-DD"));
-                    setExpiresHour(moment(tempEditableGiveaway.expiry*1000).format("HH:MM"));
+                    setExpiresDate(moment(tempEditableGiveaway.expiry * 1000).format("YYYY-MM-DD"));
+                    setExpiresHour(moment(tempEditableGiveaway.expiry * 1000).format("HH:MM"));
 
                     const tempRequiredRoles = tempServerRoles.data?.filter((item: IServerRole) => {
                         return tempEditableGiveaway.required.includes(item.id)
@@ -216,7 +216,7 @@ const EditGiveaway: React.FC = () => {
             return toast.error("Please input all values");
         }
 
-        if (Math.floor(new Date(expires).getTime() / 1000) < Math.floor(new Date().getTime()/1000)) {
+        if (Math.floor(new Date(expires).getTime() / 1000) < Math.floor(new Date().getTime() / 1000)) {
             return toast.error("Invalid expiry times")
         }
 
@@ -319,17 +319,17 @@ const EditGiveaway: React.FC = () => {
                             onChange={(e) => setDescription(e.target.value)}
                             value={description}
                             onKeyDown={handleKeyDown}
-                            className="text-cwhite text-start text-sm h-[75px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" 
-                            aria-label="Description"/>
+                            className="text-cwhite text-start text-sm h-[75px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
+                            aria-label="Description" />
                     </div>
                     {/* Expires */}
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Expires*</p>
                         <div className="grid grid-cols-2 gap-3 w-full">
                             <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true}
-                            aria-label="Expire Date" />
+                                aria-label="Expire Date" />
                             <input type="time" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
-                            aria-label="Expire Time" />
+                                aria-label="Expire Time" />
                         </div>
                     </div>
                     {/* Chain & Quantity */}
@@ -348,7 +348,7 @@ const EditGiveaway: React.FC = () => {
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Quantity*</p>
                             <input type="number" placeholder="0" onChange={(e) => setQuantity(e.target.valueAsNumber)} value={quantity} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
-                            aria-label="Quantity" />
+                                aria-label="Quantity" />
                         </div>
                     </div>
                     {/* Restricted Roles & Required Roles */}
@@ -468,8 +468,8 @@ const EditGiveaway: React.FC = () => {
                         {/* Price */}
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite ">Price*</p>
-                            {canHavePrice && <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" aria-label="Price"/>}
-                            {!canHavePrice && <input type="number" disabled step="0.00001" placeholder="0.00001" min="0.00001" value={price} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md dissabled" aria-label="Price"/>}
+                            {canHavePrice && <input type="number" step="0.00001" placeholder="0.00001" min="0.00001" value={price} onChange={(e) => setPrice(e.target.valueAsNumber)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md" aria-label="Price" />}
+                            {!canHavePrice && <input type="number" disabled step="0.00001" placeholder="0.00001" min="0.00001" value={price} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border grey-200grey-200 bg-cdark-50 rounded-md dissabled" aria-label="Price" />}
                         </div>
                     </div>
                     {/* Required all roles */}
@@ -482,11 +482,11 @@ const EditGiveaway: React.FC = () => {
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Links*</p>
-                            <input type="url" placeholder="" value={links} onChange={(e) => setLinks(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" aria-label="Links"/>
+                            <input type="url" placeholder="" value={links} onChange={(e) => setLinks(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" aria-label="Links" />
                         </div>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-normal text-cwhite">Requirements*</p>
-                            <input type="text" placeholder="" value={requirements} onChange={(e) => setRequirements(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" aria-label="Requirements"/>
+                            <input type="text" placeholder="" value={requirements} onChange={(e) => setRequirements(e.target.value)} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" aria-label="Requirements" />
                         </div>
                     </div>
                 </div>

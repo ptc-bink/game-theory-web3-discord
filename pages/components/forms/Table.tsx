@@ -12,9 +12,9 @@ import EditAllocationModal from "./EditAllocation";
 
 const Table: React.FC<ITable> = ({ allocations }) => {
 
-    const { setAllocationEdited } = useContext(AppContext);
+    const { setAllocationEdited, setEditAllocationModalOpen, editAllocationModalOpen } = useContext(AppContext);
     const [isChecked, setIsChecked] = useState<boolean>(false);
-    const [editAllocationID, setAllocationID] = useState<number>(0);
+    const [editAllocationID, setEditAllocationID] = useState<number>(-1);
 
     // Maintain the state of individual checkboxes
     const [checkedState, setCheckedState] = useState<boolean[]>([]);
@@ -26,9 +26,12 @@ const Table: React.FC<ITable> = ({ allocations }) => {
     }, []);
 
     const handleEditBtn = async (index: number) => {
-        toast.success("coming soon")
+        // toast.success(index.toString())
+        console.log('index :>> ', index);
+        console.log('allocations :>> ', allocations);
 
-        setAllocationID(index);
+        setEditAllocationModalOpen(true);
+        setEditAllocationID(index);
         setAllocationEdited(true);
     }
 
@@ -143,17 +146,19 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                     ))}
                 </div>
             </div>
-            {editAllocationID &&
-                <EditAllocationModal
-                    id={allocations[editAllocationID]?.id}
-                    title={allocations[editAllocationID]?.title}
-                    allocation={allocations[editAllocationID]?.allocation}
-                    for_server={allocations[editAllocationID]?.for_server}
-                    role={allocations[editAllocationID]?.role}
-                    contract={allocations[editAllocationID]?.contract}
-                    mint_date={allocations[editAllocationID]?.mint_date}
-                    vesting={allocations[editAllocationID]?.vesting}
-                />
+            {editAllocationID !== -1 && editAllocationModalOpen &&
+                <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
+                    <EditAllocationModal
+                        id={allocations[editAllocationID]?.id}
+                        title={allocations[editAllocationID]?.title}
+                        allocation={allocations[editAllocationID]?.allocation}
+                        for_server={allocations[editAllocationID]?.for_server}
+                        role={allocations[editAllocationID]?.role}
+                        contract={allocations[editAllocationID]?.contract}
+                        mint_date={allocations[editAllocationID]?.mint_date}
+                        vesting={allocations[editAllocationID]?.vesting}
+                    />
+                </div>
             }
         </div>
     )

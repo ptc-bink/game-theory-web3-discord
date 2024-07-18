@@ -7,36 +7,51 @@ import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
 import { addAllocation } from "@/hook";
 import { IAllocation } from '../../../utils/_type';
+import moment from "moment";
 
 const EditAllocationModal: React.FC<IAllocation> = (data) => {
 
-    const { setAddAllocationModalOpen } = useContext(AppContext);
+    const { setEditAllocationModalOpen } = useContext(AppContext);
     const [title, setTitle] = useState<string>(data.title);
     const [amount, setAmount] = useState<number>(0);
     const [allocation, setAllocation] = useState<number>(data.allocation);
     const [mintDate, setMintDate] = useState<Date>();
     const [mintHoldDays, setMintHoldDays] = useState<number>(data.vesting?.mint_hold_days as number);
-    const [secondaryBuyHoldDays, setSecondaryBuyHoldDays] = useState<number>(data.vesting?.secondary_buy_hold_days as number);
-    const [secondaryBuyHoldHours, setSecondaryBuyHoldHours] = useState<number>(data.vesting?.secondary_buy_hours as number);
+    const [expiresDate, setExpiresDate] = useState<any>();
+    const [expiresHour, setExpiresHour] = useState<any>();
     const [secondaryBuyAmount, setSecondaryBuyAmount] = useState<number>(data.vesting?.secondary_buy_amount as number);
     const [priceVoid, setPriceVoid] = useState<number>(data.vesting?.price_void as number);
     const [contract, setContract] = useState<string>(data.contract);
 
+    const initAction = () => {
+        console.log('data :>> ', data.mint_date);
+
+        setExpiresDate(moment(data.mint_date as number * 1000).format("YYYY-MM-DD"));
+        setExpiresHour(moment(data.mint_date as number * 1000).format("HH:MM"));
+    }
+
     const handleSubmit = async () => {
 
-        if (!allocation || !mintHoldDays || !secondaryBuyHoldDays || !secondaryBuyHoldHours || !secondaryBuyAmount || !amount || !priceVoid || !title || !contract || !mintDate) {
+        if (!allocation || !mintHoldDays || !expiresHour || !expiresDate || !secondaryBuyAmount || !amount || !priceVoid || !title || !contract || !mintDate) {
             return console.log("plz input all value");
         }
 
-        const data: any = { allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHoldHours, secondaryBuyAmount, priceVoid, mintDate, title, amount };
+        const data: any = { allocation, mintHoldDays, expiresDate, expiresHour, secondaryBuyAmount, priceVoid, mintDate, title, amount };
 
         await addAllocation(data);
+
+        setEditAllocationModalOpen(false);
     }
+
+    useEffect(() => {
+        initAction()
+    }, [])
+
     return (
         <div className="flex flex-col w-[450px] rounded-md p-6 max-h-[calc(100vh-50px)] overflow-scroll gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
-                <p className="text-base text-cwhite font-semibold">Add Allocation</p>
-                <div onClick={() => setAddAllocationModalOpen(false)} className="cursor-pointer">
+                <p className="text-base text-cwhite font-semibold">Edit Allocation</p>
+                <div onClick={() => setEditAllocationModalOpen(false)} className="cursor-pointer">
                     <Image
                         src={Cancel}
                         width="24"
@@ -67,14 +82,18 @@ const EditAllocationModal: React.FC<IAllocation> = (data) => {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-2">
+                    {/* <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Secondary buy hold days</p>
                         <input type="number" min="0" onChange={(e) => setSecondaryBuyHoldDays(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold" value={secondaryBuyHoldDays} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Secondary buy hold hours</p>
                         <input type="number" min="0" onChange={(e) => setSecondaryBuyHoldHours(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold" value={secondaryBuyHoldHours} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
-                    </div>
+                    </div> */}
+                    <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true}
+                        aria-label="Expire Date" />
+                    <input type="time" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
+                        aria-label="Expire Time" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
@@ -99,7 +118,7 @@ const EditAllocationModal: React.FC<IAllocation> = (data) => {
                     </div>
                 </div>
             </div>
-            <button aria-label="submit" className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={handleSubmit}>Submit</button>
+            <button aria-label="submit" className="bg-cwhite p-3 rounded-md border cursor-pointer text-cgrey-100 hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={handleSubmit}>Submit</button>
         </div>
     )
 }

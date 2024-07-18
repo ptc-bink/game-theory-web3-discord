@@ -29,6 +29,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userGlobalPermission,  setUserGlobalPermission] = useState<IUserGlobalPermission>();
   const [isAdminOfSelectedServer_app, setIsAdminOfSelectedServer_app] = useState<boolean>(false);
   const [serverRemovalID, setServerRemovalID] = useState<string>("");
+  const [editAllocationModalOpen, setEditAllocationModalOpen] = useState<boolean>(false);
+
   return (
     <AppContext.Provider
       value={{
@@ -56,6 +58,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         isRemoveEntry,
         userGlobalPermission,
         isAdminOfSelectedServer_app,
+        editAllocationModalOpen,
+        setEditAllocationModalOpen,
         setUserGlobalPermission,
         setIsRemoveEntry,
         setShowCreditCard,

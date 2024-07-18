@@ -6,7 +6,7 @@ interface ContextType {
   addServerModalOpen: boolean;
   editServerModalID: number;
   profileModalOpen: boolean;
-  serverRemoved : boolean;
+  serverRemoved: boolean;
   userID: string;
   username: string;
   userImage: string;
@@ -27,6 +27,8 @@ interface ContextType {
   isRemoveEntry: boolean;
   userGlobalPermission: any;
   isAdminOfSelectedServer_app: boolean;
+  editAllocationModalOpen: boolean;
+  setEditAllocationModalOpen: (editAllocationModalOpen: boolean) => void,
   setUserGlobalPermission: (userGlobalPermission: any) => void,
   setIsRemoveEntry: (removeEntry: boolean) => void,
   setShowCreditCard: (showCreditCard: boolean) => void,
@@ -75,9 +77,11 @@ const initialValue: ContextType = {
   showCreditCard: false,
   serverID: "",
   isRemoveEntry: false,
-  userGlobalPermission: {isAdmin:[], isSuperAdmin:[], canViewVesting:[], isMember:[]},
+  userGlobalPermission: { isAdmin: [], isSuperAdmin: [], canViewVesting: [], isMember: [] },
   isAdminOfSelectedServer_app: false,
   serverRemoved: false,
+  editAllocationModalOpen: false,
+  setEditAllocationModalOpen(editAllocationModalOpen) { },
   setUserGlobalPermission(userGlobalPermission) { },
   setIsRemoveEntry(isRemoveEntry) { },
   setShowCreditCard(showCreditCard) { },
@@ -101,7 +105,7 @@ const initialValue: ContextType = {
   setProfileModalOpen: (profileModalOpen) => { },
   setIsAdminOfSelectedServer_app: (isAdminOfSelectedServer_app) => { },
   setServerRemovalID: (serverRemovalID) => { },
-  setServerRemoved  : (serverRemoved) => { },
+  setServerRemoved: (serverRemoved) => { },
 
 };
 

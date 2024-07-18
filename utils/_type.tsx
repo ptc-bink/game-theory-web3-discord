@@ -84,7 +84,7 @@ export interface IAllocation {
     for_server: string,
     role: number,
     contract: string,
-    mint_date: number,
+    mint_date?: number,
     vesting?: {
         allocation: number,
         mint_hold_days: number,
