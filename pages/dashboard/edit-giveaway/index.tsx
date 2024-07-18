@@ -129,8 +129,9 @@ const EditGiveaway: React.FC = () => {
                     setPrice(tempEditableGiveaway.price);
                     setReqiuredAllRoles(tempEditableGiveaway.requireAllRoles);
                     setType(tempEditableGiveaway.type);
-                    setExpiresDate(moment(tempEditableGiveaway.expiry).format("YYYY-MM-DD"));
-                    setExpiresHour(moment(tempEditableGiveaway.expiry).format("HH:MM"));
+
+                    setExpiresDate(moment(tempEditableGiveaway.expiry*1000).format("YYYY-MM-DD"));
+                    setExpiresHour(moment(tempEditableGiveaway.expiry*1000).format("HH:MM"));
 
                     const tempRequiredRoles = tempServerRoles.data?.filter((item: IServerRole) => {
                         return tempEditableGiveaway.required.includes(item.id)
