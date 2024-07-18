@@ -9,10 +9,11 @@ import AppContext from "@/providers/AppContext";
 import { IChannel, IDropdownListProps, IEditServerModalProps } from "@/utils/_type";
 import { administrationChannellist, editServer } from "@/hook";
 import toast from "react-hot-toast";
+import moment from "moment";
 
-const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediskey, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel, channelList }) => {
+const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediskey, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel, channelList, paymentExpires }) => {
 
-    const { setEditServerModalID } = useContext(AppContext);
+    const { setEditServerModalID, setServerRemoved } = useContext(AppContext);
     const [chainDropdownList, setChainDropdownList] = useState<IDropdownListProps[]>([])
     const [marketChannelID, setMarketChannelId] = useState<string>();
     const [generalChannelID, setGeneralChannelId] = useState<string>();
@@ -26,6 +27,8 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
     const [vestingChannelName, setVestingChannelName] = useState<string>();
     const [reminderChannelName, setReminderChannelName] = useState<string>();
     const [winnersChannelName, setWinnersChannelName] = useState<string>();
+    const [paymentExpiresDate, setPaymentExpiresDate] = useState<string>();
+
     const [date, setDate] = useState<string>("");
     const [RedisKey, setRediskey] = useState<string>(rediskey);
 
@@ -33,6 +36,8 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
 
     
         console.log("server ====>", server);
+        console.log("Payment Expires", paymentExpires);
+        
 
         if (channelList.length > 0) {
             const tempChainDropdownList: IDropdownListProps[] = channelList.map((item: IChannel) => (
@@ -98,6 +103,12 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
                 console.error("Winners channel not found");
             }
         }
+        if (paymentExpires) {
+            setDate(paymentExpires.toString())
+            setPaymentExpiresDate(moment(paymentExpires*1000).format("YYYY-MM-DD"));
+
+            console.log(moment(paymentExpires*1000).format("YYYY-MM-DD"))
+        }
     }
 
     useEffect(() => {
@@ -124,6 +135,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
 
 
         const data = {
+            serverID: server,
             rediskey: RedisKey,
             marketChannelID: marketChannelID,
             generalChannelID: generalChannelID,
@@ -131,13 +143,29 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
             Vesting_Channel_ID: vestingChannelID,
             Reminder_Channel_ID: reminderChannelID,
             Winners_Channel_ID: winnersChannelID,
-            date: date
+            paymentExpires: date
         }
 
         const res = editServer(data);
 
         console.log("edit server response:", res);
+        setServerRemoved(true); //reusing this to refresh the server list
         closeModal();
+    }
+
+    const handleDateChange = (e: any) => {
+        const selectedDate = new Date(e.target.value);
+        setPaymentExpiresDate(e.target.value)
+        console.log("Selected Date", paymentExpiresDate);        
+        if (isNaN(selectedDate.getTime())) {
+            return toast.error("Invalid date format");
+        }
+        const unitTime = Math.floor(selectedDate.getTime() / 1000);
+        setDate(unitTime.toString());
+
+        console.log("unitTime", unitTime);
+        console.log("BAse Date", selectedDate);
+        console.log("Base Data" , e.target.value);
     }
 
     return (
@@ -190,7 +218,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
                 </div>
                 <div className="flex flex-col gap-2">
                     <p className="text-sm font-normal text-cwhite">Date</p>
-                    <input type="date" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) => setDate(e.target.value)} />
+                    <input type="date" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" value ={paymentExpiresDate?paymentExpiresDate:moment(paymentExpires*1000).format("DD-MM-YYYY")}  onChange={handleDateChange}/>
                 </div>
             </div>
             <div className="bg-cwhite p-3 rounded-md border cursor-pointer hover:bg-cgrey-100 hover:text-cwhite border-[#EEEEEE] text-sm leading-4 text-center font-medium" onClick={() => handleSaveChange()}>Save Changes</div>

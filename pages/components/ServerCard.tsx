@@ -188,6 +188,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ index, id, rediskey, name, ser
                                 reminderChannel={reminderChannel}
                                 winnersChannel={winnersChannel}
                                 channelList={channelList}
+                                paymentExpires={paymentExpires}
                             />
                         </div>
                     )

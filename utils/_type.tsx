@@ -39,6 +39,7 @@ export interface IEditServerModalProps {
     reminderChannel: string;
     winnersChannel: string;
     channelList: IChannel[];
+    paymentExpires: number;
 }
 
 export interface IUserProfile {
