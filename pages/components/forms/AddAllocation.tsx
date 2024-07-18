@@ -8,17 +8,17 @@ import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
 import { addAllocation } from "@/hook";
 
-const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
+const AddAllocationModal: React.FC<AddAllocationModalProps> = (serverID) => {
 /**
  * TODO:
  * - Backend Work for Creating Roles Etc when an alloction is created.
  * 
 
  */
-    const { setAddAllocationModalOpen } = useContext(AppContext);
+    const { setAddAllocationModalOpen, setAllocationCreated } = useContext(AppContext);
     const [title, setTitle] = useState<string>("");
     const [amount, setAmount] = useState<number>(0);
-    const [allocation, setAllocation] = useState<number>(0);
+    const [allocation, setAllocation] = useState<string>();
     const [mintDate, setMintDate] = useState<number>(0);
     const [mintHoldDays, setMintHoldDays] = useState<number>(0);
     const [secondaryBuyHoldDays, setSecondaryBuyHoldDays] = useState<number>(0);
@@ -35,9 +35,14 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
         if (!amount || amount === 0){
             return console.log("please input an amount");
         }
-        const data: any = { allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHoldHours, secondaryBuyAmount, priceVoid, mintDate, title, amount };
+        const data: any = {serverID:serverID.serverID, allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHoldHours, secondaryBuyAmount, priceVoid, mintDate, title, amount };
 
-        await addAllocation(data);
+        const res = await addAllocation(data);
+        if (res.status === 200){
+            setAllocationCreated(true);
+            setAddAllocationModalOpen(false);
+        }
+
     }
 
     const handleMintDateTime = (e: any) => {
@@ -121,5 +126,6 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
 export default AddAllocationModal;
 
 interface AddAllocationModalProps {
+    serverID: string
 
 }

@@ -485,9 +485,11 @@ export const setVestingParams = async (data: ISetVestingParams) => {
 
 export const addAllocation = async (data: any) => {
     try {
+        console.log(`data ====> `, data);
         const response = await fetch(`${baseURL_back}/allocation`, {
-            method: 'post',
+            method: 'PUT',
             credentials: 'include', // Include credentials to get the cookies
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 data
             }),
