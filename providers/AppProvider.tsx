@@ -17,6 +17,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedGiveawayID, setSelectedGiveawayID] = useState<string>("");
   const [removeEntrantModalOpen, setRemoveEntrantModalOpen] = useState<boolean>(false);
+  const [serverRemoved, setServerRemoved] = useState<boolean>(false);
   const [permittedUserModalOpen, setPermittedUserModalOpen] = useState<boolean>(false);
   const [removeApproval, setRemoveApproval] = useState<boolean>(false);
   const [allocationDeleted, setAllocationDeleted] = useState<boolean>(false);
@@ -27,9 +28,12 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isRemoveEntry, setIsRemoveEntry] = useState<boolean>(false);
   const [userGlobalPermission,  setUserGlobalPermission] = useState<IUserGlobalPermission>();
   const [isAdminOfSelectedServer_app, setIsAdminOfSelectedServer_app] = useState<boolean>(false);
+  const [serverRemovalID, setServerRemovalID] = useState<string>("");
   return (
     <AppContext.Provider
       value={{
+        serverRemoved,
+        serverRemovalID,
         addServerModalOpen,
         editServerModalID,
         profileModalOpen,
@@ -74,6 +78,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         setEditServerModalID,
         setProfileModalOpen,
         setIsAdminOfSelectedServer_app,
+        setServerRemovalID,
+        setServerRemoved
       }}
     >
       {children}

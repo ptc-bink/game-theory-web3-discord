@@ -206,7 +206,7 @@ const EditGiveaway: React.FC = () => {
 
         console.log('title :>> ', title);
         console.log('description :>> ', description);
-        console.log('expires :>> ', expires);
+        console.log('expires :>> ', Math.floor(new Date(expires).getTime() / 1000));
         console.log('chain :>> ', chain);
         console.log('quantity :>> ', quantity);
         console.log('winningRole :>> ', winningRole);
@@ -225,7 +225,7 @@ const EditGiveaway: React.FC = () => {
             // serverID: "1219682506475831446",
             giveawayID: selectedGiveawayID,
             // giveawayID: "1243148624808906802",
-            expires: Math.floor(new Date(expiresDate).getTime() / 1000),
+            expires: Math.floor(new Date(expires).getTime() / 1000),
             title: title,
             description: description,
             chain: chain,

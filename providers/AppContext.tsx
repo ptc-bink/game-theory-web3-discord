@@ -2,9 +2,11 @@ import { createContext, useContext } from "react";
 import { removeEntry, getUserGlobalPermission } from '../hook';
 
 interface ContextType {
+
   addServerModalOpen: boolean;
   editServerModalID: number;
   profileModalOpen: boolean;
+  serverRemoved : boolean;
   userID: string;
   username: string;
   userImage: string;
@@ -13,6 +15,7 @@ interface ContextType {
   isLoading: boolean;
   removeEntrantModalOpen: boolean;
   removeApproval: boolean;
+  serverRemovalID: string;
   addAllocationModalOpen: boolean;
   permittedUserModalOpen: boolean;
   allocationEdited: boolean;
@@ -46,9 +49,12 @@ interface ContextType {
   setUserImage: (userImage: string) => void;
   setServerID: (serverID: string) => void;
   setIsAdminOfSelectedServer_app: (isAdminOfSelectedServer_app: boolean) => void;
+  setServerRemovalID: (serverRemovalID: string) => void;
+  setServerRemoved: (serverRemoved: boolean) => void;
 }
 
 const initialValue: ContextType = {
+  serverRemovalID: "",
   addServerModalOpen: false,
   editServerModalID: 0,
   removeEntrantModalOpen: false,
@@ -71,6 +77,7 @@ const initialValue: ContextType = {
   isRemoveEntry: false,
   userGlobalPermission: {isAdmin:[], isSuperAdmin:[], canViewVesting:[], isMember:[]},
   isAdminOfSelectedServer_app: false,
+  serverRemoved: false,
   setUserGlobalPermission(userGlobalPermission) { },
   setIsRemoveEntry(isRemoveEntry) { },
   setShowCreditCard(showCreditCard) { },
@@ -93,6 +100,9 @@ const initialValue: ContextType = {
   setEditServerModalID: (editServerModalID) => { },
   setProfileModalOpen: (profileModalOpen) => { },
   setIsAdminOfSelectedServer_app: (isAdminOfSelectedServer_app) => { },
+  setServerRemovalID: (serverRemovalID) => { },
+  setServerRemoved  : (serverRemoved) => { },
+
 };
 
 const AppContext = createContext(initialValue);

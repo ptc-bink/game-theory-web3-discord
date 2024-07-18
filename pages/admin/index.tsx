@@ -21,7 +21,7 @@ import BackBtn from "../components/BackBtn";
 
 const Admin: React.FC<IAdminProps> = () => {
     const [loading, setLoading] = useState(true);
-    const { addServerModalOpen, isAdmin, setServerID, setAddServerModalOpen, } = useContext(AppContext);
+    const { serverRemoved, serverRemovalID , addServerModalOpen, isAdmin, setServerID, setAddServerModalOpen, setServerRemoved } = useContext(AppContext);
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
     const [serverName, setServerName] = useState<string>("");
@@ -86,6 +86,7 @@ const Admin: React.FC<IAdminProps> = () => {
         });
 
         setApprovedServerList(tempTrustedServers);
+
         setFilterApprovedServerList(tempTrustedServers);
 
         const tempServerList: any = await getServers();
@@ -152,6 +153,23 @@ const Admin: React.FC<IAdminProps> = () => {
         }
         initAction();
     }, [])
+
+    useEffect(() => {
+        //reload the page
+        if (!addServerModalOpen) {
+            initAction();
+        }
+    }, [addServerModalOpen])
+
+    useEffect(() => {
+        if (serverRemoved) {
+            initAction();
+            setServerRemoved(false);
+            
+        }
+    }, [serverRemoved])
+
+
 
 
     if (loading) {

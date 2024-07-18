@@ -12,11 +12,11 @@ import AppContext from "../../providers/AppContext";
 import EditServerModal from "./forms/EditServerModal";
 import RemoveEntrantsModal from "./forms/RemoveEntrantsModal";
 import { IChannel, IServerCardProps } from "../../utils/_type";
-import { removeEntry } from "../../hook";
+import { removeServer } from "../../hook";
 
 const ServerCard: React.FC<IServerCardProps> = ({ index, id, rediskey, name, serverImg, adminImg, createdBy, paymentExpires, marketChannel, generalChannel, submitWallet, vestingChannel, reminderChannel, winnersChannel, channelList }) => {
 
-    const { userID, editServerModalID, removeEntrantModalOpen, removeApproval, setRemoveApproval, setRemoveEntrantModalOpen, setEditServerModalID } = useContext(AppContext);
+    const { serverRemovalID,userID, editServerModalID, removeEntrantModalOpen, removeApproval, setRemoveApproval, setRemoveEntrantModalOpen, setEditServerModalID, setServerRemovalID, setServerRemoved } = useContext(AppContext);
     const [marketChannelName, setMarketChannelName] = useState<string>();
     const [generalChannelName, setGeneralChannelName] = useState<string>();
     const [submitWalletName, setSubmitWalletName] = useState<string>();
@@ -50,18 +50,16 @@ const ServerCard: React.FC<IServerCardProps> = ({ index, id, rediskey, name, ser
     }
 
     const removeApprovalAction = async () => {
-        if (!marketChannel || !createdBy || id) {
-            return toast.error("Please input all value")
-        }
 
-        const data = {
-            marketID: marketChannel,
-            serverID: id,
-            removeUserID: createdBy
-        }
-        const res = await removeEntry(data);
 
+        const res = await removeServer(id);
+        if (res.status === 200) {
+            toast.success("Server removed successfully");
+        } else {
+            toast.error("Server removal failed");
+        }
         setRemoveApproval(false);
+        setServerRemoved(true);
     }
 
     const handleModalOpen = () => {
@@ -70,17 +68,25 @@ const ServerCard: React.FC<IServerCardProps> = ({ index, id, rediskey, name, ser
         setEditServerModalID(index)
     }
 
+    const handleBeginremoval = () => {    
+        setServerRemovalID(id);
+        setRemoveEntrantModalOpen(true);
+    }
+
     useEffect(() => {
         initAction()
     }, [])
 
     useEffect(() => {
 
-        if (removeApproval) {
-            console.log("removeApproval ===>");
+        if (removeApproval && serverRemovalID === id) {
+            console.log("removeApproval ===>", id);
             removeApprovalAction();
+            setRemoveApproval(false);
         }
     }, [removeApproval])
+
+
 
     if (!createdBy) {
         return null;
@@ -158,7 +164,7 @@ const ServerCard: React.FC<IServerCardProps> = ({ index, id, rediskey, name, ser
                             alt="edit"
                         />
                     </div>
-                    <div className="flex w-full justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 hover:border-cdark-100 border-cgrey-200 gap-2" onClick={() => setRemoveEntrantModalOpen(true)}>
+                    <div className="flex w-full justify-center items-center px-4 py-[10px] rounded-lg border cursor-pointer hover:bg-cgrey-200 hover:border-cdark-100 border-cgrey-200 gap-2" onClick={handleBeginremoval}>
                         <p className="text-sm font-normal text-cwhite sm:block hidden">Remove Server</p>
                         <Image
                             src={Trash}

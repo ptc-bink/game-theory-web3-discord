@@ -7,7 +7,7 @@ import Dropdown from "./Dropdown";
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
 import { addServer, administrationChannellist, getChainList } from "@/hook";
-import { IChannel, IDropdownListProps } from "@/utils/_type";
+import { IChannel, IDropdownListProps, IAdministrationTrustedServers } from "@/utils/_type";
 import toast from "react-hot-toast";
 
 const AddServerModal: React.FC<AddServerModalProps> = ({servername}) => {
@@ -47,9 +47,22 @@ const AddServerModal: React.FC<AddServerModalProps> = ({servername}) => {
     }, [])
 
     const handleSave = async () => {
-        if (!redisKey || !serverID) {
-            return toast.error("Please insert all values")
+        if ( !serverID) {
+            return toast.error("Missing Server ID")
         }
+        if (!redisKey) {
+            return toast.error("PLease insert a redis key for this server to be added")
+        }
+        if (!marketChannelID) {
+            return toast.error("Please select a market channel ID")
+        }
+        if (!generalChannelID) {
+            return toast.error("Please select a general channel ID")
+        }
+        if (!submitWalletID) {
+            return toast.error("Please select a submit wallet ID")
+        }
+        
 
         const data = {
             rediskey: redisKey,
@@ -63,7 +76,7 @@ const AddServerModal: React.FC<AddServerModalProps> = ({servername}) => {
             Winners_Channel_ID: winnersChannelID,
             date: date
         }
-
+        //add the server to Trusted Servers
         const res = await addServer(data);
 
         console.log("add server response:", res);

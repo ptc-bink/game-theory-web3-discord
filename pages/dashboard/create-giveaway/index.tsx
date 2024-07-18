@@ -124,6 +124,9 @@ const CreateGiveaway: React.FC = () => {
         if (serverID) {
             setServerValue(serverID);
         }
+        setPrice(0.00);
+        setCanHavePrice(false);
+        setType("raffle-free");
     }
 
     const handleRequiredRolesChange = (object: any) => {

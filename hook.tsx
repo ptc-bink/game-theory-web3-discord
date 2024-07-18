@@ -770,6 +770,33 @@ export const adminCheck = async () => {
     }
 }
 
+export const removeServer = async (serverID: string) => {
+    try {
+        const response = await fetch(`${baseURL_back}/administration-trusted-servers/remove/${serverID}`, {
+            method: 'DELETE',
+            credentials: 'include', // Include credentials to get the cookies
+        });
+
+        console.log("get servers response ======================>", response);
+
+        //print cookies and full repsonce
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json(); // Parse the response body as JSON
+
+        return data
+
+    } catch (error) {
+
+        throw error;
+
+    }
+}
+
+
+
 export const removeEntry = async ({ marketID, serverID, removeUserID }: { marketID: string, serverID: string, removeUserID: string }) => {
     try {
         const response = await fetch(`${baseURL_back}/remove-entry/${marketID}/${serverID}/${removeUserID}`, {
@@ -795,6 +822,7 @@ export const removeEntry = async ({ marketID, serverID, removeUserID }: { market
 
 export const addServer = async (data: IAddserverInfo) => {
     try {
+        console.log("data ====>", data);
         const response = await fetch(`${baseURL_back}/administration-trusted-servers`, {
             method: 'PUT',
             credentials: 'include', // Include credentials to get the cookies
@@ -802,7 +830,7 @@ export const addServer = async (data: IAddserverInfo) => {
             body: JSON.stringify({ data }),
         });
 
-        console.log(await response.json());
+
 
         if (!response.ok) {
             throw 'Not invalid request'
@@ -813,33 +841,33 @@ export const addServer = async (data: IAddserverInfo) => {
         return res;
     } catch (error) {
 
-        throw ("Network response error")
+        throw (error)
 
     }
 }
 
 export const editServer = async (data: IEditserverInfo) => {
     try {
-        return console.log("data =====>", data);
+        console.log("data ====>", data);
+        const response = await fetch(`${baseURL_back}/administration-trusted-servers`, {
+            method: 'PUT',
+            credentials: 'include', // Include credentials to get the cookies
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data }),
+        });
 
-        // const response = await fetch(`${baseURL_back}/create-giveaway`, {
-        //     method: 'POST',
-        //     credentials: 'include', // Include credentials to get the cookies
-        //     body: JSON.stringify({ data }),
-        // });
+ 
 
-        // console.log(await response.json());
+        if (!response.ok) {
+            throw 'Not invalid request'
+        }
 
-        // if (!response.ok) {
-        //     throw 'Not invalid request'
-        // }
+        const res = await response.json(); // Parse the response body as JSON
 
-        // const res = await response.json(); // Parse the response body as JSON
-
-        // return res;
+        return res;
     } catch (error) {
 
-        throw ("Network response error")
+        throw (error)
 
     }
 }

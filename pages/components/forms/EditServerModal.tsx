@@ -27,9 +27,11 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
     const [reminderChannelName, setReminderChannelName] = useState<string>();
     const [winnersChannelName, setWinnersChannelName] = useState<string>();
     const [date, setDate] = useState<string>("");
+    const [RedisKey, setRediskey] = useState<string>(rediskey);
 
     const initAction = async () => {
 
+    
         console.log("server ====>", server);
 
         if (channelList.length > 0) {
@@ -45,6 +47,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
             const tempMarketChannel = channelList.find((item:IChannel) => item.id === marketChannel);
 
             if (tempMarketChannel) {
+                setMarketChannelId(tempMarketChannel.id);
                 setMarketChannelName(tempMarketChannel.name);
             } else {
                 console.error("Market channel not found");
@@ -53,6 +56,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
             const tempGeneralChannel = channelList.find((item:IChannel) => item.id === generalChannel);
 
             if (tempGeneralChannel) {
+                setGeneralChannelId(tempGeneralChannel.id);
                 setGeneralChannelName(tempGeneralChannel.name);
             } else {
                 console.error("General channel not found");
@@ -61,6 +65,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
             const tempSubmitWallet = channelList.find((item:IChannel) => item.id === submitWallet);
 
             if (tempSubmitWallet) {
+                setSubmitWalletId(tempSubmitWallet.id);
                 setSubmitWalletName(tempSubmitWallet.name);
             } else {
                 console.error("Submit channel not found");
@@ -69,6 +74,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
             const tempVestingChannel = channelList.find((item:IChannel) => item.id === vestingChannel);
 
             if (tempVestingChannel) {
+                setVestingChannelId(tempVestingChannel.id);
                 setVestingChannelName(tempVestingChannel.name);
             } else {
                 console.error("Vesting channel not found");
@@ -77,6 +83,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
             const tempReminderChannel = channelList.find((item:IChannel) => item.id === reminderChannel);
 
             if (tempReminderChannel) {
+                setReminderChannelId(tempReminderChannel.id);
                 setReminderChannelName(tempReminderChannel.name);
             } else {
                 console.error("Reminder channel not found");
@@ -85,6 +92,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
             const tempWinnersChannel = channelList.find((item:IChannel) => item.id === winnersChannel);
 
             if (tempWinnersChannel) {
+                setWinnersChannelId(tempWinnersChannel.id);
                 setWinnersChannelName(tempWinnersChannel.name);
             } else {
                 console.error("Winners channel not found");
@@ -101,12 +109,22 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
     }
 
     const handleSaveChange = () => {
-        if (!rediskey || !marketChannelID || !generalChannelID) {
-            return toast.error("Please insert all values")
+        if (!RedisKey){
+            return toast.error("Missing Redis Key")
+        }
+        if (!marketChannelID){
+            return toast.error("Missing Market Channel ID")
+        }
+        if (!generalChannelID){
+            return toast.error("Missing General Channel ID")
+        }
+        if (!submitWalletID){
+            return toast.error("Missing Submit Wallet ID")
         }
 
+
         const data = {
-            rediskey: rediskey,
+            rediskey: RedisKey,
             marketChannelID: marketChannelID,
             generalChannelID: generalChannelID,
             Submit_Wallet_ID: submitWalletID,
@@ -138,7 +156,7 @@ const EditServerModal: React.FC<IEditServerModalProps> = ({ key, server, rediske
             <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-2">
                     <p className="text-sm font-normal text-cwhite">Redis Key</p>
-                    <input type="text" disabled placeholder="Input redis key" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" value={rediskey} />
+                    <input type="text" placeholder="Input redis key" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" value={rediskey} onChange={(e) => setRediskey(e.target.value)}/>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                     <div className="flex flex-col gap-2">
