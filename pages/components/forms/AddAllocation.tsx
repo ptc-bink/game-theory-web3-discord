@@ -9,12 +9,17 @@ import AppContext from "@/providers/AppContext";
 import { addAllocation } from "@/hook";
 
 const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
+/**
+ * TODO:
+ * - Backend Work for Creating Roles Etc when an alloction is created.
+ * 
 
+ */
     const { setAddAllocationModalOpen } = useContext(AppContext);
     const [title, setTitle] = useState<string>("");
     const [amount, setAmount] = useState<number>(0);
     const [allocation, setAllocation] = useState<number>(0);
-    const [mintDate, setMintDate] = useState<Date>();
+    const [mintDate, setMintDate] = useState<number>(0);
     const [mintHoldDays, setMintHoldDays] = useState<number>(0);
     const [secondaryBuyHoldDays, setSecondaryBuyHoldDays] = useState<number>(0);
     const [secondaryBuyHoldHours, setSecondaryBuyHoldHours] = useState<number>(0);
@@ -24,14 +29,23 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
 
     const handleSubmit = async () => {
 
-        if (!allocation || !mintHoldDays || !secondaryBuyHoldDays || !secondaryBuyHoldHours || !secondaryBuyAmount || !amount || !priceVoid || !title || !contract || !mintDate) {
-            return console.log("plz input all value");
+        if (!title){
+            return console.log("please input title");
         }
-
+        if (!amount || amount === 0){
+            return console.log("please input an amount");
+        }
         const data: any = { allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHoldHours, secondaryBuyAmount, priceVoid, mintDate, title, amount };
 
         await addAllocation(data);
     }
+
+    const handleMintDateTime = (e: any) => {
+        const unitTime = new Date(e.target.value).getTime()
+        const UNIXTIME = unitTime / 1000;
+        setMintDate(UNIXTIME);
+    }
+
     return (
         <div className="flex flex-col w-[450px] rounded-md p-6 max-h-[calc(100vh-50px)] overflow-scroll gap-6 border border-cgrey-200 bg-cgrey-100">
             <div className="flex justify-between gap-4">
@@ -48,7 +62,7 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
             <div className="flex flex-col gap-3">
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Title</p>
+                        <p className="text-sm font-normal text-cwhite">Title*</p>
                         <input type="string" onChange={(e) => setTitle(e.target.value)} placeholder="Input title" value={title} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -57,9 +71,9 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Allocation</p>
-                        <input type="number" onChange={(e) => setAllocation(e.target.valueAsNumber)} placeholder="Choose Allocation" value={allocation} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
+                <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-cwhite">Amount Allocated*</p>
+                        <input type="number" min="0" onChange={(e) => setAmount(e.target.valueAsNumber)} placeholder="Choose Amount" value={amount} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Mint hold days</p>
@@ -87,10 +101,10 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-2">
-                        <p className="text-sm font-normal text-cwhite">Amount</p>
-                        <input type="number" min="0" onChange={(e) => setAmount(e.target.valueAsNumber)} placeholder="Choose Amount" value={amount} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
-                    </div>
+                <div className="flex flex-col gap-2">
+                    <p className="text-sm font-normal text-cwhite">Mint Date</p>
+                    <input type="datetime-local" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) =>handleMintDateTime(e)}/>
+                </div>
                 </div>
                 <div className="grid gap-3">
                     {/* <div className="flex flex-col gap-2">
