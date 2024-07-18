@@ -29,9 +29,9 @@ export const test = async () => {
     }
 };
 
-export const getHarvestWinners = async () => {
+export const getHarvestWinners = async (serverId: string, selectGiveawayId: string) => {
     try {
-        const response = await fetch(`${baseURL_back}/harvest`, {
+        const response = await fetch(`${baseURL_back}/harvest?serverId=${serverId}&giveawayId=${selectGiveawayId}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });
@@ -186,7 +186,7 @@ export const handleCreateGiveaway = async (data: ICreateGiveaway) => {
     try {
 
         console.log("handle create giveaway handler data ====> ", data);
-        
+
         const { serverID, expires, title, description, chain, type, quantity, price, requiredRoles, restrictedRoles, winningRole, requireAllRoles
         } = data;
 
@@ -438,7 +438,7 @@ export const getAllocationReadyForVesting = async (serverId: string) => {
 export const getVestingReportData = async (serverId: string, allocationNumber: string) => {
     try {
         //const response = await fetch(`${baseURL_back}/test/get-vesting-report`, {
-             const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=${allocationNumber}`, {
+        const response = await fetch(`${baseURL_back}/get-vesting-report?serverId=${serverId}&allocationNumber=${allocationNumber}`, {
             method: 'GET',
             credentials: 'include', // Include credentials to get the cookies
         });

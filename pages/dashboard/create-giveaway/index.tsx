@@ -143,19 +143,25 @@ const CreateGiveaway: React.FC = () => {
     const handleSubmit = async () => {
 
         console.log("expires ======>", expires);
+        console.log('Math.floor(new Date(expires).getTime() / 1000) :>> ', Math.floor(new Date(expires).getTime() / 1000));
+        console.log('Math.floor(new Date(expires).getTime() / 1000) :>> ', typeof (Math.floor(new Date(expires).getTime() / 1000)));
         console.log("title ===>", title);
         console.log("description =====>", description);
         console.log("chain ====>", chain);
         console.log("quantity ===>", quantity);
         console.log("expiresDate ===>", Math.floor(new Date(expiresDate).getTime() / 1000));
-        
+
         if (!expires || !title || !description || !chain || !quantity) {
             return toast.error("Please input all values");
         }
 
+        if (Math.floor(new Date(expires).getTime() / 1000) < Math.floor(new Date().getTime() / 1000)) {
+            return toast.error("Invalid expiry times")
+        }
+
         const data = {
             serverID: serverValue,
-            expires: Math.floor(new Date(expiresDate).getTime() / 1000),
+            expires: Math.floor(new Date(expires).getTime() / 1000),
             title: title,
             description: description,
             chain: chain,
@@ -181,19 +187,19 @@ const CreateGiveaway: React.FC = () => {
 
     const handleCreditCard = () => {
         setShowCreditCard(!showCreditCard);
-    
+
     }
 
     const handleTypeChange = (value: any) => {
         console.log("value ===>", value)
         setType(value);
-        if(value === "raffle-free") {
+        if (value === "raffle-free") {
             setPrice(0.00);
             setCanHavePrice(false);
         } else {
             setCanHavePrice(true);
         }
-        
+
     }
 
     function handleKeyDown(e: any) {
@@ -202,7 +208,7 @@ const CreateGiveaway: React.FC = () => {
             const textarea = e.target;
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
-    
+
             const wrapper = () => {
                 switch (e.key) {
                     case 'b':
@@ -215,15 +221,15 @@ const CreateGiveaway: React.FC = () => {
                         return '';
                 }
             };
-    
+
             if (start === end) { // No text is selected
                 const before = textarea.value.substring(0, start);
                 const after = textarea.value.substring(end, textarea.value.length);
-    
+
                 // Update the value with the markdown syntax inserted
                 const newValue = `${before}${wrapper()}${wrapper()}${after}`;
                 setDescription(newValue); // Assuming setDescription updates the textarea value
-    
+
                 // Use a timeout to ensure the state update has been applied
                 setTimeout(() => {
                     // Directly set the cursor position to be inside the markdown syntax
@@ -236,7 +242,7 @@ const CreateGiveaway: React.FC = () => {
                 const selectedText = textarea.value.substring(start, end);
                 const newValue = `${textarea.value.substring(0, start)}${wrapper()}${selectedText}${wrapper()}${textarea.value.substring(end)}`;
                 setDescription(newValue);
-    
+
                 setTimeout(() => {
                     const newCursorPos = start + wrapper().length + selectedText.length + wrapper().length;
                     textarea.selectionStart = newCursorPos;
@@ -262,9 +268,7 @@ const CreateGiveaway: React.FC = () => {
         }
 
         console.log("expiresDate ==>", expiresDate);
-        console.log("expiresDate ==>", typeof (expiresDate));
         console.log("expiresHour ==>", expiresHour);
-
 
         setExpires(expiresDate + "  " + expiresHour)
     }, [expiresDate, expiresHour]);
@@ -334,12 +338,12 @@ const CreateGiveaway: React.FC = () => {
                     {/* Description */}
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Description*</p>
-                        <textarea 
-                        placeholder="Description" 
-                        onChange={(e) => setDescription(e.target.value)} 
-                        value={description} 
-                        className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" 
-                        onKeyDown={handleKeyDown}
+                        <textarea
+                            placeholder="Description"
+                            onChange={(e) => setDescription(e.target.value)}
+                            value={description}
+                            className="text-cwhite text-start text-sm h-[65px] outline-none font-medium placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                     {/* Expires */}
@@ -375,7 +379,7 @@ const CreateGiveaway: React.FC = () => {
                                 placeholder="Select type"
                                 className="hover:bg-cdark-200 bg-cdark-100"
                                 callback={handleTypeChange}
-                                initValue={type? type : "raffle-free"}
+                                initValue={type ? type : "raffle-free"}
                             />
                         </div>
                         <div className="flex flex-col gap-2">
@@ -493,7 +497,7 @@ const CreateGiveaway: React.FC = () => {
                             <p className="text-sm font-normal text-cwhite">Price*</p>
                             <input
                                 type="number"
-                    
+
                                 placeholder="0.00001"
                                 min="0.00001"
                                 value={price}
@@ -517,7 +521,7 @@ const CreateGiveaway: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex w-full justify-end">
-                    <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-cwhite hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-cwhite text-sm leading-4 font-medium">submit</div>
+                    <div onClick={handleSubmit} className="flex justify-center px-8 w-fit py-3 border border-[#EEEEEE] hover:bg-cdark-200 hover:text-cwhite hover:cursor-pointer hover:border-cgrey-200 rounded-lg bg-cwhite text-cgrey-200 text-sm leading-4 font-medium">submit</div>
                 </div>
             </div>
             {showCreditCard &&

@@ -2,7 +2,6 @@
 
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import JsonView from "react18-json-view";
 import toast from "react-hot-toast";
 import 'react18-json-view/src/style.css'
 

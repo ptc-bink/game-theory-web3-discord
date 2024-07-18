@@ -16,6 +16,7 @@ import { IDropdownListProps, IGiveaway, IServer, IServerRole } from "@/utils/_ty
 import { useRouter } from "next/router";
 
 import toast from "react-hot-toast";
+import moment from "moment";
 
 const EditGiveaway: React.FC = () => {
 
@@ -30,6 +31,7 @@ const EditGiveaway: React.FC = () => {
     const [winningRole, setWinningRole] = useState<IServerRole>();
     const [editableGiveaway, setEditableGiveaway] = useState<IGiveaway>();
     const [serverValue, setServerValue] = useState<string>("");
+    const [type, setType] = useState<string>("");
     const [chainDropdownList, setChainDropdownList] = useState<IDropdownListProps[]>([]);
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
@@ -38,7 +40,6 @@ const EditGiveaway: React.FC = () => {
     const [expires, setExpires] = useState<any>();
     const [chain, setChain] = useState<string>("");
     const [quantity, setQuantity] = useState<number>(1);
-    const [type, setType] = useState<string>("");
     const [requiredAllRoles, setReqiuredAllRoles] = useState<boolean>(false);
     const [price, setPrice] = useState<number>();
     const [links, setLinks] = useState<string>("");
@@ -47,7 +48,6 @@ const EditGiveaway: React.FC = () => {
     const router = useRouter();
 
     const initAction = async () => {
-        console.log("isAdmin (EDIT GIVEAWAY) ====> ", isAdminOfSelectedServer_app)
         if (!isAdminOfSelectedServer_app) {
             return router.push("/dashboard");
         }
@@ -62,8 +62,6 @@ const EditGiveaway: React.FC = () => {
                             return item
                         }
                     })
-
-                    console.log("tempServerValue ====> ", tempServerValue);
 
                     if (tempServerValue) {
                         setServerValue(tempServerValue.guild.name)
@@ -81,8 +79,6 @@ const EditGiveaway: React.FC = () => {
         }
 
         const tempChainList: any = await getChainList(serverID);
-
-        console.log("tempChainList ====>", tempChainList.data);
 
         if (tempChainList.status == 200) {
             if (tempChainList.data.length > 0) {
@@ -132,8 +128,9 @@ const EditGiveaway: React.FC = () => {
                     setQuantity(tempEditableGiveaway.quantity);
                     setPrice(tempEditableGiveaway.price);
                     setReqiuredAllRoles(tempEditableGiveaway.requireAllRoles);
-                    console.log("tempEditableGiveaway.required ====> ", tempEditableGiveaway.required);
-                    console.log("serverRoles ====> ", tempServerRoles.data);
+                    setType(tempEditableGiveaway.type);
+                    setExpiresDate(moment(tempEditableGiveaway.expiry).format("YYYY-MM-DD"));
+                    setExpiresHour(moment(tempEditableGiveaway.expiry).format("HH:MM"));
 
                     const tempRequiredRoles = tempServerRoles.data?.filter((item: IServerRole) => {
                         return tempEditableGiveaway.required.includes(item.id)
@@ -147,14 +144,10 @@ const EditGiveaway: React.FC = () => {
                         return tempEditableGiveaway.winningRole === item.id
                     })
 
-                    console.log('tempRequiredRoles, tempRestrictedRoles, tempWinningRole ====> ', tempRequiredRoles, tempRestrictedRoles, tempWinningRole);
-
                     setReqiuredRoles(tempRequiredRoles);
                     setInitRequiredRoles(tempRequiredRoles);
                     setRestrictedRoles(tempRestrictedRoles);
                     setWinningRole(tempWinningRole);
-
-                    console.log("tempEditableGiveaway ====>", tempEditableGiveaway.required);
 
                     setInitRequiredRoles(new Set(tempEditableGiveaway.required));
                     setInitRestrictedRoles(new Set(tempEditableGiveaway.restriction));
@@ -180,9 +173,6 @@ const EditGiveaway: React.FC = () => {
     const handleRequiredRolesChange = (object: any) => {
         const seleted: string[] = object.target.value.split(",");
         const tempRequiredRoles = serverRoles.filter(item => seleted.includes(item.id));
-
-        console.log("seleted ====>", seleted);
-
 
         setInitRequiredRoles(new Set(seleted));
         setReqiuredRoles(tempRequiredRoles)
@@ -213,8 +203,20 @@ const EditGiveaway: React.FC = () => {
 
     const handleSubmit = async () => {
 
+        console.log('title :>> ', title);
+        console.log('description :>> ', description);
+        console.log('expires :>> ', expires);
+        console.log('chain :>> ', chain);
+        console.log('quantity :>> ', quantity);
+        console.log('winningRole :>> ', winningRole);
+        console.log('requiredAllRoles :>> ', requiredAllRoles);
+
         if (!title || !description || !expires || !chain || !quantity || !type) {
             return toast.error("Please input all values");
+        }
+
+        if (Math.floor(new Date(expires).getTime() / 1000) < Math.floor(new Date().getTime()/1000)) {
+            return toast.error("Invalid expiry times")
         }
 
         const data = {
@@ -226,7 +228,7 @@ const EditGiveaway: React.FC = () => {
             title: title,
             description: description,
             chain: chain,
-            type: editableGiveaway?.type as string,
+            type: type,
             quantity: quantity,
             price: price ? price : 0,
             requiredRoles: requiredRoles.map(item => item.id),
@@ -378,7 +380,7 @@ const EditGiveaway: React.FC = () => {
                                     return (
                                         <div className="flex flex-wrap gap-2">
                                             {items.map((item) => (
-                                                <Chip key={item.key}>{"@" + item.textValue}</Chip>
+                                                <Chip key={item.key}>{item.textValue}</Chip>
                                             ))}
                                         </div>
                                     );
@@ -424,7 +426,7 @@ const EditGiveaway: React.FC = () => {
                                     return (
                                         <div className="flex flex-wrap  gap-2">
                                             {items.map((item) => (
-                                                <Chip key={item.key}>{"@" + item.textValue}</Chip>
+                                                <Chip key={item.key}>{item.textValue}</Chip>
                                             ))}
                                         </div>
                                     );

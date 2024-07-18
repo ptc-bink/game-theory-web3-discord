@@ -1,18 +1,22 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import BackBtn from "@/pages/components/BackBtn";
 import { getHarvestWinners, getServers } from "@/hook";
 import JsonView from "react18-json-view";
 import toast from "react-hot-toast";
+import AppContext from "@/providers/AppContext";
+import { useRouter } from "next/router";
 
 // import { jsonFileDownload } from "@/download";
 
 const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
+    const { selectedGiveawayID, serverID } = useContext(AppContext);
     const [harvest, setHarvest] = useState<any>();
     const [formattedData, setFormattedData] = useState<string>("");
+    const router = useRouter();
 
     // Helper function to convert array of objects to CSV
     const convertArrayToCSV = (array: any[]): string => {
@@ -32,8 +36,14 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
     };
 
     const initAction = async () => {
-        const tempHarvestWinners: any = await getHarvestWinners();
+        if (!serverID || !selectedGiveawayID) {
+            toast.error("Invalid IDs")
+            return router.back();
+        }
 
+        const tempHarvestWinners: any = await getHarvestWinners(serverID, selectedGiveawayID);
+
+        console.log('tempHarvestWinners.data :>> ', tempHarvestWinners.data);
         if (tempHarvestWinners.status == 200) {
             setHarvest(tempHarvestWinners.data);
         } else {
@@ -80,7 +90,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                 </div>
             </div>
             <div className="rounded-2xl border border-cgrey-200 bg-cdark-50 px-2 py-3 text-cwhite text-base font-normal overflow-scroll h-[calc(100vh-280px)]">
-                <JsonView className="text-cwhite" src={HarvestWinners} theme="winter-is-coming" collapsed={false} />
+                <JsonView className="text-cwhite" src={formattedData} theme="winter-is-coming" collapsed={false} />
             </div>
         </div>
     );

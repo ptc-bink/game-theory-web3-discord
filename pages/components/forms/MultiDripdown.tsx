@@ -11,7 +11,7 @@ import { IMultiDropdownProps, IServerRole } from "@/utils/_type";
 const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholder, className, callback, initValue }) => {
 
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    const [value, setValue] = useState<string>(placeholder);
+    const [value, setValue] = useState<string>(initValue ? initValue : placeholder);
 
     const handleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -33,7 +33,7 @@ const MultiDropdown: React.FC<IMultiDropdownProps> = ({ dropdownList, placeholde
             <div className={`flex items-center w-full cursor-pointer border border-cgrey-200 px-4 py-[10px] rounded-lg justify-between ${className}`} onClick={handleDropdown}>
                 <p className="text-sm font-normal text-cwhite">{initValue ? initValue : value}</p>
                 <div className="flex gap-2 justify-between">
-                    {value !== placeholder &&
+                    {(value !== placeholder || initValue) &&
                         <div className="cursor-pointer " onClick={handleCancelBtn}>
                             <Image
                                 src={Cancel}

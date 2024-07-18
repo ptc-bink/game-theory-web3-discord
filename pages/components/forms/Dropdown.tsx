@@ -12,7 +12,7 @@ import { IDropdownProps } from "@/utils/_type";
 const Dropdown: React.FC<IDropdownProps> = ({ dropdownList, initValue, placeholder, className, callback }) => {
 
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    const [value, setValue] = useState<string>(placeholder);
+    const [value, setValue] = useState<string>(initValue ? initValue : placeholder);
 
     const handleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -39,6 +39,7 @@ const Dropdown: React.FC<IDropdownProps> = ({ dropdownList, initValue, placehold
                 <p className="text-sm font-normal overflow-hidden text-cwhite">{(initValue && value === placeholder) ? initValue : value}</p>
                 <div className="flex justify-between gap-2 items-center">
                     {value !== placeholder &&
+
                         <div className="cursor-pointer " onClick={handleCancelBtn}>
                             <Image
                                 src={Cancel}
