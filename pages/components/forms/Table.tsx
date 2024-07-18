@@ -21,7 +21,8 @@ const Table: React.FC<ITable> = ({ allocations }) => {
 
     useEffect(() => {
         // Initialize checkedState based on jsonObjectList length
-
+        //firstly sort these in decending order as per their number in the array
+        allocations?.sort((a, b) => b.id - a.id)
         setCheckedState(new Array(allocations?.length).fill(false));
     }, []);
 
@@ -60,9 +61,10 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                 <td className="text-left break-all">{item.title}</td>
                 <td className="text-center">{item.allocation}</td>
                 <td className="text-center" >{item.role ? item.role : "-"}</td>
-                <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "Not Set"}</td>
+                <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</td>
-                <td className="text-center">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + "d : ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + "h") : "Not Set"}</td>
+                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days === 0 ? "-" : item.vesting.secondary_buy_hold_days + "d : ": "-"}</td>
+                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hours + "h" : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.price_void : "-"}</td>
                 <td className="left-3">{btnGroup(index)}</td>
@@ -81,7 +83,8 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                         <th className="py-4 max-w-[160px]">Role</th>
                         <th className="py-4 max-w-[220px]">Mint Date</th>
                         <th className="py-4 max-w-[160px]">Mint Hold days</th>
-                        <th className="py-4 max-w-[60px]">Secondary Buy Hold</th>
+                        <th className="py-4 max-w-[60px]">Secondary Buy (Hold Days)</th>
+                        <th className="py-4 max-w-[60px]">Secondary Buy (Hours to Buy)</th>
                         <th className="py-4 max-w-[60px]">Amount</th>
                         <th className="py-4 max-w-[60px]">Price void</th>
                         <th className="py-4 max-w-[60px] text-center">Action</th>

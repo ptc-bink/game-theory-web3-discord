@@ -194,7 +194,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
                     <div className="flex w-full text-sm font-normal gap-2">
                         <div className="flex flex-grow">
                             <SearchBtn
-                                placeholder="Search giveaway"
+                                placeholder="Search Allocation"
                                 endContent="Refresh"
                                 callback={setSearchInput}
                             />
