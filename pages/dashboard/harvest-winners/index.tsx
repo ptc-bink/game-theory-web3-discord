@@ -16,6 +16,7 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
     const { selectedGiveawayID, serverID } = useContext(AppContext);
     const [harvest, setHarvest] = useState<any>();
     const [formattedData, setFormattedData] = useState<string>("");
+    const [downloadFileType, setDownloadFileType] = useState<string>("");
     const router = useRouter();
 
     // Helper function to convert array of objects to CSV
@@ -57,19 +58,30 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
 
     const handleCsvBtn = async () => {
         const csvContent = convertArrayToCSV(harvest);
-
-        downloadFile(csvContent, "harvest_winners.csv", "text/csv");
+        setFormattedData(csvContent);
+       
+        setDownloadFileType("csv");
     }
 
     const handleJsonBtn = () => {
-        const jsonContent = JSON.stringify(harvest);
+        const jsonContent = JSON.stringify(harvest, null, 2);
 
         setFormattedData(jsonContent);
-        downloadFile(jsonContent, "harvest_winners.json", "application/json");
+        setDownloadFileType("json");
+        
+    }
+    const handleDownload = () => {
+        if (!formattedData || downloadFileType === "") {
+            return toast.error("No data to download");
+        }
+        const ContentType = downloadFileType === "json" ? "application/json" : downloadFileType === "csv" ? "text/csv" : "text/plain";
+        downloadFile(formattedData, `harvest_winners.${downloadFileType}`, ContentType);
+        setDownloadFileType("txt");
     }
 
+
     const handleHumanReadableBtn = () => {
-        const humanReadableContent = harvest?.map((item: any) => `{ID: ${item.id}, Username: ${item.username}, Wallet: ${item.wallet}}\n`).join("\n");
+        const humanReadableContent = harvest?.map((item: any) => `ID: ${item.id}, Username: ${item.username}, Wallet: ${item.wallet}\n----------------------------------------------`).join("\n");
 
         setFormattedData(humanReadableContent);
     };
@@ -87,10 +99,11 @@ const HarvestWinners: React.FC<IHarvestWinners> = () => {
                     <button aria-label="csv" className="outline-none bg-cblue-500 border border-cblue-500 px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleCsvBtn}>CSV</button>
                     <button aria-label="json" className="outline-none bg-cblue-500 border border-cblue-500 px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleJsonBtn}>JSON</button>
                     <button aria-label="human" className="outline-none bg-cblue-500 border border-cblue-500 px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleHumanReadableBtn}>Human Readable</button>
+                    <button aria-label="human" className="outline-none bg-cblue-500 border border-cblue-500 px-4 py-3 w-fit text-sm leading-4 font-medium rounded-md" onClick={handleDownload}>DOWNLOAD FILE</button>
                 </div>
             </div>
             <div className="rounded-2xl border border-cgrey-200 bg-cdark-50 px-2 py-3 text-cwhite text-base font-normal overflow-scroll h-[calc(100vh-280px)]">
-                <JsonView className="text-cwhite" src={formattedData} theme="winter-is-coming" collapsed={false} />
+                <JsonView className="text-cwhite whitespace-pre-wrap" src={formattedData} theme="winter-is-coming" collapsed = {false}/>
             </div>
         </div>
     );
