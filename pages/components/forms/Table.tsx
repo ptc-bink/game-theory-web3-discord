@@ -4,6 +4,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 
 import Edit from "@/public/avatar/edit.svg"
+import { PiWavesThin } from "react-icons/pi";
 
 import { IAllocation, IRemoveEntrants } from "@/utils/_type";
 import toast from "react-hot-toast";
@@ -11,7 +12,7 @@ import AppContext from "@/providers/AppContext";
 import EditAllocationModal from "./EditAllocation";
 import moment from "moment";
 
-const Table: React.FC<ITable> = ({ allocations }) => {
+const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
 
     const { setAllocationEdited, setEditAllocationModalOpen, editAllocationModalOpen } = useContext(AppContext);
     const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -28,13 +29,18 @@ const Table: React.FC<ITable> = ({ allocations }) => {
     }, []);
 
     const handleEditBtn = async (index: number) => {
+        console.log('allocationForVesting :>> ', allocationForVesting);
         // toast.success(index.toString())
+        console.log('allocations[editAllocationID]?.id :>> ', allocations[editAllocationID]?.id);
         console.log('index :>> ', index);
-        console.log('allocations :>> ', allocations);
 
         setEditAllocationModalOpen(true);
         setEditAllocationID(index);
         setAllocationEdited(true);
+    }
+
+    const handleVestingBtn = async (index: number) => {
+        toast.success("coming soon!")
     }
 
     const btnGroup = (index: number) => {
@@ -48,6 +54,9 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                         alt="edit"
                     />
                 </button>
+                {allocationForVesting.includes(allocations[index]?.id) && <button aria-label="edit" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3 text-cwhite" onClick={() => handleVestingBtn(index)}>
+                    <PiWavesThin className="w-4 h-4 text-cwhite" />
+                </button>}
             </div>
         )
     }
@@ -65,7 +74,7 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                 {/* <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "-"}</td> */}
                 <td className="text-center" >{item.mint_date ? moment(item.mint_date as number * 1000).format("YYYY/MM/DD") + "  " + moment(item.mint_date as number * 1000).format("HH:MM") : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</td>
-                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days === 0 ? "-" : item.vesting.secondary_buy_hold_days + "d : ": "-"}</td>
+                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days === 0 ? "-" : item.vesting.secondary_buy_hold_days + "d : " : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hours + "h" : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.price_void : "-"}</td>
@@ -174,6 +183,7 @@ export default Table;
 
 interface ITable {
     allocations: IAllocation[];
+    allocationForVesting: any;
 }
 
 interface ITableBodyList {

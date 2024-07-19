@@ -468,8 +468,6 @@ export const getAllocationForVesting = async (serverId: string) => {
 
         const res = await response.json();
 
-        console.log("get allocation for vesting ===>", res);
-
         if (response.status === 200) {
             return { status: 200, data: res };
         }

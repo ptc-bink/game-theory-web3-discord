@@ -106,7 +106,7 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = (serverID) => {
                         <input type="number" step={.001} min={.001} onChange={(e) => setPriceVoid(e.target.valueAsNumber)} placeholder="Choose Price void" value={priceVoid} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Mint Date</p>
                         <input type="datetime-local" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) => handleMintDateTime(e)} />
