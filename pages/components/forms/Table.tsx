@@ -45,7 +45,13 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
 
     const btnGroup = (index: number) => {
         return (
-            <div key={index} className="flex my-1 gap-2 justify-center">
+            <div key={index} className="flex my-1 gap-2 justify-end">
+                {
+                    allocationForVesting.includes(allocations[index]?.id) &&
+                    <button aria-label="edit" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3 text-cwhite" onClick={() => handleVestingBtn(index)}>
+                        <PiWavesThin className="w-4 h-4 text-cwhite" />
+                    </button>
+                }
                 <button aria-label="edit" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleEditBtn(index)}>
                     <Image
                         src={Edit}
@@ -54,9 +60,6 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
                         alt="edit"
                     />
                 </button>
-                {allocationForVesting.includes(allocations[index]?.id) && <button aria-label="edit" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3 text-cwhite" onClick={() => handleVestingBtn(index)}>
-                    <PiWavesThin className="w-4 h-4 text-cwhite" />
-                </button>}
             </div>
         )
     }
@@ -78,7 +81,7 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hours + "h" : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.price_void : "-"}</td>
-                <td className="left-3">{btnGroup(index)}</td>
+                <td className="w-fit">{btnGroup(index)}</td>
             </tr>
         )
     }
