@@ -36,7 +36,7 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = (serverID) => {
         if (!amount || amount === 0) {
             return console.log("please input an amount");
         }
-        const data: any = {serverID:serverID.serverID, allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHoldHours, secondaryBuyAmount, priceVoid, mintDate, title, amount };
+        const data: any = {serverID:serverID.serverID,contract, allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHoldHours, secondaryBuyAmount, priceVoid, mintDate, title, amount };
 
         const res = await addAllocation(data);
         if (res.status === 200){

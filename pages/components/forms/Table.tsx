@@ -5,6 +5,8 @@ import Image from "next/image";
 
 import Edit from "@/public/avatar/edit.svg"
 import { PiWavesThin } from "react-icons/pi";
+import { IoClose } from "react-icons/io5";
+import { TiTick } from "react-icons/ti";
 
 import { IAllocation, IRemoveEntrants } from "@/utils/_type";
 import toast from "react-hot-toast";
@@ -48,11 +50,11 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
             <div key={index} className="flex my-1 gap-2 justify-end">
                 {
                     allocationForVesting.includes(allocations[index]?.id) &&
-                    <button aria-label="edit" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3 text-cwhite" onClick={() => handleVestingBtn(index)}>
+                    <button aria-label="edit" title="Generate/Refresh Vesting Report" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3 text-cwhite" onClick={() => handleVestingBtn(index)}>
                         <PiWavesThin className="w-4 h-4 text-cwhite" />
                     </button>
                 }
-                <button aria-label="edit" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleEditBtn(index)}>
+                <button aria-label="edit" title="Edit Allocation/Vestign Details" className="hover:bg-cdark-100 rounded-lg border border-cgrey-200 outline-none px-[10px] py-3" onClick={() => handleEditBtn(index)}>
                     <Image
                         src={Edit}
                         width={16}
@@ -74,10 +76,11 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
                 <td className="text-left break-all">{item.title}</td>
                 <td className="text-center">{item.allocation}</td>
                 <td className="text-center" >{item.role ? item.role : "-"}</td>
+                <td className="text-center flex items-center justify-center" >{item.contract ?<TiTick className=" text-[#00FF00]" /> : <IoClose className="text-[#FF0000]" /> }</td>
                 {/* <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "-"}</td> */}
                 <td className="text-center" >{item.mint_date ? moment(item.mint_date as number * 1000).format("YYYY/MM/DD") + "  " + moment(item.mint_date as number * 1000).format("HH:MM") : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</td>
-                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days === 0 ? "-" : item.vesting.secondary_buy_hold_days + "d : " : "-"}</td>
+                <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days === 0 ? "-" : item.vesting.secondary_buy_hold_days + "d" : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hours + "h" : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.price_void : "-"}</td>
@@ -93,8 +96,9 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
                     <tr className="border-b border-cgrey-200 p-4">
                         <th className="py-4 text-center w-[40px]">No</th>
                         <th className="py-4 text-left">Title</th>
-                        <th className="py-4 max-w-[160px]">Allocation</th>
-                        <th className="py-4 max-w-[160px]">Role</th>
+                        <th className="py-4 max-w-[160px]">Allocation Quantity</th>
+                        <th className="py-4 max-w-[160px]">Role ID</th>
+                        <th className="py-4 max-w-[160px]">Contract Set</th>
                         <th className="py-4 max-w-[220px]">Mint Date</th>
                         <th className="py-4 max-w-[160px]">Mint Hold days</th>
                         <th className="py-4 max-w-[60px]">Secondary Buy (Hold Days)</th>
@@ -118,12 +122,16 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
                                     <p className="text-sm leading-[18px] font-normal text-cwhite">{item.title}</p>
                                 </div>
                                 <div className="flex justify-between">
-                                    <p className="text-sm leading-[18px] font-normal text-cgrey-900">Allocation</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cgrey-900">Allocation Quantity</p>
                                     <p className="text-sm leading-[18px] font-normal text-cwhite">{item.allocation}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Role</p>
                                     <p className="text-sm leading-[18px] font-normal text-cwhite">{item.role ? item.role : "-"}</p>
+                                </div>
+                                <div className="flex justify-between">
+                                    <p className="text-sm leading-[18px] font-normal text-cgrey-900">Contract Set</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.contract ? "Yes" : "No"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint Date</p>
@@ -135,11 +143,15 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
                                     <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</p>
                                 </div>
                                 <div className="flex justify-between">
-                                    <p className="text-sm leading-[18px] font-normal text-cgrey-900">Secondary Buy Hold</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + "d : ") + (item.vesting.secondary_buy_hours === 0 ? "" : item.vesting.secondary_buy_hours + "h") : "Not Set"}</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cgrey-900">Secondary Buy (Hold Days)</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? (item.vesting.secondary_buy_hold_days === 0 ? "" : item.vesting.secondary_buy_hold_days + "d : "): "Not Set"}</p>
                                 </div>
                                 <div className="flex justify-between">
-                                    <p className="text-sm leading-[18px] font-normal text-cgrey-900">Amount</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cgrey-900">Secondary Buy (Hours to buy)</p>
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.secondary_buy_hours + "h" : "-"}</p>
+                                </div>
+                                <div className="flex justify-between">
+                                    <p className="text-sm leading-[18px] font-normal text-cgrey-900">Secondary Buy Amount</p>
                                     <p className="text-sm leading-[18px] font-normal text-cwhite">{item.vesting ? item.vesting.secondary_buy_amount : "-"}</p>
                                 </div>
                                 <div className="flex justify-between">
@@ -160,6 +172,14 @@ const Table: React.FC<ITable> = ({ allocations, allocationForVesting }) => {
                                     </button>
                                 </div>
                             </div>
+                            {allocationForVesting.includes(item.id) &&
+                            <div key={index} className="flex my-1 gap-2 justify-center">
+                                <div className="flex gap-2 items-center border rounded-lg justify-center w-full cursor-pointer px-[10px] py-3 border-cgrey-200" onClick={() => handleVestingBtn(index)}>
+                                    <p className="text-sm font-normal text-cwhite">Create/Refresh Vesting Report</p>
+                                    <PiWavesThin className="w-4 h-4 text-cwhite" />
+                                </div>
+                                </div>
+                            }
                         </div>
                     ))}
                 </div>
