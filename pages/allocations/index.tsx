@@ -10,7 +10,7 @@ import Add from "@/public/avatar/add.svg"
 import SearchBtn from "@/pages/components/forms/SearchBtn";
 import Dropdown from "../components/forms/Dropdown";
 import Table from "@/pages/components/forms/Table";
-import { getAllocation, getServers, getUserGlobalPermission } from "@/hook";
+import { getAllocation, getAllocationForVesting, getServers, getUserGlobalPermission } from "@/hook";
 import { IAllocation, IDropdownListProps, IServer } from "@/utils/_type";
 import AppContext from "@/providers/AppContext";
 import BackBtn from "../components/BackBtn";
@@ -19,7 +19,7 @@ import AddAllocationModal from "../components/forms/AddAllocation";
 
 const Allocation: React.FC<IAllocationProps> = () => {
 
-    const { isAdminOfSelectedServer_app,addAllocationModalOpen, allocationEdited, userGlobalPermission, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
+    const { isAdminOfSelectedServer_app, addAllocationModalOpen, allocationEdited, userGlobalPermission, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
@@ -29,7 +29,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
     const [filterMiddleAllocations, setFilterMiddleAllocations] = useState<IAllocation[]>([]);
     const [serverDropdownList, setServerDropdownList] = useState<IDropdownListProps[]>([]);
     const [isAdminOfSelectedServer, setIsAdminOfSelectedServer] = useState<boolean>(false);
-
+    const [allocationForVesting, setAllocationForVesting] = useState<any>();
 
     async function checkUserPermissionsToServer(serverID: string) {
         const adminOf = userGlobalPermissons.isAdmin;
@@ -40,10 +40,19 @@ const Allocation: React.FC<IAllocationProps> = () => {
         } else {
             setIsAdminOfSelectedServer(false);
         }
-
     }
+    
     const mainAction = async (serverID: string) => {
         checkUserPermissionsToServer(serverID);
+
+        const tempAllocationForVesting = await getAllocationForVesting(serverID);
+
+        if (tempAllocationForVesting.status === 200) {
+            setAllocationForVesting(tempAllocationForVesting.data);
+        } else {
+            toast.error("No allocation ready for vesting");
+        }
+
         let tempAllocations: IAllocation[] = [];
         checkUserPermissionsToServer(serverID);
         const res: any = await getAllocation(serverID);
@@ -97,9 +106,9 @@ const Allocation: React.FC<IAllocationProps> = () => {
 
         const tempServer: any = await getServers();
         const tempUserGlobalPermission = await getUserGlobalPermission();
+
         setUserGlobalPermissons(tempUserGlobalPermission.data);
         setUserGlobalPermission(tempUserGlobalPermission.data);
-
 
         console.log("tempServer.data ===> ", tempServer.data);
 
@@ -199,17 +208,17 @@ const Allocation: React.FC<IAllocationProps> = () => {
                                 callback={setSearchInput}
                             />
                         </div>
-                        {isAdminOfSelectedServer?
-                        <div aria-label="add allocation" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 hover:cursor-pointer outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
-                            <Image
-                                src={Add}
-                                width="16"
-                                height="16"
-                                alt="add button"
-                            />
-                            <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Add Allocation</p>
-                        </div>
-                        :<> </>
+                        {isAdminOfSelectedServer ?
+                            <div aria-label="add allocation" onClick={handleAddBtn} className=" flex justify-between w-fit items-center rounded-lg hover:bg-cgrey-900 hover:border-cdark-100 hover:cursor-pointer outline-none bg-cwhite border border-[#EEEEEE] px-[10px] py-2">
+                                <Image
+                                    src={Add}
+                                    width="16"
+                                    height="16"
+                                    alt="add button"
+                                />
+                                <p className="text-cdark-100 text-sm leading-5 font-medium sm:block hidden">Add Allocation</p>
+                            </div>
+                            : <> </>
                         }
                     </div>
                 </div>

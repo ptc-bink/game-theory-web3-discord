@@ -459,6 +459,28 @@ export const getVestingReportData = async (serverId: string, allocationNumber: s
     }
 }
 
+export const getAllocationForVesting = async (serverId: string) => {
+    try {
+        const response = await fetch(`${baseURL_back}/get-allocations-ready-for-vesting?serverId=${serverId}`, {
+            method: "GET",
+            credentials: "include"
+        })
+
+        const res = await response.json();
+
+        console.log("get allocation for vesting ===>", res);
+
+        if (response.status === 200) {
+            return { status: 200, data: res };
+        }
+
+        return { status: 200, data: res }
+
+    } catch (error) {
+        return { status: 401, data: "No allocation for vesting" }
+    }
+}
+
 export const setVestingParams = async (data: ISetVestingParams) => {
     try {
         const response = await fetch(`${baseURL_back}/set-vesting-parameters`, {
@@ -856,7 +878,7 @@ export const editServer = async (data: IEditserverInfo) => {
             body: JSON.stringify({ data }),
         });
 
- 
+
 
         if (!response.ok) {
             throw 'Not invalid request'

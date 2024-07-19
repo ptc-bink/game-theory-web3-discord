@@ -69,7 +69,7 @@ export interface ISetAllocation {
     amount: string,
     allocation_id?: string,
     contract?: string,
-    mintdate?: number,
+    mintdate?: any,
     mintHoldDays?: number,
     secondaryHoldDays?: number,
     secondaryBuyHours?: number,

@@ -5,9 +5,10 @@ import Image from "next/image";
 
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
-import { addAllocation } from "@/hook";
+import { editAllocation } from "@/hook";
 import { IAllocation } from '../../../utils/_type';
 import moment from "moment";
+import toast from "react-hot-toast";
 
 const EditAllocationModal: React.FC<IAllocation> = (data) => {
 
@@ -15,10 +16,10 @@ const EditAllocationModal: React.FC<IAllocation> = (data) => {
     const [title, setTitle] = useState<string>(data.title);
     const [amount, setAmount] = useState<number>(0);
     const [allocation, setAllocation] = useState<number>(data.allocation);
-    const [mintDate, setMintDate] = useState<Date>();
     const [mintHoldDays, setMintHoldDays] = useState<number>(data.vesting?.mint_hold_days as number);
-    const [expiresDate, setExpiresDate] = useState<any>();
-    const [expiresHour, setExpiresHour] = useState<any>();
+    const [secondaryBuyDays, setSecondaryBuyDays] = useState<any>();
+    const [secondaryBuyHours, setSecondaryBuyHours] = useState<any>();
+    const [secondaryBuy, setSecondaryBuy] = useState<any>();
     const [secondaryBuyAmount, setSecondaryBuyAmount] = useState<number>(data.vesting?.secondary_buy_amount as number);
     const [priceVoid, setPriceVoid] = useState<number>(data.vesting?.price_void as number);
     const [contract, setContract] = useState<string>(data.contract);
@@ -26,22 +27,42 @@ const EditAllocationModal: React.FC<IAllocation> = (data) => {
     const initAction = () => {
         console.log('data :>> ', data.mint_date);
 
-        setExpiresDate(moment(data.mint_date as number * 1000).format("YYYY-MM-DD"));
-        setExpiresHour(moment(data.mint_date as number * 1000).format("HH:MM"));
+        setSecondaryBuyDays(moment(data.mint_date as number * 1000).format("YYYY-MM-DD"));
+        setSecondaryBuyHours(moment(data.mint_date as number * 1000).format("HH:MM"));
     }
 
     const handleSubmit = async () => {
 
-        if (!allocation || !mintHoldDays || !expiresHour || !expiresDate || !secondaryBuyAmount || !amount || !priceVoid || !title || !contract || !mintDate) {
+        if (!title || !contract) {
             return console.log("plz input all value");
         }
 
-        const data: any = { allocation, mintHoldDays, expiresDate, expiresHour, secondaryBuyAmount, priceVoid, mintDate, title, amount };
+        if (secondaryBuy && Math.floor(new Date(secondaryBuy).getTime() / 1000) < Math.floor(new Date().getTime() / 1000)) {
+            toast.error("Invalid secondary buy date")
+        }
 
-        await addAllocation(data);
+        const mintTimeTemp = Math.floor(new Date(secondaryBuy).getTime() / 1000)
+
+        const data: any = { allocation, mintHoldDays, secondaryBuyDays, secondaryBuyHours, secondaryBuyAmount, priceVoid, mintTimeTemp, title, amount };
+
+        await editAllocation(data);
 
         setEditAllocationModalOpen(false);
     }
+
+    useEffect(() => {
+        // Initialize the date to current datetime if not already set
+        if (!secondaryBuyDays) {
+            setSecondaryBuyDays(new Date().toISOString().slice(0, 10)); // ISO format for datetime-local
+        }
+
+        if (!secondaryBuyHours) {
+            setSecondaryBuyHours(new Date().toISOString().slice(11, 16));
+        }
+
+        setSecondaryBuy(secondaryBuyDays + " " + secondaryBuyHours);
+
+    }, [secondaryBuyDays, secondaryBuyHours]);
 
     useEffect(() => {
         initAction()
@@ -90,10 +111,10 @@ const EditAllocationModal: React.FC<IAllocation> = (data) => {
                         <p className="text-sm font-normal text-cwhite">Secondary buy hold hours</p>
                         <input type="number" min="0" onChange={(e) => setSecondaryBuyHoldHours(e.target.valueAsNumber)} placeholder="Choose Secondary buy hold" value={secondaryBuyHoldHours} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div> */}
-                    <input type="date" onChange={(e) => setExpiresDate(e.target.value)} value={expiresDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true}
-                        aria-label="Expire Date" />
-                    <input type="time" onChange={(e) => setExpiresHour(e.target.value)} value={expiresHour} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
-                        aria-label="Expire Time" />
+                    <input type="date" onChange={(e) => setSecondaryBuyDays(e.target.value)} value={secondaryBuyDays} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" suppressContentEditableWarning={true}
+                        aria-label="Secondary mint Date" />
+                    <input type="time" onChange={(e) => setSecondaryBuyHours(e.target.value)} value={secondaryBuyHours} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cwhite px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md"
+                        aria-label="Secondary mint Time" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
@@ -114,7 +135,7 @@ const EditAllocationModal: React.FC<IAllocation> = (data) => {
                 <div className="grid gap-3">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Mint Date</p>
-                        {/* <input type="datetime-local" onChange={(e) => setMintDate(e.target.valueAsDate as Date)} placeholder="Choose Amount" value={mintDate} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" /> */}
+                        {/* <input type="datetime-local" onChange={(e) => setSecondaryBuyDays(e.target.valueAsDate as Date)} placeholder="Choose Amount" value={secondaryBuyDays} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" /> */}
                     </div>
                 </div>
             </div>

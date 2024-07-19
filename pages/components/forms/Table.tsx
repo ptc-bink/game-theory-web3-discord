@@ -9,6 +9,7 @@ import { IAllocation, IRemoveEntrants } from "@/utils/_type";
 import toast from "react-hot-toast";
 import AppContext from "@/providers/AppContext";
 import EditAllocationModal from "./EditAllocation";
+import moment from "moment";
 
 const Table: React.FC<ITable> = ({ allocations }) => {
 
@@ -61,7 +62,8 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                 <td className="text-left break-all">{item.title}</td>
                 <td className="text-center">{item.allocation}</td>
                 <td className="text-center" >{item.role ? item.role : "-"}</td>
-                <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "-"}</td>
+                {/* <td className="text-center" >{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "-"}</td> */}
+                <td className="text-center" >{item.mint_date ? moment(item.mint_date as number * 1000).format("YYYY/MM/DD") + "  " + moment(item.mint_date as number * 1000).format("HH:MM") : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.mint_hold_days + " days" : "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hold_days === 0 ? "-" : item.vesting.secondary_buy_hold_days + "d : ": "-"}</td>
                 <td className="text-center">{item.vesting ? item.vesting.secondary_buy_hours + "h" : "-"}</td>
@@ -113,7 +115,8 @@ const Table: React.FC<ITable> = ({ allocations }) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint Date</p>
-                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "Not Set"}</p>
+                                    {/* <p className="text-sm leading-[18px] font-normal text-cwhite">{item.mint_date ? new Date(item.mint_date * 1000).toLocaleDateString() + "  " + new Date(item.mint_date * 1000).toLocaleTimeString() : "Not Set"}</p> */}
+                                    <p className="text-sm leading-[18px] font-normal text-cwhite">{item.mint_date ? moment(item.mint_date as number * 1000).format("YYYY/MM/DD") + "  " + moment(item.mint_date as number * 1000).format("HH:MM") : "Not Set"}</p>
                                 </div>
                                 <div className="flex justify-between">
                                     <p className="text-sm leading-[18px] font-normal text-cgrey-900">Mint hold days</p>

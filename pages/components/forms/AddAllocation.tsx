@@ -7,14 +7,15 @@ import Image from "next/image";
 import Cancel from "@/public/avatar/close.svg"
 import AppContext from "@/providers/AppContext";
 import { addAllocation } from "@/hook";
+import toast from "react-hot-toast";
 
 const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
-/**
- * TODO:
- * - Backend Work for Creating Roles Etc when an alloction is created.
- * 
-
- */
+    /**
+     * TODO:
+     * - Backend Work for Creating Roles Etc when an alloction is created.
+     * 
+    
+     */
     const { setAddAllocationModalOpen } = useContext(AppContext);
     const [title, setTitle] = useState<string>("");
     const [amount, setAmount] = useState<number>(0);
@@ -29,15 +30,21 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
 
     const handleSubmit = async () => {
 
-        if (!title){
+        if (!title) {
             return console.log("please input title");
         }
-        if (!amount || amount === 0){
+        if (!amount || amount === 0) {
             return console.log("please input an amount");
         }
         const data: any = { allocation, mintHoldDays, secondaryBuyHoldDays, secondaryBuyHoldHours, secondaryBuyAmount, priceVoid, mintDate, title, amount };
 
-        await addAllocation(data);
+        const res = await addAllocation(data);
+
+        if (res.status === 200) {
+            toast.success("Create allocation success")
+        } else {
+            toast.error("Try again")
+        }
     }
 
     const handleMintDateTime = (e: any) => {
@@ -71,7 +78,7 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <p className="text-sm font-normal text-cwhite">Amount Allocated*</p>
                         <input type="number" min="0" onChange={(e) => setAmount(e.target.valueAsNumber)} placeholder="Choose Amount" value={amount} className="text-cwhite text-sm font-medium outline-none placeholder:text-sm placeholder:font-medium placeholder:text-cgrey-900 px-3 py-[10px] border border-cgrey-200 bg-cdark-50 rounded-md" />
                     </div>
@@ -101,10 +108,10 @@ const AddAllocationModal: React.FC<AddAllocationModalProps> = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-2">
-                    <p className="text-sm font-normal text-cwhite">Mint Date</p>
-                    <input type="datetime-local" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) =>handleMintDateTime(e)}/>
-                </div>
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-normal text-cwhite">Mint Date</p>
+                        <input type="datetime-local" className="outline-none placeholder:text-sm placeholder:font-normal px-3 py-[10px] rounded-md bg-cdark-50 border border-cgrey-200 text-cwhite" onChange={(e) => handleMintDateTime(e)} />
+                    </div>
                 </div>
                 <div className="grid gap-3">
                     {/* <div className="flex flex-col gap-2">
