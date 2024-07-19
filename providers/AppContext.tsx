@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import { removeEntry, getUserGlobalPermission } from '../hook';
 
 interface ContextType {
-
+  allocationCreated: boolean;
   addServerModalOpen: boolean;
   editServerModalID: number;
   profileModalOpen: boolean;
@@ -53,9 +53,11 @@ interface ContextType {
   setIsAdminOfSelectedServer_app: (isAdminOfSelectedServer_app: boolean) => void;
   setServerRemovalID: (serverRemovalID: string) => void;
   setServerRemoved: (serverRemoved: boolean) => void;
+  setAllocationCreated: (allocationCreated: boolean) => void;
 }
 
 const initialValue: ContextType = {
+  allocationCreated : false,
   serverRemovalID: "",
   addServerModalOpen: false,
   editServerModalID: 0,
@@ -106,6 +108,7 @@ const initialValue: ContextType = {
   setIsAdminOfSelectedServer_app: (isAdminOfSelectedServer_app) => { },
   setServerRemovalID: (serverRemovalID) => { },
   setServerRemoved: (serverRemoved) => { },
+  setAllocationCreated: (allocationCreated) => { },
 
 };
 

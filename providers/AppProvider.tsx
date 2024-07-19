@@ -30,10 +30,12 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isAdminOfSelectedServer_app, setIsAdminOfSelectedServer_app] = useState<boolean>(false);
   const [serverRemovalID, setServerRemovalID] = useState<string>("");
   const [editAllocationModalOpen, setEditAllocationModalOpen] = useState<boolean>(false);
+  const [allocationCreated, setAllocationCreated] = useState<boolean>(false);
 
   return (
     <AppContext.Provider
       value={{
+        allocationCreated,
         serverRemoved,
         serverRemovalID,
         addServerModalOpen,
@@ -83,7 +85,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         setProfileModalOpen,
         setIsAdminOfSelectedServer_app,
         setServerRemovalID,
-        setServerRemoved
+        setServerRemoved,
+        setAllocationCreated,
       }}
     >
       {children}

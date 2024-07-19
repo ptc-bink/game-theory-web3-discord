@@ -19,7 +19,7 @@ import AddAllocationModal from "../components/forms/AddAllocation";
 
 const Allocation: React.FC<IAllocationProps> = () => {
 
-    const { isAdminOfSelectedServer_app, addAllocationModalOpen, allocationEdited, userGlobalPermission, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
+    const {allocationCreated, isAdminOfSelectedServer_app,addAllocationModalOpen, allocationEdited, userGlobalPermission,setAllocationCreated, setAllocationEdited, setAddAllocationModalOpen, setUserGlobalPermission } = useContext(AppContext)
     const [searchInput, setSearchInput] = useState<string>("");
     const [serverValue, setServerValue] = useState<string>("");
     const [userGlobalPermissons, setUserGlobalPermissons] = useState<any>([])
@@ -133,6 +133,9 @@ const Allocation: React.FC<IAllocationProps> = () => {
         console.log(`==========SERVERS SET ===========`)
     }
 
+
+
+
     const searchFilterAction = async () => {
         let tempAllocations: IAllocation[] = [];
 
@@ -159,6 +162,12 @@ const Allocation: React.FC<IAllocationProps> = () => {
     useEffect(() => {
         initAction();
     }, [])
+    useEffect(() => {
+        if (allocationCreated) {
+            mainAction(serverValue)
+            setAllocationCreated(false);
+        }
+    }, [allocationCreated])
 
     useEffect(() => {
         if (serverValue) {
@@ -241,7 +250,7 @@ const Allocation: React.FC<IAllocationProps> = () => {
             }
             {addAllocationModalOpen &&
                 <div className="flex fixed z-[60] top-0 left-0 w-screen h-screen bg-cdark-50/30 backdrop-blur-sm justify-center items-center">
-                    <AddAllocationModal />
+                    <AddAllocationModal serverID={serverValue} />
                 </div>
             }
         </div>
