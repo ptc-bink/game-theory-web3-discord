@@ -32,16 +32,16 @@ const PreviewCard: React.FC<IPreviewCardProps> = ({ title, description, expiry, 
         let formattedText = text;
 
         // Detect text wrapped with ***
-        formattedText = formattedText.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        formattedText = formattedText?.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
 
         // Detect text wrapped with **
-        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        formattedText = formattedText?.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
         // Detect text wrapped with *
-        formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        formattedText = formattedText?.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
         // Detect text wrapped with __
-        formattedText = formattedText.replace(/__(.*?)__/g, '<u>$1</u>');
+        formattedText = formattedText?.replace(/__(.*?)__/g, '<u>$1</u>');
 
         return formattedText;
     }

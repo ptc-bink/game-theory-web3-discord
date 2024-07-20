@@ -17,11 +17,10 @@ import { removeEntry, enterGiveaway } from '../../hook';
 import toast from "react-hot-toast";
 
 const GiveawayCard: React.FC<IGiveawayCardProps> = ({ giveawayName, giveawayID, serverData, chain, avatar, title, entrants, quantity, enterDate, timeRemaining, harvested, bidders, winners, adminOfServer }) => {
-    const giveawayName_Edited = giveawayName
-        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-        .replace(/__(.*?)__/g, "<u>$1</u>")
-        .replace(/\*(.*?)\*/g, "<em>$1</em>")
-        .replace(/\n/g, "<br>");
+    const giveawayName_Edited = giveawayName? giveawayName        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/__(.*?)__/g, "<u>$1</u>")
+    .replace(/\*(.*?)\*/g, "<em>$1</em>")
+    .replace(/\n/g, "<br>"):giveawayName;
 
 
 
